@@ -27,11 +27,8 @@ class UI(layaout.Ui_MainWindow,QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.update()
         self.show()
 
-    '''def get_text(self):
-        print(self.input_line.text())'''
 
 
 

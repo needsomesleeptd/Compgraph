@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'canvas.ui'
+# Form implementation generated from reading ui file 'main.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -14,33 +14,42 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(800, 678)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(90, 20, 541, 511))
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(20, 0, 661, 581))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.frame = Canvas(self.horizontalLayoutWidget)
-        self.frame.setMinimumSize(QtCore.QSize(200, 0))
-        self.frame.setObjectName("frame")
-        self.horizontalLayout.addWidget(self.frame)
+        self.canvas = Canvas(self.horizontalLayoutWidget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.canvas.sizePolicy().hasHeightForWidth())
+        self.canvas.setSizePolicy(sizePolicy)
+        self.canvas.setMinimumSize(QtCore.QSize(200, 100))
+        self.canvas.setObjectName("canvas")
+        self.horizontalLayout.addWidget(self.canvas)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
         self.list_nodes = QtWidgets.QListView(self.horizontalLayoutWidget)
+        self.list_nodes.setMinimumSize(QtCore.QSize(100, 100))
         self.list_nodes.setObjectName("list_nodes")
         self.verticalLayout.addWidget(self.list_nodes)
         self.input_line = QtWidgets.QLineEdit(self.horizontalLayoutWidget)
+        self.input_line.setMinimumSize(QtCore.QSize(100, 10))
         self.input_line.setObjectName("input_line")
         self.verticalLayout.addWidget(self.input_line)
         self.delete_nodes = QtWidgets.QPushButton(self.horizontalLayoutWidget)
+        self.delete_nodes.setMinimumSize(QtCore.QSize(100, 10))
         self.delete_nodes.setObjectName("delete_nodes")
         self.verticalLayout.addWidget(self.delete_nodes)
         self.place_nodes = QtWidgets.QPushButton(self.horizontalLayoutWidget)
+        self.place_nodes.setMinimumSize(QtCore.QSize(100, 10))
         self.place_nodes.setObjectName("place_nodes")
         self.verticalLayout.addWidget(self.place_nodes)
         self.horizontalLayout.addLayout(self.verticalLayout)
