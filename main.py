@@ -1,63 +1,59 @@
 import sys
-from PyQt5 import QtWidgets, QtGui, QtCore
+from PyQt5 import QtWidgets, QtGui, QtCore,uic
+from PyQt5.QtCore import Qt
+import layaout
 
-
-class Table(QtWidgets.QTableWidget):
+'''class Table(QtWidgets.QTableWidget):
     def __init__(self):
         super().__init__()
         self.setColumnCount(2)
+        self.setRowCount(0)
         self.setHorizontalHeaderLabels(["x", "y"])
+        self.setMaximumHeight(500)
+        #self.sizePolicy(QtWidgets.QSizePolicy.setHorizontalPolicy())
+        self.resizeColumnsToContents()
+
+    def update(self,rows):
+        for i in range(len(rows)):
+            self.tableWidget.setItem(i, 0, rows[i][0])
+            self.tableWidget.setItem(i, 1, rows[i][1])
+
+'''
 
 
 
-class Canvas(QtWidgets.QWidget):
+
+class UI(layaout.Ui_MainWindow,QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
-        self.points = QtGui.QPolygon()
-        canvas_layout = QtWidgets.QGridLayout()
-        frame = QtWidgets.QFrame()
-        frame.setStyleSheet("border: 4px solid rgb(0, 0, 0);")
-        frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        canvas_layout.addWidget(frame)
-        self.setLayout(canvas_layout)
-
-
-
-    def mousePressEvent(self, e):
-        self.points << e.pos()
-        self.update()
-
-    def paintEvent(self, ev):
-        qp = QtGui.QPainter(self)
-        qp.setRenderHint(QtGui.QPainter.Antialiasing)
-        pen = QtGui.QPen(QtCore.Qt.blue, 3)
-        brush = QtGui.QBrush(QtCore.Qt.red)
-        qp.setPen(pen)
-        qp.setBrush(brush)
-        qp.drawPoints(self.points)
-
-
-
-class UI(QtWidgets.QMainWindow):
-    def __init__(self):
-        super().__init__()
-        layout = QtWidgets.QGridLayout()
+        self.setupUi(self)
+        self.show()
+        '''layout = QtWidgets.QGridLayout()
         self.canvas = Canvas()
-        self.label = QtWidgets.QLabel()
-
         self.table = Table()
-        layout.addWidget(self.canvas,0,0)
-        layout.addWidget(self.table, 0,1,int(self.height() / 2),9)
+        self.create_button = QtWidgets.QPushButton()
+        self.input_line = QtWidgets.QLineEdit(self)
+        #self.input_line.setFixedWidth(100)
+        self.create_button.clicked.connect(self.table.update)
+        self.input_line.returnPressed.connect(self.get_text)
+        layout.addWidget(self.canvas,0,0,2,1)
+        layout.addWidget(self.table, 0,1,2,2,alignment=Qt.AlignLeft)
+        layout.addWidget(self.input_line, 0, 1,alignment=Qt.AlignBottom | Qt.AlignLeft)
+        layout.addWidget(self.create_button,1,1)
         container = QtWidgets.QWidget()
-
-
-
         container.setLayout(layout)
         container.resize(200, 100)
         self.setCentralWidget(container)
 
         self.update()
-        self.show()
+        self.show()'''
+
+    '''def get_text(self):
+        print(self.input_line.text())'''
+
+
+
+
 
 
 if __name__ == '__main__':
