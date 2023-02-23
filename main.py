@@ -28,6 +28,7 @@ class UI(QtWidgets.QMainWindow):
         super().__init__()
         self.ui =layaout.Ui_MainWindow()
         self.ui.setupUi(self)
+        self.ui.canvas.mouseClickSignal.connect(self.ui.table_nodes.push_node_back)
         self.show()
 
 

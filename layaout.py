@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.canvas.sizePolicy().hasHeightForWidth())
         self.canvas.setSizePolicy(sizePolicy)
-        self.canvas.setMinimumSize(QtCore.QSize(200, 100))
+        self.canvas.setMinimumSize(QtCore.QSize(300, 100))
         self.canvas.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.canvas.setFrameShadow(QtWidgets.QFrame.Raised)
         self.canvas.setObjectName("canvas")
@@ -36,10 +36,10 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addItem(spacerItem)
         self.gridLayout_2 = QtWidgets.QGridLayout()
         self.gridLayout_2.setObjectName("gridLayout_2")
-        self.list_nodes = QtWidgets.QListView(self.centralwidget)
-        self.list_nodes.setMinimumSize(QtCore.QSize(100, 100))
-        self.list_nodes.setObjectName("list_nodes")
-        self.gridLayout_2.addWidget(self.list_nodes, 0, 0, 1, 1)
+        self.table_nodes = Table(self.centralwidget)
+        self.table_nodes.setMinimumSize(QtCore.QSize(330, 200))
+        self.table_nodes.setObjectName("table_nodes")
+        self.gridLayout_2.addWidget(self.table_nodes, 0, 0, 1, 1)
         self.input_line = QtWidgets.QLineEdit(self.centralwidget)
         self.input_line.setObjectName("input_line")
         self.gridLayout_2.addWidget(self.input_line, 1, 0, 1, 1)
@@ -69,3 +69,4 @@ class Ui_MainWindow(object):
         self.delete_nodes.setText(_translate("MainWindow", "Удалить все точки"))
         self.place_nodes.setText(_translate("MainWindow", "Построить график"))
 from canvas import Canvas
+from table_nodes import Table

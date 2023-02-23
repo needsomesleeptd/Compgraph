@@ -27,7 +27,7 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>200</width>
+          <width>300</width>
           <height>100</height>
          </size>
         </property>
@@ -58,11 +58,11 @@
       <item>
        <layout class="QGridLayout" name="gridLayout_2">
         <item row="0" column="0">
-         <widget class="QListView" name="list_nodes">
+         <widget class="Table" name="table_nodes">
           <property name="minimumSize">
            <size>
-            <width>100</width>
-            <height>100</height>
+            <width>330</width>
+            <height>200</height>
            </size>
           </property>
          </widget>
@@ -108,6 +108,11 @@
    <extends>QFrame</extends>
    <header location="global">canvas</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Table</class>
+   <extends>QListView</extends>
+   <header>table_nodes</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -6,7 +6,8 @@ from PyQt5 import QtCore, QtWidgets, uic
 from PyQt5.QtCore import Qt
 import matplotlib
 from matplotlib.artist import Artist
-
+from PyQt5 import QtGui
+from PyQt5.QtGui import QMouseEvent
 matplotlib.use('QT5Agg')
 
 import matplotlib.pylab as plt
@@ -23,6 +24,7 @@ def find_node(node_x, node_y, list_of_nodes):
     return None
 
 class Canvas(QtWidgets.QFrame):
+    mouseClickSignal = QtCore.pyqtSignal(float,float)
     def __init__(self,parent):
         super().__init__(parent)
         self.dots = []
@@ -40,14 +42,13 @@ class Canvas(QtWidgets.QFrame):
 
 
 
-
-
     def put_node(self, event):
         if (not event.inaxes == self.ax1 or event.button != 3):  # Right mouse key
             return
 
         ix, iy = event.xdata, event.ydata
         print(ix,iy)
+        self.mouseClickSignal.emit(event.xdata,event.ydata)
         if (len(self.cur_nodes) > 1 and abs(self.cur_nodes[0][0] - ix) < EPS and abs(self.cur_nodes[0][1] - iy) < EPS):
             f = [self.cur_nodes[0][0], self.cur_nodes[-1][0]]
             s = [self.cur_nodes[0][1], self.cur_nodes[-1][1]]
