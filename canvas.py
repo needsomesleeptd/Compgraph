@@ -25,8 +25,9 @@ class Canvas(QtWidgets.QFrame):
         self.dots = []
         self.cur_nodes = []
         self.cmap = np.random.rand(3)
+        self.drawn_lines = []
         self.fig, self.ax1 = plt.subplots()
-        self.ax1.grid()
+        self.adjust_graph()
         put_nodes_connection = self.fig.canvas.mpl_connect('button_press_event', self.put_node)
         modify_nodes_connection = self.fig.canvas.mpl_connect('pick_event', self.modify_node)
         self.plotWidget = FigureCanvas(self.fig)
@@ -36,6 +37,12 @@ class Canvas(QtWidgets.QFrame):
         lay.addWidget(self.toolbar, 0, 0, alignment=Qt.AlignBottom | Qt.AlignLeft)
 
 
+    def adjust_graph(self):
+        self.ax1.grid()
+        self.ax1.set(xlabel='X-Axis', ylabel='Y-Axis',
+                     xlim=(0, 12), ylim=(0, 12),
+                     title='Полученные многоугольники')
+        self.ax1.autoscale(enable=True, axis="x", tight=True)
 
     def put_node(self, event):
         if (not event.inaxes == self.ax1 or event.button != 3):  # Right mouse key
@@ -64,17 +71,37 @@ class Canvas(QtWidgets.QFrame):
         self.fig.canvas.draw()
 
 
+
+    def redraw_everything(self,new_dots = None):
+        print(new_dots)
+        if(new_dots != None):
+            self.dots.append(new_dots)
+            self.ax1.clear()
+            for polygon in self.dots:
+                self.cmap = np.random.rand(3)
+                x = [dot[0] for dot in polygon]
+                y = [dot[1] for dot in polygon]
+                x.append(polygon[0][0])
+                y.append(polygon[0][1])
+                self.ax1.plot(x, y, marker='.', c=self.cmap,picker=True, pickradius=5)
+
+        self.adjust_graph()
+        self.fig.canvas.draw()
+
+
+
+
+
     def find_similar_polygons(self):
         graphs_params = find_similar_graphs_with_max_nodes(self.dots)
         if (graphs_params == None):
             print("Not found")
-            pass #display error
+            pass #Todo:display error
         else:
-            lines = self.ax1.lines()
-            x_data = lines.get_xdata()
-            y_data = lines.get_ydata()
-            print("x_data:,",x_data)
-            print("y_data",y_data)
+            self.ax1.lines[graphs_params[0]].set_linestyle('-.')
+            self.ax1.lines[graphs_params[1]].set_linestyle('-.')
+            self.fig.canvas.draw()
+
 
 
     def modify_node(self, event):

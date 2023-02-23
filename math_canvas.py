@@ -41,14 +41,14 @@ def find_similar_graphs_with_max_nodes(nodes:list):
             cos_angles_second = set()
             len_graph = len(nodes[i])
             for node_index in range(len_graph):
-                vector_first = Vector(nodes[i][node_index])
-                vector_second = Vector(nodes[i][(node_index + 1) % len_graph])
+                vector_first = Vector(nodes[i][node_index],nodes[i][node_index - 1])
+                vector_second = Vector(nodes[i][(node_index + 1) % len_graph],nodes[i][(node_index - 1) % len_graph])
                 cos_angle = vector_angle_cos(vector_first,vector_second)
                 cos_angles_first.add(cos_angle)
 
             for node_index in range(len_graph):
-                vector_first = Vector(nodes[j][node_index])
-                vector_second = Vector(nodes[j][(node_index + 1) % len_graph])
+                vector_first = Vector(nodes[i][node_index], nodes[i][node_index - 1])
+                vector_second = Vector(nodes[i][(node_index + 1) % len_graph], nodes[i][(node_index - 1) % len_graph])
                 cos_angle = vector_angle_cos(vector_first, vector_second)
                 cos_angles_second.add(cos_angle)
             if (all(almost_equal(*values) for values in zip(cos_angles_first, cos_angles_second))):
@@ -64,7 +64,7 @@ def find_similar_graphs_with_max_nodes(nodes:list):
 
 class Vector:
     def __init__(self,first_dot,second_dot):
-        self.coords = [first_dot[0] - second_dot[0]],[first_dot[1] - second_dot[0]]
+        self.coords = [first_dot[0] - second_dot[0],first_dot[1] - second_dot[0]]
     def len(self):
         return (self.coords[0]**2 + self.coords[1] **2)**0.5
 

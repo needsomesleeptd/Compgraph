@@ -2,7 +2,7 @@
 import sys
 import numpy as np
 
-from PyQt5 import QtCore, QtWidgets, uic
+from PyQt5 import QtGui, QtWidgets, uic
 from PyQt5.QtCore import Qt
 import matplotlib
 from matplotlib.artist import Artist
@@ -32,17 +32,20 @@ class Table(QtWidgets.QTableWidget):
         self.adjustSize()
         self.setSizeAdjustPolicy(self.AdjustToContents)
         self.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum)
+        self.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
 
 
     def push_node_back(self,xdata,ydata):
         ix, iy = xdata, ydata
-        print(321)
         rowPos = self.rowCount()
         self.insertRow(rowPos)
         self.setItem(rowPos, 0, QtWidgets.QTableWidgetItem(str(ix)))
         self.setItem(rowPos, 1, QtWidgets.QTableWidgetItem(str(iy)))
-        #self.setColumnWidth(rowPos, self.width() // 2)
         self.resizeColumnToContents(0)
         self.resizeColumnToContents(1)
+
+    def add_graph_to_table(self, graph:list):
+        for node in graph:
+            self.push_node_back(node[0],node[1])
 

@@ -17,6 +17,7 @@ def is_float(string:str):
 
 
 class Input_line(QtWidgets.QLineEdit):
+    iscompletedSignal = QtCore.pyqtSignal(list)
     def __init__(self,parent):
         super().__init__(parent)
         self.returnPressed.connect(self.get_nodes)
@@ -40,7 +41,8 @@ class Input_line(QtWidgets.QLineEdit):
                 y_str = coords[1][:len(coords[1]) - 1]
                 if is_float(x_str) and is_float(y_str):
                     nodes_float.append([float(x_str),float(y_str)])
-        return nodes_float
+
+        self.iscompletedSignal.emit(nodes_float)
 
 
                         
