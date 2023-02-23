@@ -29,6 +29,8 @@ class UI(QtWidgets.QMainWindow):
         self.ui =layaout.Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.canvas.mouseClickSignal.connect(self.ui.table_nodes.push_node_back)
+        self.ui.find_similar_polygons.clicked.connect(self.ui.canvas.find_similar_polygons)
+        self.ui.input_line.returnPressed.connect(self.ui.canvas.put_node)
         self.show()
 
 

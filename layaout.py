@@ -40,15 +40,15 @@ class Ui_MainWindow(object):
         self.table_nodes.setMinimumSize(QtCore.QSize(330, 200))
         self.table_nodes.setObjectName("table_nodes")
         self.gridLayout_2.addWidget(self.table_nodes, 0, 0, 1, 1)
-        self.input_line = QtWidgets.QLineEdit(self.centralwidget)
+        self.input_line = Input_line(self.centralwidget)
         self.input_line.setObjectName("input_line")
         self.gridLayout_2.addWidget(self.input_line, 1, 0, 1, 1)
         self.delete_nodes = QtWidgets.QPushButton(self.centralwidget)
         self.delete_nodes.setObjectName("delete_nodes")
         self.gridLayout_2.addWidget(self.delete_nodes, 2, 0, 1, 1)
-        self.place_nodes = QtWidgets.QPushButton(self.centralwidget)
-        self.place_nodes.setObjectName("place_nodes")
-        self.gridLayout_2.addWidget(self.place_nodes, 3, 0, 1, 1)
+        self.find_similar_polygons = QtWidgets.QPushButton(self.centralwidget)
+        self.find_similar_polygons.setObjectName("find_similar_polygons")
+        self.gridLayout_2.addWidget(self.find_similar_polygons, 3, 0, 1, 1)
         self.horizontalLayout.addLayout(self.gridLayout_2)
         self.horizontalLayout_2.addLayout(self.horizontalLayout)
         MainWindow.setCentralWidget(self.centralwidget)
@@ -67,6 +67,7 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.delete_nodes.setText(_translate("MainWindow", "Удалить все точки"))
-        self.place_nodes.setText(_translate("MainWindow", "Найти подобные n-угольники"))
+        self.find_similar_polygons.setText(_translate("MainWindow", "Найти подобные n-угольники"))
 from canvas import Canvas
+from input_line import Input_line
 from table_nodes import Table

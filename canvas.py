@@ -63,6 +63,20 @@ class Canvas(QtWidgets.QFrame):
             self.mouseClickSignal.emit(event.xdata, event.ydata)
         self.fig.canvas.draw()
 
+
+    def find_similar_polygons(self):
+        graphs_params = find_similar_graphs_with_max_nodes(self.dots)
+        if (graphs_params == None):
+            print("Not found")
+            pass #display error
+        else:
+            lines = self.ax1.lines()
+            x_data = lines.get_xdata()
+            y_data = lines.get_ydata()
+            print("x_data:,",x_data)
+            print("y_data",y_data)
+
+
     def modify_node(self, event):
         artist = event.artist
         x_d = artist.get_xdata()

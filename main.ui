@@ -68,7 +68,7 @@
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QLineEdit" name="input_line"/>
+         <widget class="Input_line" name="input_line"/>
         </item>
         <item row="2" column="0">
          <widget class="QPushButton" name="delete_nodes">
@@ -78,9 +78,9 @@
          </widget>
         </item>
         <item row="3" column="0">
-         <widget class="QPushButton" name="place_nodes">
+         <widget class="QPushButton" name="find_similar_polygons">
           <property name="text">
-           <string>Построить график</string>
+           <string>Найти подобные n-угольники</string>
           </property>
          </widget>
         </item>
@@ -113,6 +113,11 @@
    <class>Table</class>
    <extends>QListView</extends>
    <header>table_nodes</header>
+  </customwidget>
+  <customwidget>
+   <class>Input_line</class>
+   <extends>QLineEdit</extends>
+   <header>input_line</header>
   </customwidget>
  </customwidgets>
  <resources/>
