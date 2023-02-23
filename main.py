@@ -23,10 +23,11 @@ import layaout
 
 
 
-class UI(layaout.Ui_MainWindow,QtWidgets.QMainWindow):
+class UI(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setupUi(self)
+        self.ui =layaout.Ui_MainWindow()
+        self.ui.setupUi(self)
         self.show()
 
 

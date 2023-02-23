@@ -22,7 +22,7 @@ def find_node(node_x, node_y, list_of_nodes):
             return i
     return None
 
-class Canvas(QtWidgets.QWidget):
+class Canvas(QtWidgets.QFrame):
     def __init__(self,parent):
         super().__init__(parent)
         self.dots = []
@@ -33,16 +33,12 @@ class Canvas(QtWidgets.QWidget):
         put_nodes_connection = self.fig.canvas.mpl_connect('button_press_event', self.put_node)
         modify_nodes_connection = self.fig.canvas.mpl_connect('pick_event', self.modify_node)
         self.plotWidget = FigureCanvas(self.fig)
-        self.toolbar = NavigationToolbar(self.plotWidget, self)
-        lay = QtWidgets.QGridLayout()
-        self.table = QtWidgets.QTableWidget(self)
-        lay.setContentsMargins(0, 0, 0, 0)
-        lay.addWidget(self.table, 0, 1)
+        self.toolbar = NavigationToolbar(self.plotWidget, parent)
+        lay = QtWidgets.QGridLayout(self)
         lay.addWidget(self.plotWidget, 0, 0)
         lay.addWidget(self.toolbar, 0, 0, alignment=Qt.AlignBottom | Qt.AlignLeft)
-        #self.resize(1000,1000)
-        self.adjustSize()
-        self.update()
+
+
 
 
 
