@@ -14,14 +14,9 @@ import matplotlib.pylab as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 
-EPS = 1e-1
 
+from math_canvas import *
 
-def find_node(node_x, node_y, list_of_nodes):
-    for i in range(len(list_of_nodes)):
-        if (abs(node_x - list_of_nodes[i][0]) < EPS and abs(node_y - list_of_nodes[i][1]) < EPS):
-            return i
-    return None
 
 class Canvas(QtWidgets.QFrame):
     mouseClickSignal = QtCore.pyqtSignal(float,float)
@@ -48,30 +43,24 @@ class Canvas(QtWidgets.QFrame):
 
         ix, iy = event.xdata, event.ydata
         print(ix,iy)
-        self.mouseClickSignal.emit(event.xdata,event.ydata)
-        if (len(self.cur_nodes) > 1 and abs(self.cur_nodes[0][0] - ix) < EPS and abs(self.cur_nodes[0][1] - iy) < EPS):
-            f = [self.cur_nodes[0][0], self.cur_nodes[-1][0]]
-            s = [self.cur_nodes[0][1], self.cur_nodes[-1][1]]
-            self.ax1.plot(f, s, marker='.', c=self.cmap, picker=True, pickradius=5)
+        if (len(self.cur_nodes) > 1 and are_eq_nodes([ix,iy],self.cur_nodes[0])): #end_of_loop
+            xs = [self.cur_nodes[0][0], self.cur_nodes[-1][0]]
+            ys = [self.cur_nodes[0][1], self.cur_nodes[-1][1]]
+            self.ax1.plot(xs, ys, marker='.', c=self.cmap, picker=True, pickradius=5)
             self.dots.append(self.cur_nodes)
             self.cur_nodes = []
-        if (find_node(ix, iy, self.cur_nodes) != None):
-            return
-        self.cur_nodes.append([ix, iy])
-        self.dots.append([ix, iy])
-        if (len(self.cur_nodes) > 1):
-            f = [self.cur_nodes[-1][0], self.cur_nodes[-2][0]]
-            s = [self.cur_nodes[-1][1], self.cur_nodes[-2][1]]
-            self.ax1.plot(f, s, marker='.', c=self.cmap,picker=True, pickradius=5)
         else:
-            self.cmap = np.random.rand(3)
-            plt.plot(self.cur_nodes[0][0], self.cur_nodes[0][1], marker='.', c=self.cmap)
-        if (abs(self.cur_nodes[0][0] - ix) < EPS and abs(self.cur_nodes[0][1] - iy)):
-            f = [self.cur_nodes[0][0], self.cur_nodes[-1][0]]
-            s = [self.cur_nodes[0][1], self.cur_nodes[-1][1]]
-            self.ax1.plot(f, s, marker='.', c=self.cmap, picker=True, pickradius=5)
-            self.dots.append(self.cur_nodes)
-            self.cur_nodes = []
+            if (find_node([ix,iy],self.cur_nodes) != None): #node_already_there
+                return
+            self.cur_nodes.append([ix, iy])
+            if (len(self.cur_nodes) > 1):
+                xs = [self.cur_nodes[-1][0], self.cur_nodes[-2][0]]
+                ys = [self.cur_nodes[-1][1], self.cur_nodes[-2][1]]
+                self.ax1.plot(xs, ys, marker='.', c=self.cmap,picker=True, pickradius=5)
+            else:
+                self.cmap = np.random.rand(3)
+                plt.plot(self.cur_nodes[0][0], self.cur_nodes[0][1], marker='.', c=self.cmap)
+            self.mouseClickSignal.emit(event.xdata, event.ydata)
         self.fig.canvas.draw()
 
     def modify_node(self, event):
@@ -84,12 +73,3 @@ class Canvas(QtWidgets.QFrame):
         print(x_d, y_d, ind)
         self.plotWidget.draw()
 
-        '''for dot in self.dots:
-            self.ax1.plot(dot[0], dot[1],'*',color = "red")'''
-
-    '''def on_running(self, xdata, ydata):
-        # Update data (with the new _and_ the old points)
-
-        # We need to draw *and* flush
-        self.figure.canvas.draw()
-        self.figure.canvas.flush_events()'''

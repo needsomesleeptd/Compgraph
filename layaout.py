@@ -67,6 +67,6 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.delete_nodes.setText(_translate("MainWindow", "Удалить все точки"))
-        self.place_nodes.setText(_translate("MainWindow", "Построить график"))
+        self.place_nodes.setText(_translate("MainWindow", "Найти подобные n-угольники"))
 from canvas import Canvas
 from table_nodes import Table
