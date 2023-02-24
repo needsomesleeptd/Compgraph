@@ -99,7 +99,7 @@ class Canvas(QtWidgets.QFrame):
 
         self.adjust_graph()
         self.fig.canvas.draw()
-       # self.getDotsSignal.emit(self.graphs)
+        self.getDotsSignal.emit(self.graphs)
 
 
 
@@ -111,15 +111,19 @@ class Canvas(QtWidgets.QFrame):
             print("Not found")
             self.displayMessageSignal.emit("Результат поиска подобных многоугольников", "Подобных многоугольников не найдено")
         else:
-            graph_len = graphs_params[2]
-            print(graphs_params[0],graphs_params[1],graph_len)
-            for i in range(graphs_params[0],graphs_params[0] + graph_len):
-                self.ax1.lines[i].set_linestyle('-.')
-                self.ax1.lines[i].set_color('red')
+            graph_len = graphs_params[2] + 1 #to compensate for reverse node
+            start_dot_first = get_dot_index(self.graphs,graphs_params[0])
+            start_dot_second = get_dot_index(self.graphs, graphs_params[1])
+            print(start_dot_first,start_dot_second)
+            for i in range(len(self.ax1.lines)):
+                print(self.ax1.lines[i].get_xdata(),self.ax1.lines[i].get_ydata())
+            for line_index in range(start_dot_first,start_dot_first + graph_len):
+                self.ax1.lines[line_index].set_linestyle('-.')
+                self.ax1.lines[line_index].set_color('red')
 
-            for i in range(graphs_params[1],graphs_params[1] + graph_len):
-                self.ax1.lines[i].set_linestyle('-.')
-                self.ax1.lines[i].set_color('red')
+            for line_index in range(start_dot_second,start_dot_second + graph_len):
+                self.ax1.lines[line_index].set_linestyle('-.')
+                self.ax1.lines[line_index].set_color('red')
 
 
             message = "Подобные n-угольники найдены, максимальное n - {}, их линия преобразована в штриховую".format(graphs_params[2])

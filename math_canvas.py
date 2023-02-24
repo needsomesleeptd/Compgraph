@@ -19,6 +19,29 @@ def are_eq_nodes(first_dot,second_dot):
 
 
 
+
+def get_dot_index(graphs:list,nodes_count:int):
+    graph_index = 0
+    graphs_nodes_count = 0
+    while (nodes_count > len(graphs[graph_index])):
+       nodes_count -= len(graphs[graph_index])
+       graph_index += 1
+    node_index = nodes_count
+    return graph_index,node_index
+
+def get_dot_index(graphs:list,graph_index:int):
+   nodes_count = 0
+   for i in range(graph_index):
+       nodes_count += len(graphs[i]) + 1
+   return nodes_count
+
+
+
+
+
+
+
+
 def vector_scalar_product(first_vector,second_vector):
     scalar_sum = 0
     for i in range(len(first_vector.coords)):
@@ -67,12 +90,5 @@ class Vector:
         self.coords = [first_dot[0] - second_dot[0],first_dot[1] - second_dot[0]]
     def len(self):
         return (self.coords[0]**2 + self.coords[1] **2)**0.5
-
-
-
-
-
-
-
 
 
