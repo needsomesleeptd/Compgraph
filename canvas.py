@@ -123,6 +123,7 @@ class Canvas(QtWidgets.QFrame):
             self.graphs.append(new_dots)
         for polygon in self.graphs:
             self.cmap = np.random.rand(3)
+            self.ax1.plot(polygon[0][0], polygon[0][1], marker='.', c=self.cmap, picker=True, pickradius=2)
             for i in  range(len(polygon)):
                 xs = [polygon[i][0], polygon[(i+1) % len(polygon)][0]]
                 ys = [polygon[i][1], polygon[(i + 1)  % len(polygon) ][1]]

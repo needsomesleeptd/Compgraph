@@ -77,13 +77,8 @@ class Table(QtWidgets.QTableWidget):
 
     def create_from_canvas(self,graphs):
         self.clear()
-        node_index = 0
-        for i in range(len(graphs)):
-            for j in range(len(graphs[i])):
-                self.setItem(node_index, 0, QtWidgets.QTableWidgetItem(str(graphs[i][j][0])))
-                self.setItem(node_index, 1, QtWidgets.QTableWidgetItem(str(graphs[i][j][1])))
-                node_index += 1
-
+        self.setRowCount(0)
+        self.update_to_canvas(graphs)
 
 
 
