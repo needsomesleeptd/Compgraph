@@ -26,10 +26,6 @@ class Canvas(QtWidgets.QFrame):
     def __init__(self,parent):
         super().__init__(parent)
         self.graphs = []
-        self.x = []
-        self.y = []
-        self.graph_ids = []
-        self.colors = []
         self.cur_nodes = []
         self.cmap = np.random.rand(3)
         self.drawn_lines = []
