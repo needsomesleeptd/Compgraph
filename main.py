@@ -40,15 +40,27 @@ class UI(QtWidgets.QMainWindow):
 
         self.ui.canvas.getDotsSignal.connect(self.ui.table_nodes.create_from_canvas)
         self.ui.canvas.displayMessageSignal.connect(self.show_message)
+        self.ui.input_line.isNotValidCompletedSignal.connect(self.show_message)
+        self.ui.revert_state_button.clicked.connect(self.revert_state)
         self.show()
 
     def show_message(self,title,message):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
-        msg.setText("title")
+        msg.setText(title)
         msg.setInformativeText(message)
         msg.setWindowTitle("Error")
         msg.exec_()
+
+    def revert_state(self):
+        state = self.ui.canvas.state_saver.pop_state() #cur_nodes graph colors
+        if (state != None):
+            self.ui.canvas.graphs = state[1]
+            self.ui.canvas.cur_nodes = state[0]
+            self.ui.canvas.colors = state[2]
+            self.ui.canvas.redraw_everything()
+
+
 
         #Todo:add warnings + checks and popups
         #Todo:add removing and moving dots

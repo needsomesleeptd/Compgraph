@@ -13,7 +13,7 @@ matplotlib.use('QT5Agg')
 import matplotlib.pylab as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
-
+from state_saver import StateSaver
 
 from math_canvas import *
 
@@ -32,7 +32,7 @@ class Canvas(QtWidgets.QFrame):
         self.node_to_remove = None
         self.fig, self.ax1 = plt.subplots()
         self.adjust_graph()
-        self.prev_occasions_list = []
+        self.state_saver = StateSaver()
         self.colors = []
         put_nodes_connection = self.fig.canvas.mpl_connect('button_press_event', self.put_node)
         highlight_nodes_connection = self.fig.canvas.mpl_connect('pick_event', self.highlight_node)
@@ -79,6 +79,8 @@ class Canvas(QtWidgets.QFrame):
                     self.colors.append(self.cmap)
                     plt.plot(self.cur_nodes[0][0], self.cur_nodes[0][1], marker='.', c=self.cmap)
                 self.mouseClickSignal.emit(event.xdata, event.ydata)
+
+            self.state_saver.push_state([self.cur_nodes, self.graphs, self.colors])
             self.fig.canvas.draw()
 
 
@@ -90,6 +92,7 @@ class Canvas(QtWidgets.QFrame):
             if (graph_index != None):
                 del self.graphs[graph_index]
                 del self.colors[graph_index]
+                self.state_saver.push_state([self.cur_nodes, self.graphs, self.colors])
                 self.redraw_everything()
 
     def modify_node(self,event):
@@ -99,6 +102,7 @@ class Canvas(QtWidgets.QFrame):
             if (self.node_to_remove != None):
                 self.graphs[self.node_to_remove[0]][self.node_to_remove[1]] = [ix, iy]
                 self.node_to_remove = None
+                self.state_saver.push_state([self.cur_nodes, self.graphs, self.colors])
                 self.redraw_everything()
 
             elif (graph_index != None):
@@ -121,6 +125,7 @@ class Canvas(QtWidgets.QFrame):
             ys = [polygon[i][1], polygon[(i + 1) % len(polygon)][1]]
             self.ax1.plot(xs, ys, marker='.', c=self.cmap, picker=True, pickradius=2)
         self.getDotsSignal.emit(self.graphs)
+        self.state_saver.push_state([self.cur_nodes, self.graphs, self.colors])
         self.fig.canvas.draw()
 
     def redraw_everything(self,new_dots = None):
@@ -166,6 +171,7 @@ class Canvas(QtWidgets.QFrame):
 
             message = "Подобные n-угольники найдены, максимальное n - {}, их линия преобразована в штриховую".format(graphs_params[2])
             self.displayMessageSignal.emit("Результат поиска подобных многоугольников", message)
+            self.state_saver.push_state([self.cur_nodes, self.graphs, self.colors])
             self.fig.canvas.draw()
 
 
@@ -178,10 +184,13 @@ class Canvas(QtWidgets.QFrame):
         props = {"color" : "red"}
         Artist.update(artist,props)
         print(x_d, y_d, ind)
+        self.state_saver.push_state([self.cur_nodes, self.graphs, self.colors])
         self.plotWidget.draw()
 
     def clear_canvas(self,event):
         self.cur_nodes.clear()
         self.graphs.clear()
         self.colors.clear()
+        self.state_saver.push_state([self.cur_nodes, self.graphs, self.colors])
         self.redraw_everything()
+

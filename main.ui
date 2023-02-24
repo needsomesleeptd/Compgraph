@@ -57,6 +57,20 @@
       </item>
       <item>
        <layout class="QGridLayout" name="gridLayout_2">
+        <item row="3" column="0">
+         <widget class="QPushButton" name="find_similar_polygons">
+          <property name="text">
+           <string>Найти подобные n-угольники</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QPushButton" name="delete_nodes">
+          <property name="text">
+           <string>Удалить все точки</string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="0">
          <widget class="Table" name="table_nodes">
           <property name="minimumSize">
@@ -70,17 +84,10 @@
         <item row="1" column="0">
          <widget class="Input_line" name="input_line"/>
         </item>
-        <item row="2" column="0">
-         <widget class="QPushButton" name="delete_nodes">
+        <item row="4" column="0">
+         <widget class="QPushButton" name="revert_state_button">
           <property name="text">
-           <string>Удалить все точки</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QPushButton" name="find_similar_polygons">
-          <property name="text">
-           <string>Найти подобные n-угольники</string>
+           <string>Вернуть на одно действие назад</string>
           </property>
          </widget>
         </item>

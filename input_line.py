@@ -18,24 +18,28 @@ def is_float(string:str):
 
 class Input_line(QtWidgets.QLineEdit):
     iscompletedSignal = QtCore.pyqtSignal(list)
+    isNotValidCompletedSignal = QtCore.pyqtSignal(str, str)
     def __init__(self,parent):
         super().__init__(parent)
         self.returnPressed.connect(self.get_nodes)
 
 
     def get_nodes(self): # valid : (%d,%d) ($d,%d)
+        error_str = "Возникла ошибка при вводе значений(Пример валидного ввода:\n(1,2) (2,2) (2,1)"
+        error_title = "Ошибка в вводе"
         text = self.text()
         print(text)
         nodes_float = []
         nodes_str = text.split(' ')
         if (len(nodes_str) < 3):
+            self.isNotValidCompletedSignal.emit(error_title,error_str)
             return None
         else:
             for node_str in nodes_str:
-                if (node_str.count('(') != 1 and node_str.count(')') != 1):
+                if (node_str.count('(') != 1 and node_str.count(')') != 1 or node_str.count(',') != 1):
+                    self.isNotValidCompletedSignal.emit(error_title,error_str)
                     return None
-                if (node_str.count(',') != 1):
-                    return None
+
                 coords = node_str.split(',')
                 x_str = coords[0][1:]
                 y_str = coords[1][:len(coords[1]) - 1]
