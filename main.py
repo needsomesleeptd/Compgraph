@@ -2,6 +2,8 @@ import sys
 from PyQt5 import QtWidgets, QtGui, QtCore,uic
 from PyQt5.QtCore import Qt
 import layaout
+from PyQt5.QtWidgets import QMessageBox
+
 
 '''class Table(QtWidgets.QTableWidget):
     def __init__(self):
@@ -28,13 +30,32 @@ class UI(QtWidgets.QMainWindow):
         super().__init__()
         self.ui =layaout.Ui_MainWindow()
         self.ui.setupUi(self)
+         #canvas
         self.ui.canvas.mouseClickSignal.connect(self.ui.table_nodes.push_node_back)
         self.ui.find_similar_polygons.clicked.connect(self.ui.canvas.find_similar_polygons)
-        self.ui.input_line.iscompletedSignal.connect(self.ui.canvas.redraw_everything)
-        self.ui.input_line.iscompletedSignal.connect(self.ui.table_nodes.add_graph_to_table)
+        self.ui.delete_nodes.clicked.connect(self.ui.canvas.clear_canvas)
+        self.ui.input_line.iscompletedSignal.connect(self.ui.canvas.add_graph)
+
+        #input_line
+        #self.ui.input_line.iscompletedSignal.connect(self.ui.table_nodes.add_graph_to_table)
+
+        self.ui.canvas.getDotsSignal.connect(self.ui.table_nodes.update_to_canvas)
+        self.ui.canvas.displayMessageSignal.connect(self.show_message)
         self.show()
 
+    def show_message(self,title,message):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setText("title")
+        msg.setInformativeText(message)
+        msg.setWindowTitle("Error")
+        msg.exec_()
 
+        #Todo:add warnings + checks and popups
+        #Todo:add removing and moving dots
+        #Todo: test on bigger graphs
+        #Todo:think about the same dot
+        #Todo: add saving dots
 
 
 

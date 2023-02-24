@@ -20,9 +20,16 @@ from math_canvas import *
 
 class Canvas(QtWidgets.QFrame):
     mouseClickSignal = QtCore.pyqtSignal(float,float)
+    displayMessageSignal = QtCore.pyqtSignal(str, str)
+    getDotsSignal = QtCore.pyqtSignal(list)
+
     def __init__(self,parent):
         super().__init__(parent)
-        self.dots = []
+        self.graphs = []
+        self.x = []
+        self.y = []
+        self.graph_ids = []
+        self.colors = []
         self.cur_nodes = []
         self.cmap = np.random.rand(3)
         self.drawn_lines = []
@@ -54,7 +61,7 @@ class Canvas(QtWidgets.QFrame):
             xs = [self.cur_nodes[0][0], self.cur_nodes[-1][0]]
             ys = [self.cur_nodes[0][1], self.cur_nodes[-1][1]]
             self.ax1.plot(xs, ys, marker='.', c=self.cmap, picker=True, pickradius=5)
-            self.dots.append(self.cur_nodes)
+            self.graphs.append(self.cur_nodes)
             self.cur_nodes = []
         else:
             if (find_node([ix,iy],self.cur_nodes) != None): #node_already_there
@@ -72,34 +79,55 @@ class Canvas(QtWidgets.QFrame):
 
 
 
+
+    def add_graph(self, polygon):
+        self.graphs.append(polygon)
+        for i in range(len(polygon)):
+            xs = [polygon[i][0], polygon[(i + 1) % len(polygon)][0]]
+            ys = [polygon[i][1], polygon[(i + 1) % len(polygon)][1]]
+            self.ax1.plot(xs, ys, marker='.', c=self.cmap, picker=True, pickradius=5)
+        self.getDotsSignal.emit(self.graphs)
+        self.fig.canvas.draw()
+
     def redraw_everything(self,new_dots = None):
         print(new_dots)
+        self.ax1.clear()
         if(new_dots != None):
-            self.dots.append(new_dots)
-            self.ax1.clear()
-            for polygon in self.dots:
+            self.graphs.append(new_dots)
+            for polygon in self.graphs:
                 self.cmap = np.random.rand(3)
-                x = [dot[0] for dot in polygon]
-                y = [dot[1] for dot in polygon]
-                x.append(polygon[0][0])
-                y.append(polygon[0][1])
-                self.ax1.plot(x, y, marker='.', c=self.cmap,picker=True, pickradius=5)
+                for i in  range(len(polygon)):
+                    xs = [polygon[i][0], polygon[(i+1) % len(polygon)][0]]
+                    ys = [polygon[i][1], polygon[(i + 1)  % len(polygon) ][1]]
+                    self.ax1.plot(xs, ys, marker='.', c=self.cmap,picker=True, pickradius=5)
 
         self.adjust_graph()
         self.fig.canvas.draw()
+       # self.getDotsSignal.emit(self.graphs)
 
 
 
 
 
     def find_similar_polygons(self):
-        graphs_params = find_similar_graphs_with_max_nodes(self.dots)
+        graphs_params = find_similar_graphs_with_max_nodes(self.graphs) #loop_1 loop_2 nodes_count
         if (graphs_params == None):
             print("Not found")
-            pass #Todo:display error
+            self.displayMessageSignal.emit("Результат поиска подобных многоугольников", "Подобных многоугольников не найдено")
         else:
-            self.ax1.lines[graphs_params[0]].set_linestyle('-.')
-            self.ax1.lines[graphs_params[1]].set_linestyle('-.')
+            graph_len = graphs_params[2]
+            print(graphs_params[0],graphs_params[1],graph_len)
+            for i in range(graphs_params[0],graphs_params[0] + graph_len):
+                self.ax1.lines[i].set_linestyle('-.')
+                self.ax1.lines[i].set_color('red')
+
+            for i in range(graphs_params[1],graphs_params[1] + graph_len):
+                self.ax1.lines[i].set_linestyle('-.')
+                self.ax1.lines[i].set_color('red')
+
+
+            message = "Подобные n-угольники найдены, максимальное n - {}, их линия преобразована в штриховую".format(graphs_params[2])
+            self.displayMessageSignal.emit("Результат поиска подобных многоугольников", message)
             self.fig.canvas.draw()
 
 
@@ -114,3 +142,7 @@ class Canvas(QtWidgets.QFrame):
         print(x_d, y_d, ind)
         self.plotWidget.draw()
 
+    def clear_canvas(self,event):
+        self.cur_nodes.clear()
+        self.graphs.clear()
+        self.redraw_everything()

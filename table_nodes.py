@@ -45,6 +45,35 @@ class Table(QtWidgets.QTableWidget):
         self.resizeColumnToContents(0)
         self.resizeColumnToContents(1)
 
+    def update_to_canvas(self,graphs:list):
+        rowPos = self.rowCount()
+        dots_count = 0
+        for graph in graphs:
+            dots_count += len(graph)
+
+        if (rowPos < dots_count):
+            count_ins_dots = 0
+            graph_to_ins_index = 0
+            while (count_ins_dots < rowPos):
+                count_ins_dots += len(graphs[graph_to_ins_index])
+                graph_to_ins_index +=1
+            for i in range(graph_to_ins_index,len(graphs)):
+                self.add_graph_to_table(graphs[i])
+
+        while (rowPos > dots_count):
+            self.removeRow(rowPos - 1)
+            rowPos -= 1
+
+
+
+
+
+
+
+    def pop_node_from_table(self,index):
+        self.model.removeRow(index)
+
+
     def add_graph_to_table(self, graph:list):
         for node in graph:
             self.push_node_back(node[0],node[1])
