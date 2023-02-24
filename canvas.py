@@ -29,10 +29,12 @@ class Canvas(QtWidgets.QFrame):
         self.cur_nodes = []
         self.cmap = np.random.rand(3)
         self.drawn_lines = []
+        self.node_to_remove = None
         self.fig, self.ax1 = plt.subplots()
         self.adjust_graph()
         put_nodes_connection = self.fig.canvas.mpl_connect('button_press_event', self.put_node)
-        modify_nodes_connection = self.fig.canvas.mpl_connect('pick_event', self.modify_node)
+        modify_nodes_connection = self.fig.canvas.mpl_connect('pick_event', self.highlight_node)
+        put_nodes_connection = self.fig.canvas.mpl_connect('button_press_event', self.modify_node)
         self.plotWidget = FigureCanvas(self.fig)
         self.toolbar = NavigationToolbar(self.plotWidget, parent)
         lay = QtWidgets.QGridLayout(self)
@@ -79,6 +81,22 @@ class Canvas(QtWidgets.QFrame):
             if (graph_index != None):
                 del self.graphs[graph_index]
                 self.redraw_everything()
+
+
+
+
+    def modify_node(self,event):
+        if (event.inaxes == self.ax1 and event.button == 1):
+            ix, iy = event.xdata, event.ydata
+            graph_index, node_index = find_graph_node([ix, iy], self.graphs)
+            if (self.node_to_remove != None):
+                self.graphs[self.node_to_remove[0]][self.node_to_remove[1]] = [ix, iy]
+                self.node_to_remove = None
+                self.redraw_everything()
+
+            elif (graph_index != None):
+                if (self.node_to_remove == None):
+                    self.node_to_remove = [graph_index,node_index]
 
 
 
@@ -142,7 +160,7 @@ class Canvas(QtWidgets.QFrame):
 
 
 
-    def modify_node(self, event):
+    def highlight_node(self, event):
         artist = event.artist
         x_d = artist.get_xdata()
         y_d = artist.get_ydata()
