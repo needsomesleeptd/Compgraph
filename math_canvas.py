@@ -69,23 +69,28 @@ def find_similar_graphs_with_max_nodes(nodes:list):
                 continue
             cos_angles_first = set()
             cos_angles_second = set()
+            relation_coefficients = set()
             len_graph = len(nodes[i])
             for node_index in range(len_graph):
-                vector_first = Vector(nodes[i][node_index],nodes[i][node_index - 1])
-                vector_second = Vector(nodes[i][(node_index + 1) % len_graph],nodes[i][node_index])
-                cos_angle = vector_angle_cos(vector_first,vector_second)
-                cos_angles_first.add(cos_angle)
+                first_vector_first_graph = Vector(nodes[i][node_index],nodes[i][node_index - 1])
+                second_vector_first_graph = Vector(nodes[i][(node_index + 1) % len_graph],nodes[i][node_index])
+                cos_angles_first_graph = vector_angle_cos(first_vector_first_graph,second_vector_first_graph)
+                cos_angles_first.add(cos_angles_first_graph)
+                first_vector_second_graph = Vector(nodes[j][node_index], nodes[j][node_index - 1])
+                second_vector_second_graph = Vector(nodes[j][(node_index + 1) % len_graph], nodes[j][node_index])
+                cos_angles_second_graph = vector_angle_cos(first_vector_second_graph, second_vector_second_graph)
+                cos_angles_second.add(cos_angles_second_graph)
 
-            for node_index in range(len_graph):
-                vector_first = Vector(nodes[j][node_index], nodes[j][node_index - 1])
-                vector_second = Vector(nodes[j][(node_index + 1) % len_graph], nodes[j][node_index])
-                cos_angle = vector_angle_cos(vector_first, vector_second)
-                cos_angles_second.add(cos_angle)
-            if (all(almost_equal(*values,10**-1) for values in zip(cos_angles_first, cos_angles_second))):
+                relation_coefficients.add(first_vector_first_graph.len()/first_vector_second_graph.len())
+                relation_coefficients.add(second_vector_first_graph.len() / second_vector_second_graph.len())
+
+
+            if (all(almost_equal(*values) for values in zip(cos_angles_first, cos_angles_second))):
                 max_n = len_graph
                 first_graph_index = i
                 second_graph_index = j
-    if (first_graph_index == -1):
+    #print(relation_coefficients)
+    if (first_graph_index == -1 or len(relation_coefficients) > 1):
         return None
     return first_graph_index,second_graph_index,max_n
 
