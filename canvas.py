@@ -32,6 +32,8 @@ class Canvas(QtWidgets.QFrame):
         self.node_to_remove = None
         self.fig, self.ax1 = plt.subplots()
         self.adjust_graph()
+        self.prev_occasions_list = []
+        self.colors = []
         put_nodes_connection = self.fig.canvas.mpl_connect('button_press_event', self.put_node)
         highlight_nodes_connection = self.fig.canvas.mpl_connect('pick_event', self.highlight_node)
         modify_nodes_connection = self.fig.canvas.mpl_connect('button_press_event', self.modify_node)
@@ -50,7 +52,7 @@ class Canvas(QtWidgets.QFrame):
                      xlim=(0, 12), ylim=(0, 12),
                      title='Полученные многоугольники')
         self.ax1.autoscale(enable=True, axis="x", tight=True)
-
+        self.ax1.autoscale(enable=True, axis="y", tight=True)
     def put_node(self, event):
         if (not event.inaxes == self.ax1):  # Right mouse key
             return
@@ -74,6 +76,7 @@ class Canvas(QtWidgets.QFrame):
                     self.ax1.plot(xs, ys, marker='.', c=self.cmap,picker=True, pickradius=2)
                 else:
                     self.cmap = np.random.rand(3)
+                    self.colors.append(self.cmap)
                     plt.plot(self.cur_nodes[0][0], self.cur_nodes[0][1], marker='.', c=self.cmap)
                 self.mouseClickSignal.emit(event.xdata, event.ydata)
             self.fig.canvas.draw()
@@ -86,10 +89,11 @@ class Canvas(QtWidgets.QFrame):
             graph_index, node_index = find_graph_node([ix, iy], self.graphs)
             if (graph_index != None):
                 del self.graphs[graph_index]
+                del self.colors[graph_index]
                 self.redraw_everything()
 
     def modify_node(self,event):
-        if (event.inaxes == self.ax1 and event.button == 1):
+        if (event.inaxes == self.ax1 and event.button == 1 and event.dblclick):
             ix, iy = event.xdata, event.ydata
             graph_index, node_index = find_graph_node([ix, iy], self.graphs)
             if (self.node_to_remove != None):
@@ -109,6 +113,8 @@ class Canvas(QtWidgets.QFrame):
 
     def add_graph(self, polygon):
         self.graphs.append(polygon)
+        self.cmap = np.random.rand(3)
+        self.colors.append(self.cmap)
         self.ax1.plot(polygon[0][0], polygon[0][1], marker='.', c=self.cmap, picker=True, pickradius=2)
         for i in range(len(polygon)):
             xs = [polygon[i][0], polygon[(i + 1) % len(polygon)][0]]
@@ -122,13 +128,12 @@ class Canvas(QtWidgets.QFrame):
         self.ax1.clear()
         if(new_dots != None):
             self.graphs.append(new_dots)
-        for polygon in self.graphs:
-            self.cmap = np.random.rand(3)
-            self.ax1.plot(polygon[0][0], polygon[0][1], marker='.', c=self.cmap, picker=True, pickradius=2)
+        for index,polygon in enumerate(self.graphs):
+            self.ax1.plot(polygon[0][0], polygon[0][1], marker='.', c=self.colors[index], picker=True, pickradius=2)
             for i in  range(len(polygon)):
                 xs = [polygon[i][0], polygon[(i+1) % len(polygon)][0]]
                 ys = [polygon[i][1], polygon[(i + 1)  % len(polygon) ][1]]
-                self.ax1.plot(xs, ys, marker='.', c=self.cmap,picker=True, pickradius=2)
+                self.ax1.plot(xs, ys, marker='.', c=self.colors[index],picker=True, pickradius=2)
 
         self.adjust_graph()
         self.fig.canvas.draw()
@@ -178,4 +183,5 @@ class Canvas(QtWidgets.QFrame):
     def clear_canvas(self,event):
         self.cur_nodes.clear()
         self.graphs.clear()
+        self.colors.clear()
         self.redraw_everything()
