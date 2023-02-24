@@ -55,6 +55,7 @@ class UI(QtWidgets.QMainWindow):
     def revert_state(self):
         state = self.ui.canvas.state_saver.pop_state() #cur_nodes graph colors
         if (state != None):
+            print(state)
             self.ui.canvas.graphs = state[1]
             self.ui.canvas.cur_nodes = state[0]
             self.ui.canvas.colors = state[2]
