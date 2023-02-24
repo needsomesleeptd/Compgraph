@@ -15,6 +15,7 @@ from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as Navigatio
 
 EPS = 1e-1
 
+from math_canvas import are_eq_nodes
 
 def find_node(node_x, node_y, list_of_nodes):
     for i in range(len(list_of_nodes)):
@@ -25,6 +26,10 @@ def find_node(node_x, node_y, list_of_nodes):
 class Table(QtWidgets.QTableWidget):
     def __init__(self,parent):
         super().__init__(parent)
+        self.adjust_table()
+
+
+    def adjust_table(self):
         self.setColumnCount(2)
         self.setHorizontalHeaderLabels(
             ["x", "y"]
@@ -33,8 +38,6 @@ class Table(QtWidgets.QTableWidget):
         self.setSizeAdjustPolicy(self.AdjustToContents)
         self.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum)
         self.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-
-
 
     def push_node_back(self,xdata,ydata):
         ix, iy = xdata, ydata
@@ -63,6 +66,26 @@ class Table(QtWidgets.QTableWidget):
         while (rowPos > dots_count):
             self.removeRow(rowPos - 1)
             rowPos -= 1
+        node_index = 0
+        for i in range(len(graphs)):
+            for j in range(len(graphs[i])):
+                    self.setItem(node_index, 0, QtWidgets.QTableWidgetItem(str(graphs[i][j][0])))
+                    self.setItem(node_index, 1, QtWidgets.QTableWidgetItem(str(graphs[i][j][1])))
+                    node_index += 1
+
+
+
+    def create_from_canvas(self,graphs):
+        self.clear()
+        node_index = 0
+        for i in range(len(graphs)):
+            for j in range(len(graphs[i])):
+                self.setItem(node_index, 0, QtWidgets.QTableWidgetItem(str(graphs[i][j][0])))
+                self.setItem(node_index, 1, QtWidgets.QTableWidgetItem(str(graphs[i][j][1])))
+                node_index += 1
+
+
+
 
 
 
@@ -77,4 +100,3 @@ class Table(QtWidgets.QTableWidget):
     def add_graph_to_table(self, graph:list):
         for node in graph:
             self.push_node_back(node[0],node[1])
-

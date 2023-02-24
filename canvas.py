@@ -33,8 +33,10 @@ class Canvas(QtWidgets.QFrame):
         self.fig, self.ax1 = plt.subplots()
         self.adjust_graph()
         put_nodes_connection = self.fig.canvas.mpl_connect('button_press_event', self.put_node)
-        modify_nodes_connection = self.fig.canvas.mpl_connect('pick_event', self.highlight_node)
-        put_nodes_connection = self.fig.canvas.mpl_connect('button_press_event', self.modify_node)
+        highlight_nodes_connection = self.fig.canvas.mpl_connect('pick_event', self.highlight_node)
+        modify_nodes_connection = self.fig.canvas.mpl_connect('button_press_event', self.modify_node)
+        delete_nodes_connection = self.fig.canvas.mpl_connect('button_press_event', self.delete_node)
+
         self.plotWidget = FigureCanvas(self.fig)
         self.toolbar = NavigationToolbar(self.plotWidget, parent)
         lay = QtWidgets.QGridLayout(self)
@@ -59,7 +61,7 @@ class Canvas(QtWidgets.QFrame):
             if (len(self.cur_nodes) > 1 and are_eq_nodes([ix,iy],self.cur_nodes[0])): #end_of_loop
                 xs = [self.cur_nodes[0][0], self.cur_nodes[-1][0]]
                 ys = [self.cur_nodes[0][1], self.cur_nodes[-1][1]]
-                self.ax1.plot(xs, ys, marker='.', c=self.cmap, picker=True, pickradius=5)
+                self.ax1.plot(xs, ys, marker='.', c=self.cmap, picker=True, pickradius=2)
                 self.graphs.append(self.cur_nodes)
                 self.cur_nodes = []
             else:
@@ -69,21 +71,22 @@ class Canvas(QtWidgets.QFrame):
                 if (len(self.cur_nodes) > 1):
                     xs = [self.cur_nodes[-1][0], self.cur_nodes[-2][0]]
                     ys = [self.cur_nodes[-1][1], self.cur_nodes[-2][1]]
-                    self.ax1.plot(xs, ys, marker='.', c=self.cmap,picker=True, pickradius=5)
+                    self.ax1.plot(xs, ys, marker='.', c=self.cmap,picker=True, pickradius=2)
                 else:
                     self.cmap = np.random.rand(3)
                     plt.plot(self.cur_nodes[0][0], self.cur_nodes[0][1], marker='.', c=self.cmap)
                 self.mouseClickSignal.emit(event.xdata, event.ydata)
             self.fig.canvas.draw()
 
-        elif (event.button == 2):
-            graph_index,node_index = find_graph_node([ix,iy],self.graphs)
+
+
+    def delete_node(self,event):
+        ix, iy = event.xdata, event.ydata
+        if (event.button == 2):
+            graph_index, node_index = find_graph_node([ix, iy], self.graphs)
             if (graph_index != None):
                 del self.graphs[graph_index]
                 self.redraw_everything()
-
-
-
 
     def modify_node(self,event):
         if (event.inaxes == self.ax1 and event.button == 1):
@@ -109,7 +112,7 @@ class Canvas(QtWidgets.QFrame):
         for i in range(len(polygon)):
             xs = [polygon[i][0], polygon[(i + 1) % len(polygon)][0]]
             ys = [polygon[i][1], polygon[(i + 1) % len(polygon)][1]]
-            self.ax1.plot(xs, ys, marker='.', c=self.cmap, picker=True, pickradius=5)
+            self.ax1.plot(xs, ys, marker='.', c=self.cmap, picker=True, pickradius=2)
         self.getDotsSignal.emit(self.graphs)
         self.fig.canvas.draw()
 
@@ -123,7 +126,7 @@ class Canvas(QtWidgets.QFrame):
             for i in  range(len(polygon)):
                 xs = [polygon[i][0], polygon[(i+1) % len(polygon)][0]]
                 ys = [polygon[i][1], polygon[(i + 1)  % len(polygon) ][1]]
-                self.ax1.plot(xs, ys, marker='.', c=self.cmap,picker=True, pickradius=5)
+                self.ax1.plot(xs, ys, marker='.', c=self.cmap,picker=True, pickradius=2)
 
         self.adjust_graph()
         self.fig.canvas.draw()

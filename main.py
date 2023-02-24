@@ -39,7 +39,7 @@ class UI(QtWidgets.QMainWindow):
         #input_line
         #self.ui.input_line.iscompletedSignal.connect(self.ui.table_nodes.add_graph_to_table)
 
-        self.ui.canvas.getDotsSignal.connect(self.ui.table_nodes.update_to_canvas)
+        self.ui.canvas.getDotsSignal.connect(self.ui.table_nodes.create_from_canvas)
         self.ui.canvas.displayMessageSignal.connect(self.show_message)
         self.show()
 
