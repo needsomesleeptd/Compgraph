@@ -2,6 +2,13 @@ EPS = 1e-1
 
 
 
+def find_graph_node(node,graphs:list):
+    for graph_index in range(len(graphs)):
+        ind = find_node(node,graphs[graph_index])
+        if (ind != None):
+            return graph_index,ind
+    return None,None
+
 def find_node(node, list_of_nodes):
     for i in range(len(list_of_nodes)):
         if (are_eq_nodes(node,list_of_nodes[i])):

@@ -48,30 +48,40 @@ class Canvas(QtWidgets.QFrame):
         self.ax1.autoscale(enable=True, axis="x", tight=True)
 
     def put_node(self, event):
-        if (not event.inaxes == self.ax1 or event.button != 3):  # Right mouse key
+        if (not event.inaxes == self.ax1):  # Right mouse key
             return
 
         ix, iy = event.xdata, event.ydata
-        print(ix,iy)
-        if (len(self.cur_nodes) > 1 and are_eq_nodes([ix,iy],self.cur_nodes[0])): #end_of_loop
-            xs = [self.cur_nodes[0][0], self.cur_nodes[-1][0]]
-            ys = [self.cur_nodes[0][1], self.cur_nodes[-1][1]]
-            self.ax1.plot(xs, ys, marker='.', c=self.cmap, picker=True, pickradius=5)
-            self.graphs.append(self.cur_nodes)
-            self.cur_nodes = []
-        else:
-            if (find_node([ix,iy],self.cur_nodes) != None): #node_already_there
-                return
-            self.cur_nodes.append([ix, iy])
-            if (len(self.cur_nodes) > 1):
-                xs = [self.cur_nodes[-1][0], self.cur_nodes[-2][0]]
-                ys = [self.cur_nodes[-1][1], self.cur_nodes[-2][1]]
-                self.ax1.plot(xs, ys, marker='.', c=self.cmap,picker=True, pickradius=5)
+        if (event.button == 3):
+
+            if (len(self.cur_nodes) > 1 and are_eq_nodes([ix,iy],self.cur_nodes[0])): #end_of_loop
+                xs = [self.cur_nodes[0][0], self.cur_nodes[-1][0]]
+                ys = [self.cur_nodes[0][1], self.cur_nodes[-1][1]]
+                self.ax1.plot(xs, ys, marker='.', c=self.cmap, picker=True, pickradius=5)
+                self.graphs.append(self.cur_nodes)
+                self.cur_nodes = []
             else:
-                self.cmap = np.random.rand(3)
-                plt.plot(self.cur_nodes[0][0], self.cur_nodes[0][1], marker='.', c=self.cmap)
-            self.mouseClickSignal.emit(event.xdata, event.ydata)
-        self.fig.canvas.draw()
+                if (find_node([ix,iy],self.cur_nodes) != None): #node_already_there
+                    return
+                self.cur_nodes.append([ix, iy])
+                if (len(self.cur_nodes) > 1):
+                    xs = [self.cur_nodes[-1][0], self.cur_nodes[-2][0]]
+                    ys = [self.cur_nodes[-1][1], self.cur_nodes[-2][1]]
+                    self.ax1.plot(xs, ys, marker='.', c=self.cmap,picker=True, pickradius=5)
+                else:
+                    self.cmap = np.random.rand(3)
+                    plt.plot(self.cur_nodes[0][0], self.cur_nodes[0][1], marker='.', c=self.cmap)
+                self.mouseClickSignal.emit(event.xdata, event.ydata)
+            self.fig.canvas.draw()
+
+        elif (event.button == 2):
+            graph_index,node_index = find_graph_node([ix,iy],self.graphs)
+            if (graph_index != None):
+                del self.graphs[graph_index]
+                self.redraw_everything()
+
+
+
 
 
 
@@ -90,12 +100,12 @@ class Canvas(QtWidgets.QFrame):
         self.ax1.clear()
         if(new_dots != None):
             self.graphs.append(new_dots)
-            for polygon in self.graphs:
-                self.cmap = np.random.rand(3)
-                for i in  range(len(polygon)):
-                    xs = [polygon[i][0], polygon[(i+1) % len(polygon)][0]]
-                    ys = [polygon[i][1], polygon[(i + 1)  % len(polygon) ][1]]
-                    self.ax1.plot(xs, ys, marker='.', c=self.cmap,picker=True, pickradius=5)
+        for polygon in self.graphs:
+            self.cmap = np.random.rand(3)
+            for i in  range(len(polygon)):
+                xs = [polygon[i][0], polygon[(i+1) % len(polygon)][0]]
+                ys = [polygon[i][1], polygon[(i + 1)  % len(polygon) ][1]]
+                self.ax1.plot(xs, ys, marker='.', c=self.cmap,picker=True, pickradius=5)
 
         self.adjust_graph()
         self.fig.canvas.draw()
