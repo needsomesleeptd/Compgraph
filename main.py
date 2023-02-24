@@ -35,7 +35,6 @@ class UI(QtWidgets.QMainWindow):
         self.ui.find_similar_polygons.clicked.connect(self.ui.canvas.find_similar_polygons)
         self.ui.delete_nodes.clicked.connect(self.ui.canvas.clear_canvas)
         self.ui.input_line.iscompletedSignal.connect(self.ui.canvas.add_graph)
-
         #input_line
         #self.ui.input_line.iscompletedSignal.connect(self.ui.table_nodes.add_graph_to_table)
 

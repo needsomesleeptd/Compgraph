@@ -109,6 +109,7 @@ class Canvas(QtWidgets.QFrame):
 
     def add_graph(self, polygon):
         self.graphs.append(polygon)
+        self.ax1.plot(polygon[0][0], polygon[0][1], marker='.', c=self.cmap, picker=True, pickradius=2)
         for i in range(len(polygon)):
             xs = [polygon[i][0], polygon[(i + 1) % len(polygon)][0]]
             ys = [polygon[i][1], polygon[(i + 1) % len(polygon)][1]]
@@ -143,7 +144,7 @@ class Canvas(QtWidgets.QFrame):
             print("Not found")
             self.displayMessageSignal.emit("Результат поиска подобных многоугольников", "Подобных многоугольников не найдено")
         else:
-            graph_len = graphs_params[2] + 1 #to compensate for reverse node
+            graph_len = graphs_params[2] #to compensate for reverse node
             start_dot_first = get_dot_index(self.graphs,graphs_params[0])
             start_dot_second = get_dot_index(self.graphs, graphs_params[1])
             print(start_dot_first,start_dot_second)
