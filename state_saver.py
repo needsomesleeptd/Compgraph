@@ -6,7 +6,7 @@ class StateSaver:
         self.max_states = max_state_cnt
 
     def push_state(self,state:list):
-        if (len(self.states) < self.max_states):
+        if (len(self.states) <= self.max_states):
             self.states.append(state)
         else:
             for i in range(1,len(self.states)):

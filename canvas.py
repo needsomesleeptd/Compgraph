@@ -34,6 +34,7 @@ class Canvas(QtWidgets.QFrame):
         self.fig, self.ax1 = plt.subplots()
         self.adjust_graph()
         self.state_saver = StateSaver()
+        self.state_saver.states.append([[],[],[]])
         self.colors = []
         put_nodes_connection = self.fig.canvas.mpl_connect('button_press_event', self.put_node)
         highlight_nodes_connection = self.fig.canvas.mpl_connect('pick_event', self.highlight_node)
