@@ -4,6 +4,8 @@ from PyQt5.QtCore import Qt
 import layaout
 from PyQt5.QtWidgets import QMessageBox
 
+from copy import deepcopy,copy
+
 
 '''class Table(QtWidgets.QTableWidget):
     def __init__(self):
@@ -55,10 +57,10 @@ class UI(QtWidgets.QMainWindow):
     def revert_state(self):
         state = self.ui.canvas.state_saver.pop_state() #cur_nodes graph colors
         if (state != None):
-            print(state)
-            self.ui.canvas.graphs = state[1]
-            self.ui.canvas.cur_nodes = state[0]
-            self.ui.canvas.colors = state[2]
+            print("using state",state)
+            self.ui.canvas.cur_nodes = copy(state[0])
+            self.ui.canvas.graphs = deepcopy(state[1])
+            self.ui.canvas.colors = copy(state[2])
             self.ui.canvas.redraw_everything()
 
 
@@ -68,7 +70,7 @@ class UI(QtWidgets.QMainWindow):
         #Todo: test on bigger graphs
         #Todo:think about the same dot
         #Todo: add saving dots
-
+        #TOdo: rewrite add to states in all actions to copy
 
 
 

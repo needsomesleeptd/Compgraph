@@ -12,11 +12,13 @@ class StateSaver:
             for i in range(1,len(self.states)):
                 self.states[i-1] = self.states[i]
             self.states[-1] = state
+        print("last_state", self.states[-1])
+        print("last_state_vizited", self.states[-2])
 
     def pop_state(self):
         state = None
-        if (len(self.states) > 0):
-            state = self.states[-1]
+        if (len(self.states) > 1):
+            state = self.states[-2]
             del self.states[-1]
         return  state
 

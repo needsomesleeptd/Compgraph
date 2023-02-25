@@ -17,6 +17,7 @@ from state_saver import StateSaver
 
 from math_canvas import *
 
+from copy import deepcopy,copy
 
 class Canvas(QtWidgets.QFrame):
     mouseClickSignal = QtCore.pyqtSignal(float,float)
@@ -80,7 +81,8 @@ class Canvas(QtWidgets.QFrame):
                     plt.plot(self.cur_nodes[0][0], self.cur_nodes[0][1], marker='.', c=self.cmap)
                 self.mouseClickSignal.emit(event.xdata, event.ydata)
 
-            self.state_saver.push_state([self.cur_nodes, self.graphs, self.colors])
+            self.state_saver.push_state([copy(self.cur_nodes), deepcopy(self.graphs), copy(self.colors)])
+            print("state:",self.cur_nodes, self.graphs, self.colors)
             self.fig.canvas.draw()
 
 
@@ -139,6 +141,12 @@ class Canvas(QtWidgets.QFrame):
                 xs = [polygon[i][0], polygon[(i+1) % len(polygon)][0]]
                 ys = [polygon[i][1], polygon[(i + 1)  % len(polygon) ][1]]
                 self.ax1.plot(xs, ys, marker='.', c=self.colors[index],picker=True, pickradius=2)
+        if (len(self.cur_nodes) > 0):
+            self.ax1.plot(self.cur_nodes[0][0], self.cur_nodes[0][1], marker='.', c=self.cmap, picker=True, pickradius=2)
+            for dot_index in  range(len(self.cur_nodes) - 1):
+                    xs = [self.cur_nodes[dot_index][0], self.cur_nodes[dot_index + 1][0]]
+                    ys = [self.cur_nodes[dot_index][1], self.cur_nodes[dot_index + 1][1]]
+                    self.ax1.plot(xs, ys, marker='.', c=self.cmap, picker=True, pickradius=2)
 
         self.adjust_graph()
         self.fig.canvas.draw()
