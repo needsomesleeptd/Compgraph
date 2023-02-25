@@ -181,7 +181,7 @@ class Canvas(QtWidgets.QFrame):
 
             message = "Подобные n-угольники найдены, максимальное n - {}, их линия преобразована в штриховую".format(graphs_params[2])
             self.displayMessageSignal.emit("Результат поиска подобных многоугольников", message)
-            self.state_saver.push_state([self.cur_nodes, self.graphs, self.colors])
+            self.state_saver.push_state([copy(self.cur_nodes), deepcopy(self.graphs), deepcopy(self.colors)])
             self.fig.canvas.draw()
 
 
@@ -194,13 +194,12 @@ class Canvas(QtWidgets.QFrame):
         props = {"color" : "red"}
         Artist.update(artist,props)
         print(x_d, y_d, ind)
-        self.state_saver.push_state([self.cur_nodes, self.graphs, self.colors])
         self.plotWidget.draw()
 
     def clear_canvas(self,event):
         self.cur_nodes.clear()
         self.graphs.clear()
         self.colors.clear()
-        self.state_saver.push_state([self.cur_nodes, self.graphs, self.colors])
+        self.state_saver.push_state([copy(self.cur_nodes), deepcopy(self.graphs), deepcopy(self.colors)])
         self.redraw_everything()
 
