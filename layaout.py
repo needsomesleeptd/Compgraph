@@ -58,10 +58,19 @@ class Ui_MainWindow(object):
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 759, 22))
         self.menubar.setObjectName("menubar")
+        self.menu = QtWidgets.QMenu(self.menubar)
+        self.menu.setObjectName("menu")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        self.about_program = QtWidgets.QAction(MainWindow)
+        self.about_program.setObjectName("about_program")
+        self.about_author = QtWidgets.QAction(MainWindow)
+        self.about_author.setObjectName("about_author")
+        self.menu.addAction(self.about_program)
+        self.menu.addAction(self.about_author)
+        self.menubar.addAction(self.menu.menuAction())
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -72,6 +81,9 @@ class Ui_MainWindow(object):
         self.find_similar_polygons.setText(_translate("MainWindow", "Найти подобные n-угольники"))
         self.delete_nodes.setText(_translate("MainWindow", "Удалить все точки"))
         self.revert_state_button.setText(_translate("MainWindow", "Вернуть на одно действие назад"))
+        self.menu.setTitle(_translate("MainWindow", "Меню"))
+        self.about_program.setText(_translate("MainWindow", "О программе"))
+        self.about_author.setText(_translate("MainWindow", "Об авторе"))
 from canvas import Canvas
 from input_line import Input_line
 from table_nodes import Table

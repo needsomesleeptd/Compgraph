@@ -44,14 +44,53 @@ class UI(QtWidgets.QMainWindow):
         self.ui.canvas.displayMessageSignal.connect(self.show_message)
         self.ui.input_line.isNotValidCompletedSignal.connect(self.show_message)
         self.ui.revert_state_button.clicked.connect(self.revert_state)
+        self.ui.about_author.triggered.connect(self.about_author_message)
+        self.ui.about_program.triggered.connect(self.about_program_message)
         self.show()
+
+
+    def about_author_message(self):
+        title = "Об авторе"
+        text = "Данная работа была выполнена студентом Разиным Андреем группы ИУ7-34Б\n\n" \
+               "Если бы он знал о polygon его жизнь была бы проще"
+        self.show_message(title,text)
+
+
+    def about_program_message(self):
+        title = "О программе"
+        text = "Цель работы: Найти два подобных N-угольника, где N – максимально возможное."\
+                "Многоугольники задаются на плоскости координатами вершин контуров. Вершины"\
+                "в контуре перечисляются в порядке обхода против часовой стрелки. Считать, что"\
+                "две величины равны с точностью до двух знаков после запятой."\
+                "\n\n"\
+                "Будем называть два многоугольника подобными, если существует взаимно"\
+                         "однозначное отображение сторон этих двух фигур такое, что соответствующие"\
+                         "стороны пропорциональны с коэффициентом пропорциональности k, а углы,"\
+                         "образованные двумя соответствующими сторонами, равны."\
+                "\n\n"\
+                "Замечания по работе программы:\n"\
+                "   1.Постановка точек на канвасе происходит при нажатии ПКМ\n"\
+                "   2.Удаление точек на канвасе происходит при нажатии средней кнопки мыши(колесика)\n"\
+                "   3.Для перемещения точки на канвасе необходимо дважды нажать на нее ЛКМ(расстояние от курсора до " \
+               "точки должно быть <=0.1 единиц длины по канвасу), а затем дважды кликнуть нажатия на точку для ее " \
+               "перемещения\n"\
+                "   4.Возврат  состояний осуществляется <=5 раз\n" \
+                "   5.Строка для ввода служит для ввода координат вершин многоугольников  в порядке их обхода и поддерживает формат ввода координат в скобках с пробелами\n"\
+                "Пример:(0,1) (1,0) (1,1)"\
+                "   Конечные и начальные координаты точек объеденятся автоматически\n"\
+                "   6.В случае введения невалидных многоугольников поведелние программы не определено\n"
+
+
+
+
+        self.show_message(title, text)
 
     def show_message(self,title,message):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
-        msg.setText(title)
+        #msg.setText(title)
         msg.setInformativeText(message)
-        msg.setWindowTitle("Error")
+        msg.setWindowTitle(title)
         msg.exec_()
 
     def revert_state(self):
@@ -66,12 +105,7 @@ class UI(QtWidgets.QMainWindow):
 
 
 
-        #Todo:add warnings + checks and popups
-        #Todo:add removing and moving dots
-        #Todo: test on bigger graphs
-        #Todo:think about the same dot
-        #Todo: add saving dots
-        #TOdo: rewrite add to states in all actions to copy
+
 
 
 
