@@ -81,7 +81,7 @@ class Canvas(QtWidgets.QFrame):
                     plt.plot(self.cur_nodes[0][0], self.cur_nodes[0][1], marker='.', c=self.cmap)
                 self.mouseClickSignal.emit(event.xdata, event.ydata)
 
-            self.state_saver.push_state([copy(self.cur_nodes), deepcopy(self.graphs), copy(self.colors)])
+            self.state_saver.push_state([copy(self.cur_nodes), deepcopy(self.graphs), deepcopy(self.colors)])
             print("state:",self.cur_nodes, self.graphs, self.colors)
             self.fig.canvas.draw()
 
@@ -94,7 +94,7 @@ class Canvas(QtWidgets.QFrame):
             if (graph_index != None):
                 del self.graphs[graph_index]
                 del self.colors[graph_index]
-                self.state_saver.push_state([self.cur_nodes, self.graphs, self.colors])
+                self.state_saver.push_state([copy(self.cur_nodes), deepcopy(self.graphs), deepcopy(self.colors)])
                 self.redraw_everything()
 
     def modify_node(self,event):
@@ -104,7 +104,7 @@ class Canvas(QtWidgets.QFrame):
             if (self.node_to_remove != None):
                 self.graphs[self.node_to_remove[0]][self.node_to_remove[1]] = [ix, iy]
                 self.node_to_remove = None
-                self.state_saver.push_state([self.cur_nodes, self.graphs, self.colors])
+                self.state_saver.push_state([copy(self.cur_nodes), deepcopy(self.graphs), deepcopy(self.colors)])
                 self.redraw_everything()
 
             elif (graph_index != None):
@@ -127,7 +127,7 @@ class Canvas(QtWidgets.QFrame):
             ys = [polygon[i][1], polygon[(i + 1) % len(polygon)][1]]
             self.ax1.plot(xs, ys, marker='.', c=self.cmap, picker=True, pickradius=2)
         self.getDotsSignal.emit(self.graphs)
-        self.state_saver.push_state([self.cur_nodes, self.graphs, self.colors])
+        self.state_saver.push_state([copy(self.cur_nodes), deepcopy(self.graphs), deepcopy(self.colors)])
         self.fig.canvas.draw()
 
     def redraw_everything(self,new_dots = None):
@@ -151,6 +151,7 @@ class Canvas(QtWidgets.QFrame):
         self.adjust_graph()
         self.fig.canvas.draw()
         self.getDotsSignal.emit(self.graphs)
+
 
 
 
