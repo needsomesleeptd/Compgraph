@@ -65,6 +65,9 @@ class Canvas(QtWidgets.QFrame):
             if (len(self.cur_nodes) > 1 and are_eq_nodes([ix,iy],self.cur_nodes[0])): #end_of_loop
                 xs = [self.cur_nodes[0][0], self.cur_nodes[-1][0]]
                 ys = [self.cur_nodes[0][1], self.cur_nodes[-1][1]]
+                if (not is_polygon_valid(self.cur_nodes)):
+                    self.displayMessageSignal.emit("Проверка ввода многоугольника",
+                                                   "Введенный вами многоугольник не является валидным")
                 self.ax1.plot(xs, ys, marker='.', c=self.cmap, picker=True, pickradius=2)
                 self.graphs.append(self.cur_nodes)
                 self.cur_nodes = []
@@ -151,7 +154,7 @@ class Canvas(QtWidgets.QFrame):
 
         self.adjust_graph()
         self.fig.canvas.draw()
-        self.getDotsSignal.emit(self.graphs)
+        self.getDotsSignal.emit(self.graphs + [self.cur_nodes])
 
 
 

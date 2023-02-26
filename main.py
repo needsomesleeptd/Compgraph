@@ -7,22 +7,6 @@ from PyQt5.QtWidgets import QMessageBox
 from copy import deepcopy,copy
 
 
-'''class Table(QtWidgets.QTableWidget):
-    def __init__(self):
-        super().__init__()
-        self.setColumnCount(2)
-        self.setRowCount(0)
-        self.setHorizontalHeaderLabels(["x", "y"])
-        self.setMaximumHeight(500)
-        #self.sizePolicy(QtWidgets.QSizePolicy.setHorizontalPolicy())
-        self.resizeColumnsToContents()
-
-    def update(self,rows):
-        for i in range(len(rows)):
-            self.tableWidget.setItem(i, 0, rows[i][0])
-            self.tableWidget.setItem(i, 1, rows[i][1])
-
-'''
 
 
 
@@ -48,7 +32,8 @@ class UI(QtWidgets.QMainWindow):
         self.ui.about_program.triggered.connect(self.about_program_message)
         self.show()
 
-
+        #Todo:create graph validation (2-строки точки в одном месте и тд)
+        #Todo:Check for similar dots in Input Line and wrong graphs there
     def about_author_message(self):
         title = "Об авторе"
         text = "Данная работа была выполнена студентом Разиным Андреем группы ИУ7-34Б\n\n" \

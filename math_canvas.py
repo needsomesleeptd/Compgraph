@@ -100,6 +100,35 @@ def find_similar_graphs_with_max_nodes(nodes:list):
     return first_graph_index,second_graph_index,max_n
 
 
+def are_polygons_valid(polygons:list):
+    for polygon in polygons:
+        if (not is_polygon_valid(polygon)):
+            return  False
+    return True
+
+def is_polygon_valid(polygon:list):
+    if (len(polygon) < 3):
+        return False
+
+    for i in range(1,len(polygon) - 1):
+        first_vector = Vector(polygon[i - 1], polygon[i])
+        second_vector = Vector(polygon[i], polygon[i + 1])
+        if (almost_equal(first_vector.len(),0.0) or almost_equal(second_vector.len(),0.0)):
+            return False
+        cos_angle = vector_angle_cos(first_vector,second_vector)
+        if (almost_equal(1.0,abs(cos_angle))):
+            return False
+    return True
+
+
+
+
+
+
+
+
+
+
 
 
 class Vector:
