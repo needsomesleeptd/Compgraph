@@ -56,7 +56,8 @@ class Canvas(QtWidgets.QFrame):
         self.ax1.autoscale(enable=True, axis="x", tight=True)
         self.ax1.autoscale(enable=True, axis="y", tight=True)
     def put_node(self, event):
-        if (not event.inaxes == self.ax1):  # Right mouse key
+        state = self.toolbar.mode #toolbar tools state check
+        if not event.inaxes == self.ax1 or state != '':  # Right mouse key
             return
 
         ix, iy = event.xdata, event.ydata
@@ -96,8 +97,9 @@ class Canvas(QtWidgets.QFrame):
 
 
     def delete_node(self,event):
+        state = self.toolbar.mode  # toolbar tools state check
         ix, iy = event.xdata, event.ydata
-        if (event.button == 2):
+        if (event.button == 2 and state == ''):
             graph_index, node_index = find_graph_node([ix, iy], self.graphs)
             if (graph_index != None):
                 del self.graphs[graph_index]
@@ -106,7 +108,8 @@ class Canvas(QtWidgets.QFrame):
                 self.redraw_everything()
 
     def modify_node(self,event):
-        if (event.inaxes == self.ax1 and event.button == 1 and event.dblclick):
+        state = self.toolbar.mode  # toolbar tools state check
+        if (event.inaxes == self.ax1 and event.button == 1 and event.dblclick and  state == ''):
             ix, iy = event.xdata, event.ydata
             graph_index, node_index = find_graph_node([ix, iy], self.graphs)
             if (self.node_to_remove != None):

@@ -86,7 +86,7 @@ class UI(QtWidgets.QMainWindow):
             self.ui.canvas.graphs = deepcopy(state[1])
             self.ui.canvas.colors = copy(state[2])
             self.ui.canvas.redraw_everything()
-            self.ui.table_nodes.add_graph_to_table(self.ui.canvas.cur_nodes)
+            #self.ui.table_nodes.add_graph_to_table(self.ui.canvas.cur_nodes)
 
 
 
