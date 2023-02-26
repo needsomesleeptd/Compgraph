@@ -40,7 +40,7 @@ class Canvas(QtWidgets.QFrame):
         self.state_saver.states.append([[],[],[]])
         self.colors = []
         put_nodes_connection = self.fig.canvas.mpl_connect('button_press_event', self.put_node)
-        highlight_nodes_connection = self.fig.canvas.mpl_connect('pick_event', self.highlight_node)
+        #highlight_nodes_connection = self.fig.canvas.mpl_connect('pick_event', self.highlight_node)
         modify_nodes_connection = self.fig.canvas.mpl_connect('button_press_event', self.modify_node)
         delete_nodes_connection = self.fig.canvas.mpl_connect('button_press_event', self.delete_node)
 
@@ -126,7 +126,11 @@ class Canvas(QtWidgets.QFrame):
 
             elif (graph_index != None):
                 if (self.node_to_remove == None):
+                    absolute_dot_index = get_dot_index_lines(self.graphs,graph_index) + node_index
+                    self.ax1.lines[absolute_dot_index].set_markeredgecolor('red')
+                    self.ax1.lines[absolute_dot_index].set_markerfacecolor('red')
                     self.node_to_remove = [graph_index,node_index]
+                    self.fig.canvas.draw()
 
 
 

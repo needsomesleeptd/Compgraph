@@ -39,7 +39,7 @@ class UI(QtWidgets.QMainWindow):
         #Todo:Check for similar dots in Input Line and wrong graphs there
     def about_author_message(self):
         title = "Об авторе"
-        text = "Данная работа была выполнена студентом Разиным Андреем группы ИУ7-34Б\n\n" \
+        text = "Данная работа была выполнена студентом Разиным Андреем группы ИУ7-44Б\n\n" \
                "Если бы он знал о polygon его жизнь была бы проще"
         self.show_message(title,text)
 
@@ -76,7 +76,7 @@ class UI(QtWidgets.QMainWindow):
     def show_message(self,title,message):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
-        #msg.setText(title)
+        msg.setText(title)
         msg.setInformativeText(message)
         msg.setWindowTitle(title)
         msg.exec_()
