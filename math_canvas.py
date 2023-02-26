@@ -86,9 +86,10 @@ def find_similar_graphs_with_max_nodes(nodes:list):
             len_nodes_second.sort()
             relation_coefficients = set(len_first/len_second for len_first,len_second  in zip(len_nodes_first,len_nodes_second))
             if (all(almost_equal(*values) for values in zip(cos_angles_first, cos_angles_second)) and len(relation_coefficients) == 1):
-                max_n = len_graph
-                first_graph_index = i
-                second_graph_index = j
+                if (max_n < len_graph):
+                    max_n = len_graph
+                    first_graph_index = i
+                    second_graph_index = j
     if (max_n == 0):
         return None
     return first_graph_index,second_graph_index,max_n
