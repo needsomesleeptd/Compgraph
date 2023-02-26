@@ -55,8 +55,8 @@ class Canvas(QtWidgets.QFrame):
         self.ax1.set(xlabel='X-Axis', ylabel='Y-Axis',
                      xlim=(0, 12), ylim=(0, 12),
                      title='Полученные многоугольники')
-        self.ax1.autoscale(enable=True, axis="x", tight=True)
-        self.ax1.autoscale(enable=True, axis="y", tight=True)
+        self.ax1.autoscale(enable=True, axis="x", tight=False)
+        self.ax1.autoscale(enable=True, axis="y", tight=False)
     def put_node(self, event):
         state = self.toolbar.mode #toolbar tools state check
         if not event.inaxes == self.ax1 or state != '':  # Right mouse key
@@ -77,6 +77,7 @@ class Canvas(QtWidgets.QFrame):
                     ys = [self.cur_nodes[0][1], self.cur_nodes[-1][1]]
                     self.ax1.plot(xs, ys, marker='.', c=self.cmap, picker=True, pickradius=2)
                     self.graphs.append(self.cur_nodes)
+                    self.colors.append(self.cmap)
                     self.cur_nodes = []
             else:
                 if (find_node([ix,iy],self.cur_nodes) != None): #node_already_there
@@ -88,7 +89,6 @@ class Canvas(QtWidgets.QFrame):
                     self.ax1.plot(xs, ys, marker='.', c=self.cmap,picker=True, pickradius=2)
                 else:
                     self.cmap = np.random.rand(3)
-                    self.colors.append(self.cmap)
                     plt.plot(self.cur_nodes[0][0], self.cur_nodes[0][1], marker='.', c=self.cmap)
                 self.mouseClickSignal.emit(event.xdata, event.ydata,self.cmap)
 
@@ -135,14 +135,13 @@ class Canvas(QtWidgets.QFrame):
 
     def add_graph(self, polygon):
         self.graphs.append(polygon)
-        self.cmap = np.random.rand(3)
-        self.colors.append(self.cmap)
-        self.ax1.plot(polygon[0][0], polygon[0][1], marker='.', c=self.cmap, picker=True, pickradius=2)
+        self.colors.append(np.random.rand(3))
+        self.ax1.plot(polygon[0][0], polygon[0][1], marker='.', c=self.colors[-1], picker=True, pickradius=2)
         for i in range(len(polygon)):
             xs = [polygon[i][0], polygon[(i + 1) % len(polygon)][0]]
             ys = [polygon[i][1], polygon[(i + 1) % len(polygon)][1]]
-            self.ax1.plot(xs, ys, marker='.', c=self.cmap, picker=True, pickradius=2)
-        self.getDotsSignal.emit(self.graphs,self.colors)
+            self.ax1.plot(xs, ys, marker='.', c=self.colors[-1] ,picker=True, pickradius=2)
+        self.getDotsSignal.emit(self.graphs + [self.cur_nodes], self.colors + [self.cmap])
         self.state_saver.push_state([copy(self.cur_nodes), deepcopy(self.graphs), deepcopy(self.colors)])
         self.fig.canvas.draw()
 
@@ -182,7 +181,7 @@ class Canvas(QtWidgets.QFrame):
             graph_len = graphs_params[2] #to compensate for reverse node
             start_dot_first = get_dot_index(self.graphs,graphs_params[0])
             start_dot_second = get_dot_index(self.graphs, graphs_params[1])
-            print(start_dot_first,start_dot_second)
+            self.redraw_everything()
             for i in range(len(self.ax1.lines)):
                 print(self.ax1.lines[i].get_xdata(),self.ax1.lines[i].get_ydata())
             for line_index in range(start_dot_first,start_dot_first + graph_len):

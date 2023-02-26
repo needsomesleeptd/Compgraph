@@ -58,17 +58,10 @@ class Table(QtWidgets.QTableWidget):
         for graph in graphs:
             dots_count += len(graph)
 
-        if (rowPos < dots_count):
-            count_ins_dots = 0
-            graph_to_ins_index = 0
-            while (count_ins_dots < rowPos):
-                count_ins_dots += len(graphs[graph_to_ins_index])
-                graph_to_ins_index +=1
-            for i in range(graph_to_ins_index,len(graphs)):
-                if (len(colors) < i):
-                    self.add_graph_to_table(graphs[i], colors[i - 1])
-                else:
-                    self.add_graph_to_table(graphs[i],colors[i - 1])
+        while (rowPos < dots_count):
+            self.insertRow(rowPos)
+            rowPos += 1
+
 
         while (rowPos > dots_count):
             self.removeRow(rowPos - 1)
@@ -77,7 +70,7 @@ class Table(QtWidgets.QTableWidget):
         for i in range(len(graphs)):
             for j in range(len(graphs[i])):
                 for col_index in range(self.columnCount()):
-                    self.setItem(node_index, col_index, QtWidgets.QTableWidgetItem(str(graphs[i][j][0])))
+                    self.setItem(node_index, col_index, QtWidgets.QTableWidgetItem(str(graphs[i][j][col_index])))
                     color_table = QtGui.QColor()
                     color_table.setRgbF(*colors[i])
                     self.item(node_index, col_index).setBackground(color_table)
