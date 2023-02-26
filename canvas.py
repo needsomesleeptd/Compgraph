@@ -63,14 +63,18 @@ class Canvas(QtWidgets.QFrame):
         if (event.button == 3):
 
             if (len(self.cur_nodes) > 1 and are_eq_nodes([ix,iy],self.cur_nodes[0])): #end_of_loop
-                xs = [self.cur_nodes[0][0], self.cur_nodes[-1][0]]
-                ys = [self.cur_nodes[0][1], self.cur_nodes[-1][1]]
                 if (not is_polygon_valid(self.cur_nodes)):
                     self.displayMessageSignal.emit("Проверка ввода многоугольника",
                                                    "Введенный вами многоугольник не является валидным")
-                self.ax1.plot(xs, ys, marker='.', c=self.cmap, picker=True, pickradius=2)
-                self.graphs.append(self.cur_nodes)
-                self.cur_nodes = []
+                if (len(self.cur_nodes) < 3):
+                    self.cur_nodes = []
+                    self.redraw_everything()
+                else:
+                    xs = [self.cur_nodes[0][0], self.cur_nodes[-1][0]]
+                    ys = [self.cur_nodes[0][1], self.cur_nodes[-1][1]]
+                    self.ax1.plot(xs, ys, marker='.', c=self.cmap, picker=True, pickradius=2)
+                    self.graphs.append(self.cur_nodes)
+                    self.cur_nodes = []
             else:
                 if (find_node([ix,iy],self.cur_nodes) != None): #node_already_there
                     return
@@ -106,9 +110,12 @@ class Canvas(QtWidgets.QFrame):
             ix, iy = event.xdata, event.ydata
             graph_index, node_index = find_graph_node([ix, iy], self.graphs)
             if (self.node_to_remove != None):
-                self.graphs[self.node_to_remove[0]][self.node_to_remove[1]] = [ix, iy]
-                self.node_to_remove = None
+                self.graphs[self.node_to_remove[0]][self.node_to_remove[1]] = [ix, iy] #[graph_index] [node_index]
                 self.state_saver.push_state([copy(self.cur_nodes), deepcopy(self.graphs), deepcopy(self.colors)])
+                if not is_polygon_valid(self.graphs[self.node_to_remove[0]]):
+                    self.displayMessageSignal.emit("Проверка ввода многоугольника",
+                                                   "Модифицированный вами многоугольник не является валидным")
+                self.node_to_remove = None
                 self.redraw_everything()
 
             elif (graph_index != None):
