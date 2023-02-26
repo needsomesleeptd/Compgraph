@@ -26,8 +26,11 @@ class UI(QtWidgets.QMainWindow):
 
         self.ui.canvas.getDotsSignal.connect(self.ui.table_nodes.create_from_canvas)
         self.ui.canvas.displayMessageSignal.connect(self.show_message)
+        self.ui.canvas.highlightDotsSignal.connect(self.ui.table_nodes.highlight_rows)
         self.ui.input_line.isNotValidCompletedSignal.connect(self.show_message)
         self.ui.revert_state_button.clicked.connect(self.revert_state)
+
+
         self.ui.about_author.triggered.connect(self.about_author_message)
         self.ui.about_program.triggered.connect(self.about_program_message)
         self.show()

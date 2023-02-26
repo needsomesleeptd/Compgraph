@@ -76,13 +76,11 @@ class Table(QtWidgets.QTableWidget):
                     self.item(node_index, col_index).setBackground(color_table)
                 node_index += 1
 
-    def change_colors(self,rows_indexes:list,colors:list):
-        colors_index = 0
-        column_count = self.columnCount()
+    def highlight_rows(self,rows_indexes:list):
         for row_index in rows_indexes:
-            for i in range(column_count):
-                self.item(row_index,i).setBackground(QtGui.QColor(*colors[colors_index]))
-                colors_index += 1
+            for col_index in range(self.columnCount()):
+                self.item(row_index,col_index).setSelected(True)
+
 
     def create_from_canvas(self,graphs:list,colors:list):
         self.clear()

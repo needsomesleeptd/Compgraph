@@ -27,16 +27,10 @@ def are_eq_nodes(first_dot,second_dot,accuracy = 10**-2):
 
 
 
-def get_dot_index(graphs:list,nodes_count:int):
-    graph_index = 0
-    graphs_nodes_count = 0
-    while (nodes_count > len(graphs[graph_index])):
-       nodes_count -= len(graphs[graph_index])
-       graph_index += 1
-    node_index = nodes_count
-    return graph_index,node_index
+def get_dot_index_stored(graphs:list, graph_index:int):
+    return get_dot_index_lines(graphs, graph_index) - graph_index - 1
 
-def get_dot_index(graphs:list,graph_index:int):
+def get_dot_index_lines(graphs:list, graph_index:int):
    nodes_count = 1
    for i in range(graph_index):
        nodes_count += len(graphs[i]) + 1

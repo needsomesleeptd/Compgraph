@@ -25,6 +25,7 @@ class Canvas(QtWidgets.QFrame):
     mouseClickSignal = QtCore.pyqtSignal(float,float,numpy.ndarray)
     displayMessageSignal = QtCore.pyqtSignal(str, str)
     getDotsSignal = QtCore.pyqtSignal(list,list)
+    highlightDotsSignal = QtCore.pyqtSignal(list)
 
     def __init__(self,parent):
         super().__init__(parent)
@@ -93,7 +94,7 @@ class Canvas(QtWidgets.QFrame):
                 self.mouseClickSignal.emit(event.xdata, event.ydata,self.cmap)
 
             self.state_saver.push_state([copy(self.cur_nodes), deepcopy(self.graphs), deepcopy(self.colors)])
-            print("state:",self.cur_nodes, self.graphs, self.colors)
+            #print("state:",self.cur_nodes, self.graphs, self.colors)
             self.fig.canvas.draw()
 
 
@@ -179,11 +180,10 @@ class Canvas(QtWidgets.QFrame):
             self.displayMessageSignal.emit("Результат поиска подобных многоугольников", "Подобных многоугольников не найдено")
         else:
             graph_len = graphs_params[2] #to compensate for reverse node
-            start_dot_first = get_dot_index(self.graphs,graphs_params[0])
-            start_dot_second = get_dot_index(self.graphs, graphs_params[1])
+            start_dot_first = get_dot_index_lines(self.graphs, graphs_params[0])
+            start_dot_second = get_dot_index_lines(self.graphs, graphs_params[1])
             self.redraw_everything()
-            for i in range(len(self.ax1.lines)):
-                print(self.ax1.lines[i].get_xdata(),self.ax1.lines[i].get_ydata())
+
             for line_index in range(start_dot_first,start_dot_first + graph_len):
                 self.ax1.lines[line_index].set_linestyle('-.')
                 self.ax1.lines[line_index].set_color('red')
@@ -191,6 +191,11 @@ class Canvas(QtWidgets.QFrame):
             for line_index in range(start_dot_second,start_dot_second + graph_len):
                 self.ax1.lines[line_index].set_linestyle('-.')
                 self.ax1.lines[line_index].set_color('red')
+            first_dot_stored = get_dot_index_stored(self.graphs, graphs_params[0])
+            second_dot_stored = get_dot_index_stored(self.graphs, graphs_params[1])
+            first_graph_indexes = [i for i in range(first_dot_stored,first_dot_stored + graph_len)]
+            second_graph_indexes = [i for i in range(second_dot_stored, second_dot_stored + graph_len)]
+            self.highlightDotsSignal.emit(first_graph_indexes + second_graph_indexes)
 
 
 
