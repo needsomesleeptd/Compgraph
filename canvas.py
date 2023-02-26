@@ -1,5 +1,7 @@
 
 import sys
+
+import numpy
 import numpy as np
 
 from PyQt5 import QtCore, QtWidgets, uic
@@ -20,9 +22,9 @@ from math_canvas import *
 from copy import deepcopy,copy
 
 class Canvas(QtWidgets.QFrame):
-    mouseClickSignal = QtCore.pyqtSignal(float,float)
+    mouseClickSignal = QtCore.pyqtSignal(float,float,numpy.ndarray)
     displayMessageSignal = QtCore.pyqtSignal(str, str)
-    getDotsSignal = QtCore.pyqtSignal(list)
+    getDotsSignal = QtCore.pyqtSignal(list,list)
 
     def __init__(self,parent):
         super().__init__(parent)
@@ -88,7 +90,7 @@ class Canvas(QtWidgets.QFrame):
                     self.cmap = np.random.rand(3)
                     self.colors.append(self.cmap)
                     plt.plot(self.cur_nodes[0][0], self.cur_nodes[0][1], marker='.', c=self.cmap)
-                self.mouseClickSignal.emit(event.xdata, event.ydata)
+                self.mouseClickSignal.emit(event.xdata, event.ydata,self.cmap)
 
             self.state_saver.push_state([copy(self.cur_nodes), deepcopy(self.graphs), deepcopy(self.colors)])
             print("state:",self.cur_nodes, self.graphs, self.colors)
@@ -140,7 +142,7 @@ class Canvas(QtWidgets.QFrame):
             xs = [polygon[i][0], polygon[(i + 1) % len(polygon)][0]]
             ys = [polygon[i][1], polygon[(i + 1) % len(polygon)][1]]
             self.ax1.plot(xs, ys, marker='.', c=self.cmap, picker=True, pickradius=2)
-        self.getDotsSignal.emit(self.graphs)
+        self.getDotsSignal.emit(self.graphs,self.colors)
         self.state_saver.push_state([copy(self.cur_nodes), deepcopy(self.graphs), deepcopy(self.colors)])
         self.fig.canvas.draw()
 
@@ -164,7 +166,7 @@ class Canvas(QtWidgets.QFrame):
 
         self.adjust_graph()
         self.fig.canvas.draw()
-        self.getDotsSignal.emit(self.graphs + [self.cur_nodes])
+        self.getDotsSignal.emit(self.graphs + [self.cur_nodes],self.colors + [self.cmap])
 
 
 
@@ -190,6 +192,8 @@ class Canvas(QtWidgets.QFrame):
             for line_index in range(start_dot_second,start_dot_second + graph_len):
                 self.ax1.lines[line_index].set_linestyle('-.')
                 self.ax1.lines[line_index].set_color('red')
+
+
 
 
             message = "Подобные n-угольники найдены, максимальное n - {}, их линия преобразована в штриховую".format(graphs_params[2])

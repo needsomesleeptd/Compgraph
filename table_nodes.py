@@ -39,16 +39,20 @@ class Table(QtWidgets.QTableWidget):
         self.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum)
         self.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
-    def push_node_back(self,xdata,ydata):
+    def push_node_back(self,xdata,ydata,color):
         ix, iy = xdata, ydata
         rowPos = self.rowCount()
+        colCount =self.columnCount()
         self.insertRow(rowPos)
         self.setItem(rowPos, 0, QtWidgets.QTableWidgetItem(str(ix)))
         self.setItem(rowPos, 1, QtWidgets.QTableWidgetItem(str(iy)))
-        self.resizeColumnToContents(0)
-        self.resizeColumnToContents(1)
+        for i in range(colCount):
+            color_table = QtGui.QColor()
+            color_table.setRgbF(*color)
+            self.item(rowPos, i).setBackground(color_table)
+            self.resizeColumnToContents(i)
 
-    def update_to_canvas(self,graphs:list):
+    def update_to_canvas(self,graphs:list,colors:list):
         rowPos = self.rowCount()
         dots_count = 0
         for graph in graphs:
@@ -61,7 +65,10 @@ class Table(QtWidgets.QTableWidget):
                 count_ins_dots += len(graphs[graph_to_ins_index])
                 graph_to_ins_index +=1
             for i in range(graph_to_ins_index,len(graphs)):
-                self.add_graph_to_table(graphs[i])
+                if (len(colors) < i):
+                    self.add_graph_to_table(graphs[i], colors[i - 1])
+                else:
+                    self.add_graph_to_table(graphs[i],colors[i - 1])
 
         while (rowPos > dots_count):
             self.removeRow(rowPos - 1)
@@ -69,16 +76,25 @@ class Table(QtWidgets.QTableWidget):
         node_index = 0
         for i in range(len(graphs)):
             for j in range(len(graphs[i])):
-                    self.setItem(node_index, 0, QtWidgets.QTableWidgetItem(str(graphs[i][j][0])))
-                    self.setItem(node_index, 1, QtWidgets.QTableWidgetItem(str(graphs[i][j][1])))
-                    node_index += 1
+                for col_index in range(self.columnCount()):
+                    self.setItem(node_index, col_index, QtWidgets.QTableWidgetItem(str(graphs[i][j][0])))
+                    color_table = QtGui.QColor()
+                    color_table.setRgbF(*colors[i])
+                    self.item(node_index, col_index).setBackground(color_table)
+                node_index += 1
 
+    def change_colors(self,rows_indexes:list,colors:list):
+        colors_index = 0
+        column_count = self.columnCount()
+        for row_index in rows_indexes:
+            for i in range(column_count):
+                self.item(row_index,i).setBackground(QtGui.QColor(*colors[colors_index]))
+                colors_index += 1
 
-
-    def create_from_canvas(self,graphs):
+    def create_from_canvas(self,graphs:list,colors:list):
         self.clear()
         self.setRowCount(0)
-        self.update_to_canvas(graphs)
+        self.update_to_canvas(graphs,colors)
 
 
 
@@ -92,6 +108,6 @@ class Table(QtWidgets.QTableWidget):
         self.model.removeRow(index)
 
 
-    def add_graph_to_table(self, graph:list):
+    def add_graph_to_table(self, graph:list,color):
         for node in graph:
-            self.push_node_back(node[0],node[1])
+            self.push_node_back(node[0],node[1],color)
