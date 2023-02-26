@@ -126,11 +126,15 @@ class Canvas(QtWidgets.QFrame):
 
             elif (graph_index != None):
                 if (self.node_to_remove == None):
-                    absolute_dot_index = get_dot_index_lines(self.graphs,graph_index) + node_index
+                    self.node_to_remove = [graph_index, node_index]
+
+                    absolute_dot_index = get_dot_index_lines(self.graphs, graph_index) + node_index
                     self.ax1.lines[absolute_dot_index].set_markeredgecolor('red')
                     self.ax1.lines[absolute_dot_index].set_markerfacecolor('red')
-                    self.node_to_remove = [graph_index,node_index]
+                    self.ax1.lines[absolute_dot_index].set_markersize(10)
                     self.fig.canvas.draw()
+
+
 
 
 
