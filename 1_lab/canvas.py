@@ -36,6 +36,8 @@ class Canvas(QtWidgets.QFrame):
         self.node_to_remove = None
         self.fig, self.ax1 = plt.subplots()
         self.adjust_graph()
+        self.ax1.set_xlim(0, 12.1)
+        self.ax1.set_ylim(0, 12.1)
         self.state_saver = StateSaver()
         self.state_saver.states.append([[],[],[]])
         self.colors = []

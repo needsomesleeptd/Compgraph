@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>759</width>
+    <width>993</width>
     <height>589</height>
    </rect>
   </property>
@@ -27,7 +27,7 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>300</width>
+          <width>600</width>
           <height>100</height>
          </size>
         </property>
@@ -49,7 +49,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>64</width>
+          <width>32</width>
           <height>506</height>
          </size>
         </property>
@@ -75,7 +75,7 @@
          <widget class="Table" name="table_nodes">
           <property name="minimumSize">
            <size>
-            <width>330</width>
+            <width>200</width>
             <height>200</height>
            </size>
           </property>
@@ -102,7 +102,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>759</width>
+     <width>993</width>
      <height>22</height>
     </rect>
    </property>

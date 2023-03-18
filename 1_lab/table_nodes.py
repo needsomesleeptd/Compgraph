@@ -44,13 +44,13 @@ class Table(QtWidgets.QTableWidget):
         rowPos = self.rowCount()
         colCount =self.columnCount()
         self.insertRow(rowPos)
-        self.setItem(rowPos, 0, QtWidgets.QTableWidgetItem(str(ix)))
-        self.setItem(rowPos, 1, QtWidgets.QTableWidgetItem(str(iy)))
+        self.setItem(rowPos, 0, QtWidgets.QTableWidgetItem(str(round(ix,3))))
+        self.setItem(rowPos, 1, QtWidgets.QTableWidgetItem(str(round(iy,3))))
         for i in range(colCount):
             color_table = QtGui.QColor()
             color_table.setRgbF(*color)
             self.item(rowPos, i).setBackground(color_table)
-            self.resizeColumnToContents(i)
+            #self.resizeColumnToContents(i)
 
     def update_to_canvas(self,graphs:list,colors:list):
         rowPos = self.rowCount()
@@ -70,7 +70,7 @@ class Table(QtWidgets.QTableWidget):
         for i in range(len(graphs)):
             for j in range(len(graphs[i])):
                 for col_index in range(self.columnCount()):
-                    self.setItem(node_index, col_index, QtWidgets.QTableWidgetItem(str(graphs[i][j][col_index])))
+                    self.setItem(node_index, col_index, QtWidgets.QTableWidgetItem(str(round(graphs[i][j][col_index],3))))
                     color_table = QtGui.QColor()
                     color_table.setRgbF(*colors[i])
                     self.item(node_index, col_index).setBackground(color_table)
@@ -86,6 +86,7 @@ class Table(QtWidgets.QTableWidget):
         self.clear()
         self.setRowCount(0)
         self.update_to_canvas(graphs,colors)
+        self.adjust_table()
 
 
 
