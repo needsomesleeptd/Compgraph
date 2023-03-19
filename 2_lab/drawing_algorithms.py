@@ -86,7 +86,7 @@ def bresenhamAlogorithmFloat(xFr:int,yFr:int,xTo:int,yTo:int):
 def bresenhamAlogorithmInt(x1, y1, x2, y2, colour='black', stepmode=False):
     pointsList = QPolygonF()
     if x1 == x2 and y1 == y2:
-        pointsList.append([x1, y1, colour])
+        pointsList.append((QPoint(x1, y1)))
     else:
         dx = x2 - x1
         dy = y2 - y1

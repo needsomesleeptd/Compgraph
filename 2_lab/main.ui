@@ -78,7 +78,7 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
-           <widget class="QLabel" name="Label_2">
+           <widget class="QPushButton" name="choose_colors_button">
             <property name="font">
              <font>
               <family>Times New Roman</family>
@@ -86,43 +86,25 @@
              </font>
             </property>
             <property name="text">
-             <string>Выбор цвета линий:</string>
+             <string>Выбрать цвета линий</string>
             </property>
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout">
-            <item>
-             <widget class="QPushButton" name="red_color_button">
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(255, 5, 5)</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="green_color_button">
-              <property name="styleSheet">
-               <string notr="true">background-color:rgb(145, 255, 0)</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="blue_color_button">
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(29, 0, 255)</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
+           <widget class="QPushButton" name="choose_background_colors_button">
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Изменить цвет фона</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout"/>
           </item>
          </layout>
         </item>

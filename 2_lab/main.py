@@ -15,19 +15,18 @@ class UI(QtWidgets.QMainWindow):
         self.ui = layout.Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.draw_line_button.pressed.connect(self.processCanvasLine)
+        self.ui.choose_background_colors_button.pressed.connect(self.changeCanvasBackGroundColor)
+
         self.ui.Brez_algo_int_button.pressed.connect(self.processBrezIntAlgo)
         self.ui.Brez_algo_float_button.pressed.connect(self.processBrezFloatAlgo)
         self.ui.Brez_algo_smooth_button.pressed.connect(self.processBrezSmoothAlgo)
         
-        self.connectColorButton(self.ui.red_color_button)
-        self.connectColorButton(self.ui.blue_color_button)
-        self.connectColorButton(self.ui.green_color_button)
 
+        self.ui.choose_colors_button.clicked.connect(self.changeCanvasLineColor)
 
         self.show()
 
-    def connectColorButton(self, button):
-        button.pressed.connect((lambda: self.changeCanvasLineColor(button)))
+
 
 
 
@@ -65,8 +64,12 @@ class UI(QtWidgets.QMainWindow):
         req = request([x0, y0, x1, y1], "brezSmooth", self.ui.canvas)
         handle_request(req)
 
-    def changeCanvasLineColor(self, button):
-        button_color = button.palette().window().color()
+    def changeCanvasBackGroundColor(self):
+        background_color = QtWidgets.QColorDialog.getColor()
+        brush = QtGui.QBrush(background_color)
+        self.ui.canvas.setBackgroundBrush(brush)
+    def changeCanvasLineColor(self):
+        button_color = QtWidgets.QColorDialog.getColor()
         self.ui.canvas.changePenColor(button_color)
 
 
