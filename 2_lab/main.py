@@ -5,6 +5,7 @@ import layout
 from PyQt5.QtWidgets import QMessageBox
 from drawing_algorithms import *
 
+from controller import *
 
 
 
@@ -14,7 +15,10 @@ class UI(QtWidgets.QMainWindow):
         self.ui = layout.Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.draw_line_button.pressed.connect(self.processCanvasLine)
-        self.ui.Brez_algo_float_button.pressed.connect(self.processBrezAlgo)
+        self.ui.Brez_algo_int_button.pressed.connect(self.processBrezIntAlgo)
+        self.ui.Brez_algo_float_button.pressed.connect(self.processBrezFloatAlgo)
+        self.ui.Brez_algo_smooth_button.pressed.connect(self.processBrezSmoothAlgo)
+        
         self.connectColorButton(self.ui.red_color_button)
         self.connectColorButton(self.ui.blue_color_button)
         self.connectColorButton(self.ui.green_color_button)
@@ -32,16 +36,34 @@ class UI(QtWidgets.QMainWindow):
         y0 = self.ui.Y0.value()
         x1 = self.ui.X1.value()
         y1 = self.ui.Y1.value()
-        self.ui.canvas.drawLine(x0, y0, x1, y1)
+        req = request([x0,y0,x1,y1],"defaultAlgo",self.ui.canvas)
+        handle_request(req)
 
-    def processBrezAlgo(self):
-        x0 = int(self.ui.X0.value())
-        y0 = int(self.ui.Y0.value())
-        x1 = int(self.ui.X1.value())
-        y1 = int(self.ui.Y1.value())
-        points = bresenhamAlogorithmFloat(x0,y0,x1,y1)
-        self.ui.canvas.drawLineByPoints(points)
 
+    def processBrezFloatAlgo(self):
+        x0 = self.ui.X0.value()
+        y0 = self.ui.Y0.value()
+        x1 = self.ui.X1.value()
+        y1 = self.ui.Y1.value()
+        req = request([x0, y0, x1, y1], "brezFloat", self.ui.canvas)
+        handle_request(req)
+
+    def processBrezIntAlgo(self):
+        x0 = self.ui.X0.value()
+        y0 = self.ui.Y0.value()
+        x1 = self.ui.X1.value()
+        y1 = self.ui.Y1.value()
+        req = request([x0, y0, x1, y1], "brezInt", self.ui.canvas)
+        handle_request(req)
+
+
+    def processBrezSmoothAlgo(self):
+        x0 = self.ui.X0.value()
+        y0 = self.ui.Y0.value()
+        x1 = self.ui.X1.value()
+        y1 = self.ui.Y1.value()
+        req = request([x0, y0, x1, y1], "brezSmooth", self.ui.canvas)
+        handle_request(req)
 
     def changeCanvasLineColor(self, button):
         button_color = button.palette().window().color()

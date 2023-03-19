@@ -30,7 +30,7 @@
       <item>
        <layout class="QVBoxLayout" name="Main_Vertical_Layout">
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="draw_spectre">
           <property name="font">
            <font>
             <family>Times New Roman</family>
@@ -58,7 +58,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QDoubleSpinBox" name="Y_1_value_2">
+           <widget class="QDoubleSpinBox" name="sprectre_angle_val">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -149,6 +149,32 @@
           </property>
           <property name="text">
            <string>Алгоритм Брезенхема</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="Brez_algo_int_button">
+          <property name="font">
+           <font>
+            <family>Times New Roman</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Алгоритм Брезенхема с целыми числами</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="Brez_algo_smooth_button">
+          <property name="font">
+           <font>
+            <family>Times New Roman</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Алгоритм Брезенхема со сглаживанием</string>
           </property>
          </widget>
         </item>
