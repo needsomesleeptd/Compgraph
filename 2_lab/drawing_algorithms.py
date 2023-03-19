@@ -2,6 +2,8 @@ from PyQt5.QtCore import QPoint
 from PyQt5.QtGui import QPolygonF
 import numpy as np
 
+from math import *
+
 def sign(x):
     if (x > 0):
         return 1
@@ -9,6 +11,29 @@ def sign(x):
         return 0
     else:
         return -1
+
+def to_radians(angle_degrees):
+	return angle_degrees*pi/180.0
+
+def rotate_OZ(x,y,angle_degrees):
+    cos_val = cos(to_radians(angle_degrees));
+    sin_val = sin(to_radians(angle_degrees));
+
+    save_x = x
+
+    x = (x) * cos_val + (y) * sin_val;
+    y = (save_x) * -sin_val + (y) * cos_val;
+    return x,y
+
+def get_spectre_coords(line_len,min_angle_diff):
+    spectre_coords = []
+    point_1 = [0,0]
+    point_2 = [0,line_len]
+    angle = 0
+    while(angle < 360):
+        spectre_coords.append([rotate_OZ(*point_1,angle),rotate_OZ(*point_2,angle)])
+        angle +=min_angle_diff
+    return spectre_coords
 
 
 
@@ -35,10 +60,12 @@ def sign(x):
             error = error - 1.0
     return points'''
 
-def bresenhamAlogorithmFloat(xFr:int,yFr:int,xTo:int,yTo:int):
+def bresenhamAlogorithmFloat(xFr:float,yFr:float,xTo:float,yTo:float):
     pointsList = QPolygonF()
+    xTo = round(xTo)
+    yTo = round(yTo)
 
-    if xFr == xTo and yFr == yTo:
+    if isclose(xFr,xTo) and isclose(yFr,yTo):
         pointsList.append(QPoint(xFr, yFr))
     else:
         dx = xTo - xFr
@@ -63,7 +90,7 @@ def bresenhamAlogorithmFloat(xFr:int,yFr:int,xTo:int,yTo:int):
 
 
 
-        while x != xTo or y != yTo:
+        while not isclose(x,xTo) or not isclose(y,yTo):
             pointsList.append(QPoint(x, y))
 
             if e >= 0:
@@ -85,8 +112,10 @@ def bresenhamAlogorithmFloat(xFr:int,yFr:int,xTo:int,yTo:int):
 
 def bresenhamAlogorithmInt(x1, y1, x2, y2, colour='black', stepmode=False):
     pointsList = QPolygonF()
-    if x1 == x2 and y1 == y2:
-        pointsList.append((QPoint(x1, y1)))
+    x2 = round(x2)
+    y2 = round(y2)
+    if isclose(x1, y1) and isclose(y2, y2):
+        pointsList.append(QPoint(x1, y1))
     else:
         dx = x2 - x1
         dy = y2 - y1
@@ -111,7 +140,7 @@ def bresenhamAlogorithmInt(x1, y1, x2, y2, colour='black', stepmode=False):
         yb = y
         steps = 0
 
-        while x != x2 or y != y2:
+        while not isclose(x, x2) or not isclose(y, y2):
             if stepmode == False:
                 pointsList.append(QPoint(x, y))
 
@@ -141,6 +170,11 @@ def bresenhamAlogorithmInt(x1, y1, x2, y2, colour='black', stepmode=False):
 
 def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=100, stepmode=False):
     coloredPoints = []
+    if isclose(x1, y1) and isclose(y2, y2):
+        coloredPoints.append([x1, y1,maxIntensivity / 2])
+        return coloredPoints
+
+
     colors_intersinty = np.linspace(0,100,num=maxIntensivity)
 
     dx = x2 - x1
@@ -149,6 +183,7 @@ def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=100, stepmode=False
     sy = sign(dy)
     dy = abs(dy)
     dx = abs(dx)
+
     if dy >= dx:
         dx, dy = dy, dx
         swap = 1  #
@@ -168,7 +203,7 @@ def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=100, stepmode=False
     # for i in range(0, dx + 1):
     # i = 0
     # while i <= dx:
-    while x != x2 or y != y2:
+    while not isclose(x, x2) and not isclose(y, y2):
         if not stepmode:
             coloredPoints.append([x, y, colors_intersinty[round(e) - 1] / maxIntensivity])
         # canvas.create_oval(x, y, x, y, outline=fill[round(e) - 1])

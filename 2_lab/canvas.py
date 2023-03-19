@@ -29,7 +29,6 @@ class Canvas(QtWidgets.QGraphicsView):
         scene = QtWidgets.QGraphicsScene()
         self.setScene(scene)
         scene.setSceneRect(-self.width() / 2, -self.height() / 2,self.width(),self.height())
-        #self.setTransformationAnchor()
         return scene
 
 
@@ -57,6 +56,16 @@ class Canvas(QtWidgets.QGraphicsView):
             prev_x = x
             prev_y = y
 
+
+    def drawSpectre(self,spectreLines,method):
+        for line in spectreLines:
+            if (method == "brezSmoothSpectre"):
+                self.drawLineIntensivityByPoints(line)
+            elif (method == "defaultAlgoSpectre"):
+                self.drawLine(*line)
+            else:
+                self.drawLineByPoints(line)
+        self.update()
 
 
 

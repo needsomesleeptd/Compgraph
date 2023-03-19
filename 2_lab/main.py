@@ -12,6 +12,7 @@ from controller import *
 class UI(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
+        self.cur_method = "brezFloat"
         self.ui = layout.Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.draw_line_button.pressed.connect(self.processCanvasLine)
@@ -20,7 +21,7 @@ class UI(QtWidgets.QMainWindow):
         self.ui.Brez_algo_int_button.pressed.connect(self.processBrezIntAlgo)
         self.ui.Brez_algo_float_button.pressed.connect(self.processBrezFloatAlgo)
         self.ui.Brez_algo_smooth_button.pressed.connect(self.processBrezSmoothAlgo)
-        
+        self.ui.draw_spectre.clicked.connect(self.processSpectre)
 
         self.ui.choose_colors_button.clicked.connect(self.changeCanvasLineColor)
 
@@ -29,39 +30,48 @@ class UI(QtWidgets.QMainWindow):
 
 
 
-
+    def processSpectre(self):
+        min_angle = self.ui.sprectre_angle_val.value()
+        method = self.cur_method+"Spectre"
+        req = request(None, method, self.ui.canvas)
+        req.setMinAngle(min_angle)
+        handle_request(req)
     def processCanvasLine(self):
+        self.cur_method = "defaultAlgo"
         x0 = self.ui.X0.value()
         y0 = self.ui.Y0.value()
         x1 = self.ui.X1.value()
         y1 = self.ui.Y1.value()
-        req = request([x0,y0,x1,y1],"defaultAlgo",self.ui.canvas)
+        req = request([x0,y0,x1,y1],self.cur_method,self.ui.canvas)
         handle_request(req)
 
 
     def processBrezFloatAlgo(self):
+        self.cur_method = "brezFloat"
         x0 = self.ui.X0.value()
         y0 = self.ui.Y0.value()
         x1 = self.ui.X1.value()
         y1 = self.ui.Y1.value()
-        req = request([x0, y0, x1, y1], "brezFloat", self.ui.canvas)
+        req = request([x0, y0, x1, y1],self.cur_method, self.ui.canvas)
         handle_request(req)
 
     def processBrezIntAlgo(self):
+        self.cur_method = "brezInt"
         x0 = self.ui.X0.value()
         y0 = self.ui.Y0.value()
         x1 = self.ui.X1.value()
         y1 = self.ui.Y1.value()
-        req = request([x0, y0, x1, y1], "brezInt", self.ui.canvas)
+        req = request([x0, y0, x1, y1],   self.cur_method, self.ui.canvas)
         handle_request(req)
 
 
     def processBrezSmoothAlgo(self):
+        self.cur_method = "brezSmooth"
         x0 = self.ui.X0.value()
         y0 = self.ui.Y0.value()
         x1 = self.ui.X1.value()
         y1 = self.ui.Y1.value()
-        req = request([x0, y0, x1, y1], "brezSmooth", self.ui.canvas)
+        req = request([x0, y0, x1, y1], self.cur_method, self.ui.canvas)
         handle_request(req)
 
     def changeCanvasBackGroundColor(self):
