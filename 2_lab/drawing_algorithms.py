@@ -35,7 +35,7 @@ def get_spectre_coords(line_len,min_angle_diff):
     point_1 = [0,0]
     point_2 = [0,line_len]
     angle = 0
-    while(angle + min_angle_diff < 360):
+    while(angle < 360):
         spectre_coords.append([rotate_OZ(*point_1,angle),rotate_OZ(*point_2,angle)])
         angle +=min_angle_diff
     return spectre_coords

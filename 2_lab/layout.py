@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'main.ui'
+# Form implementation generated from reading ui file '.\main.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1210, 778)
+        MainWindow.resize(1210, 816)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -49,6 +49,7 @@ class Ui_MainWindow(object):
         font.setFamily("Times New Roman")
         font.setPointSize(12)
         self.sprectre_angle_val.setFont(font)
+        self.sprectre_angle_val.setMaximum(360.0)
         self.sprectre_angle_val.setObjectName("sprectre_angle_val")
         self.formLayout_2.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.sprectre_angle_val)
         self.Label_2 = QtWidgets.QLabel(self.centralwidget)
@@ -63,6 +64,8 @@ class Ui_MainWindow(object):
         font.setFamily("Times New Roman")
         font.setPointSize(12)
         self.spectre_line_len.setFont(font)
+        self.spectre_line_len.setMinimum(0.0)
+        self.spectre_line_len.setMaximum(1000.0)
         self.spectre_line_len.setObjectName("spectre_line_len")
         self.formLayout_2.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.spectre_line_len)
         self.Main_Vertical_Layout.addLayout(self.formLayout_2)
@@ -97,6 +100,7 @@ class Ui_MainWindow(object):
         self.standard.setObjectName("standard")
         self.Main_Vertical_Layout.addWidget(self.standard)
         self.brez_float = QtWidgets.QRadioButton(self.centralwidget)
+        self.brez_float.setChecked(True)
         self.brez_float.setObjectName("brez_float")
         self.Main_Vertical_Layout.addWidget(self.brez_float)
         self.brez_int = QtWidgets.QRadioButton(self.centralwidget)
@@ -198,7 +202,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.draw_spectre.setText(_translate("MainWindow", "Нарисовать спектр"))
         self.Label.setText(_translate("MainWindow", "Угол между отрезками в спектре"))
-        self.Label_2.setText(_translate("MainWindow", "Длинна отрезка"))
+        self.Label_2.setText(_translate("MainWindow", "Длина отрезка"))
         self.choose_colors_button.setText(_translate("MainWindow", "Выбрать цвета линий"))
         self.choose_background_colors_button.setText(_translate("MainWindow", "Изменить цвет фона"))
         self.draw_line_button.setText(_translate("MainWindow", "Нарисовать Отрезок"))

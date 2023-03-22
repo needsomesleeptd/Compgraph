@@ -23,12 +23,51 @@ class Canvas(QtWidgets.QGraphicsView):
         super().__init__(parent)
         self.scene = self.CreateGraphicsScene()
         self.pen = QtGui.QPen(Qt.red)
+        self._zoom = 2 #times which picture is zoomed
+
+    def fitInView(self, scale=True):
+        rect = QtCore.QRectF(self.rect())
+
+        self.setSceneRect(rect)
+
+        unity = self.transform().mapRect(QtCore.QRectF(0, 0, 1, 1))
+        self.scale(1 / unity.width(), 1 / unity.height())
+        viewrect = self.viewport().rect()
+        scenerect = self.transform().mapRect(rect)
+        factor = min(viewrect.width() / scenerect.width(),
+                     viewrect.height() / scenerect.height())
+        self.scale(factor, factor)
+        self._zoom = 0
+    def wheelEvent(self, event):
+
+        if event.angleDelta().y() > 0:
+            factor = 1.25
+            self._zoom += 1
+        else:
+            factor = 0.8
+            self._zoom -= 1
+        self.scale(factor, factor)
+        newPos = self.mapToScene(event.pos())
+
+
+
+    def mousePressEvent(self, event):
+        oldPos = self.mapToScene(self.viewport().rect().center())
+
+        self.setTransformationAnchor(QtWidgets.QGraphicsView.NoAnchor)
+        self.setResizeAnchor(QtWidgets.QGraphicsView.NoAnchor)
+        newPos = self.mapToScene(event.pos())
+        delta = newPos - oldPos
+        self.translate(delta.x(), delta.y())
+
+        #super().mousePressEvent(event)
+
 
 
     def CreateGraphicsScene(self):
         scene = QtWidgets.QGraphicsScene()
         self.setScene(scene)
-        scene.setSceneRect(-self.width() / 2, -self.height() / 2,self.width(),self.height())
+        #scene.setSceneRect(-self.width() / 2, -self.height() / 2,self.width(),self.height())
         return scene
 
 

@@ -53,33 +53,7 @@ class UI(QtWidgets.QMainWindow):
 
 
 
-    def processBrezFloatAlgo(self):
-        self.cur_method = "brezFloat"
-        x0 = self.ui.X0.value()
-        y0 = self.ui.Y0.value()
-        x1 = self.ui.X1.value()
-        y1 = self.ui.Y1.value()
-        req = request([x0, y0, x1, y1],self.cur_method, self.ui.canvas)
-        handle_request(req)
 
-    def processBrezIntAlgo(self):
-        self.cur_method = "brezInt"
-        x0 = self.ui.X0.value()
-        y0 = self.ui.Y0.value()
-        x1 = self.ui.X1.value()
-        y1 = self.ui.Y1.value()
-        req = request([x0, y0, x1, y1],   self.cur_method, self.ui.canvas)
-        handle_request(req)
-
-
-    def processBrezSmoothAlgo(self):
-        self.cur_method = "brezSmooth"
-        x0 = self.ui.X0.value()
-        y0 = self.ui.Y0.value()
-        x1 = self.ui.X1.value()
-        y1 = self.ui.Y1.value()
-        req = request([x0, y0, x1, y1], self.cur_method, self.ui.canvas)
-        handle_request(req)
 
     def changeCanvasBackGroundColor(self):
         background_color = QtWidgets.QColorDialog.getColor()
