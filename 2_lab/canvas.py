@@ -62,7 +62,7 @@ class Canvas(QtWidgets.QGraphicsView):
             if (method == "brezSmoothSpectre"):
                 self.drawLineIntensivityByPoints(line)
             elif (method == "defaultAlgoSpectre"):
-                self.drawLine(*line)
+                self.drawLine(*line[0],*line[1])
             else:
                 self.drawLineByPoints(line)
         self.update()

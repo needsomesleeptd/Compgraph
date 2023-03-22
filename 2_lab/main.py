@@ -15,13 +15,16 @@ class UI(QtWidgets.QMainWindow):
         self.cur_method = "brezFloat"
         self.ui = layout.Ui_MainWindow()
         self.ui.setupUi(self)
-        self.ui.draw_line_button.pressed.connect(self.processCanvasLine)
+        self.ui.draw_line_button.pressed.connect(self.processLine)
         self.ui.choose_background_colors_button.pressed.connect(self.changeCanvasBackGroundColor)
 
-        self.ui.Brez_algo_int_button.pressed.connect(self.processBrezIntAlgo)
-        self.ui.Brez_algo_float_button.pressed.connect(self.processBrezFloatAlgo)
-        self.ui.Brez_algo_smooth_button.pressed.connect(self.processBrezSmoothAlgo)
+        self.ui.brez_int.pressed.connect(lambda :self.changeAlgotype("brezInt"))
+        self.ui.brez_float.pressed.connect(lambda: self.changeAlgotype("brezFloat"))
+        self.ui.brez_smooth.pressed.connect(lambda: self.changeAlgotype("brezSmooth"))
+        self.ui.standard.pressed.connect(lambda : self.changeAlgotype("defaultAlgo"))
+
         self.ui.draw_spectre.clicked.connect(self.processSpectre)
+
 
         self.ui.choose_colors_button.clicked.connect(self.changeCanvasLineColor)
 
@@ -29,21 +32,25 @@ class UI(QtWidgets.QMainWindow):
 
 
 
+    def changeAlgotype(self,algo_type:str):
+        self.cur_method = algo_type
 
     def processSpectre(self):
         min_angle = self.ui.sprectre_angle_val.value()
+        lines_len  = self.ui.spectre_line_len.value()
         method = self.cur_method+"Spectre"
         req = request(None, method, self.ui.canvas)
         req.setMinAngle(min_angle)
+        req.setSpectreLen(lines_len)
         handle_request(req)
-    def processCanvasLine(self):
-        self.cur_method = "defaultAlgo"
+    def processLine(self):
         x0 = self.ui.X0.value()
         y0 = self.ui.Y0.value()
         x1 = self.ui.X1.value()
         y1 = self.ui.Y1.value()
         req = request([x0,y0,x1,y1],self.cur_method,self.ui.canvas)
         handle_request(req)
+
 
 
     def processBrezFloatAlgo(self):
@@ -76,11 +83,13 @@ class UI(QtWidgets.QMainWindow):
 
     def changeCanvasBackGroundColor(self):
         background_color = QtWidgets.QColorDialog.getColor()
-        brush = QtGui.QBrush(background_color)
-        self.ui.canvas.setBackgroundBrush(brush)
+        if (background_color.isValid()):
+            brush = QtGui.QBrush(background_color)
+            self.ui.canvas.setBackgroundBrush(brush)
     def changeCanvasLineColor(self):
         button_color = QtWidgets.QColorDialog.getColor()
-        self.ui.canvas.changePenColor(button_color)
+        if (button_color.isValid()):
+            self.ui.canvas.changePenColor(button_color)
 
 
 

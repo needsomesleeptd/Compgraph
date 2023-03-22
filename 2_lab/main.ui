@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1210</width>
-    <height>778</height>
+    <height>816</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -71,6 +71,9 @@
               <pointsize>12</pointsize>
              </font>
             </property>
+            <property name="maximum">
+             <double>360.000000000000000</double>
+            </property>
            </widget>
           </item>
           <item row="1" column="0">
@@ -82,7 +85,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Длинна отрезка</string>
+             <string>Длина отрезка</string>
             </property>
            </widget>
           </item>
@@ -93,6 +96,12 @@
               <family>Times New Roman</family>
               <pointsize>12</pointsize>
              </font>
+            </property>
+            <property name="minimum">
+             <double>0.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1000.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -145,39 +154,31 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="Brez_algo_float_button">
-          <property name="font">
-           <font>
-            <family>Times New Roman</family>
-            <pointsize>12</pointsize>
-           </font>
-          </property>
+         <widget class="QRadioButton" name="standard">
           <property name="text">
-           <string>Алгоритм Брезенхема</string>
+           <string>Стандартный алгоритм</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="Brez_algo_int_button">
-          <property name="font">
-           <font>
-            <family>Times New Roman</family>
-            <pointsize>12</pointsize>
-           </font>
+         <widget class="QRadioButton" name="brez_float">
+          <property name="text">
+           <string>Алгоритм Брезенхема</string>
           </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="brez_int">
           <property name="text">
            <string>Алгоритм Брезенхема с целыми числами</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="Brez_algo_smooth_button">
-          <property name="font">
-           <font>
-            <family>Times New Roman</family>
-            <pointsize>12</pointsize>
-           </font>
-          </property>
+         <widget class="QRadioButton" name="brez_smooth">
           <property name="text">
            <string>Алгоритм Брезенхема со сглаживанием</string>
           </property>

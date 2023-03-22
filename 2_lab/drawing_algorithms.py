@@ -4,6 +4,11 @@ import numpy as np
 
 from math import *
 
+
+def my_isclose(x,y,EPS=0.1):
+    return isclose(x,y,abs_tol=EPS)
+
+
 def sign(x):
     if (x > 0):
         return 1
@@ -30,7 +35,7 @@ def get_spectre_coords(line_len,min_angle_diff):
     point_1 = [0,0]
     point_2 = [0,line_len]
     angle = 0
-    while(angle < 360):
+    while(angle + min_angle_diff < 360):
         spectre_coords.append([rotate_OZ(*point_1,angle),rotate_OZ(*point_2,angle)])
         angle +=min_angle_diff
     return spectre_coords
@@ -114,7 +119,7 @@ def bresenhamAlogorithmInt(x1, y1, x2, y2, colour='black', stepmode=False):
     pointsList = QPolygonF()
     x2 = round(x2)
     y2 = round(y2)
-    if isclose(x1, y1) and isclose(y2, y2):
+    if isclose(x1,x2) and isclose(y1, y2):
         pointsList.append(QPoint(x1, y1))
     else:
         dx = x2 - x1
@@ -168,14 +173,16 @@ def bresenhamAlogorithmInt(x1, y1, x2, y2, colour='black', stepmode=False):
     return pointsList
 
 
-def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=100, stepmode=False):
+def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivityCount=100, stepmode=False):
+    x1,y1,x2,y2 = map(int,(x1,y1,x2,y2))
     coloredPoints = []
-    if isclose(x1, y1) and isclose(y2, y2):
+    maxIntensivity = 1
+    if isclose(x1, x2) and isclose(y1, y2):
         coloredPoints.append([x1, y1,maxIntensivity / 2])
         return coloredPoints
 
 
-    colors_intersinty = np.linspace(0,100,num=maxIntensivity)
+    colors_intersinty = np.linspace(0,maxIntensivity,num=maxIntensivityCount)
 
     dx = x2 - x1
     dy = y2 - y1
@@ -203,9 +210,9 @@ def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=100, stepmode=False
     # for i in range(0, dx + 1):
     # i = 0
     # while i <= dx:
-    while not isclose(x, x2) and not isclose(y, y2):
+    while not (my_isclose(x, x2) and  my_isclose(y, y2)):
         if not stepmode:
-            coloredPoints.append([x, y, colors_intersinty[round(e) - 1] / maxIntensivity])
+            coloredPoints.append([x, y, colors_intersinty[round(e) - 1]])
         # canvas.create_oval(x, y, x, y, outline=fill[round(e) - 1])
         if e < w:
             if swap == 0:  # dy < dx
@@ -223,6 +230,7 @@ def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=100, stepmode=False
                 steps += 1
             xb = x
             yb = y
+        #print(x,y,x2,y2)
 
     if stepmode:
         return steps
