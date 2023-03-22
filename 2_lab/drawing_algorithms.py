@@ -173,16 +173,15 @@ def bresenhamAlogorithmInt(x1, y1, x2, y2, colour='black', stepmode=False):
     return pointsList
 
 
-def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivityCount=100, stepmode=False):
+def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=100, stepmode=False):
     x1,y1,x2,y2 = map(int,(x1,y1,x2,y2))
     coloredPoints = []
-    maxIntensivity = 1
     if isclose(x1, x2) and isclose(y1, y2):
         coloredPoints.append([x1, y1,maxIntensivity / 2])
         return coloredPoints
 
 
-    colors_intersinty = np.linspace(0,maxIntensivity,num=maxIntensivityCount)
+    colors_intersinty = np.linspace(0,maxIntensivity,num=maxIntensivity)
 
     dx = x2 - x1
     dy = y2 - y1
@@ -212,7 +211,8 @@ def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivityCount=100, stepmode=
     # while i <= dx:
     while not (my_isclose(x, x2) and  my_isclose(y, y2)):
         if not stepmode:
-            coloredPoints.append([x, y, colors_intersinty[round(e) - 1]])
+            if (e >= 2):
+                coloredPoints.append([x, y, colors_intersinty[round(e) - 1] / maxIntensivity])
         # canvas.create_oval(x, y, x, y, outline=fill[round(e) - 1])
         if e < w:
             if swap == 0:  # dy < dx
@@ -235,4 +235,44 @@ def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivityCount=100, stepmode=
     if stepmode:
         return steps
     return coloredPoints
+
+
+def CDA(x1, y1, x2, y2,stepmode = False):
+    pointsList = QPolygonF()
+    steps = 0
+    if x1 == x2 and y1 == y2:
+        pointsList.append(QPoint(round(x1),round(y1)))
+    else:
+        dx = abs(x2 - x1)
+        dy = abs(y2 - y1)
+
+        # steep - max growth
+        if dx >= dy:
+            length = dx
+        else:
+            length = dy
+        dx = (x2 - x1) / length  # step of x
+        dy = (y2 - y1) / length  # step of y
+
+        # set line to start
+        x = x1
+        y = y1
+
+        # i <= lenght i = 0
+        # while abs(x - x2) > 1 or abs(y - y2) > 1:
+        for i in range(0, int(length) + 1):
+            if not stepmode:
+                pointsList.append((QPoint(round(x), round(y))))
+            elif round(x + dx) != round(x) and round(y + dy) != round(y):
+                steps += 1
+            x += dx
+            y += dy
+    if stepmode:
+        return steps
+    return pointsList
+
+
+
+
+
 

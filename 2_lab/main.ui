@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1210</width>
+    <width>1214</width>
     <height>816</height>
    </rect>
   </property>
@@ -136,6 +136,19 @@
            </widget>
           </item>
           <item>
+           <widget class="QPushButton" name="clear_canvas">
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Очистить канвас</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <layout class="QHBoxLayout" name="horizontalLayout"/>
           </item>
          </layout>
@@ -181,6 +194,20 @@
          <widget class="QRadioButton" name="brez_smooth">
           <property name="text">
            <string>Алгоритм Брезенхема со сглаживанием</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="CDA">
+          <property name="text">
+           <string>Алгоритм ЦДА</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="Vu">
+          <property name="text">
+           <string>Алгоритм Ву</string>
           </property>
          </widget>
         </item>
@@ -339,7 +366,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1210</width>
+     <width>1214</width>
      <height>26</height>
     </rect>
    </property>

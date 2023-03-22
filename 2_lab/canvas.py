@@ -23,6 +23,7 @@ class Canvas(QtWidgets.QGraphicsView):
         super().__init__(parent)
         self.scene = self.CreateGraphicsScene()
         self.pen = QtGui.QPen(Qt.red)
+        self.backgroundColor = QtGui.QColor(Qt.white)
         self._zoom = 2 #times which picture is zoomed
 
     def fitInView(self, scale=True):
@@ -57,7 +58,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.setTransformationAnchor(QtWidgets.QGraphicsView.NoAnchor)
         self.setResizeAnchor(QtWidgets.QGraphicsView.NoAnchor)
         newPos = self.mapToScene(event.pos())
-        delta = newPos - oldPos
+        delta = oldPos - newPos
         self.translate(delta.x(), delta.y())
 
         #super().mousePressEvent(event)
@@ -79,17 +80,22 @@ class Canvas(QtWidgets.QGraphicsView):
 
     def drawLineIntensivityByPoints(self,coloredPoints):
 
-        default_color = self.pen.color()
-        drawing_pen = QtGui.QPen(default_color)
+        default_drawing_color = self.pen.color()
+        default_background_color = self.backgroundColor
+        drawing_pen = QtGui.QPen(default_drawing_color)
         prev_x,prev_y = coloredPoints[0][0],coloredPoints[0][1]
-
+        delta_red =  default_background_color.red() -  default_drawing_color.red()
+        delta_blue = default_background_color.blue() - default_drawing_color.blue()
+        delta_green = default_background_color.green() - default_drawing_color.green()
+        
 
         for point in coloredPoints:
-            x,y,intersivity = point[0],point[1],point[2]
-            new_red = default_color.red() * intersivity
-            new_blue = default_color.blue() * intersivity
-            new_green = default_color.green() * intersivity
-            new_color = QtGui.QColor(new_red,new_blue,new_green)
+            x,y,intensivity = point[0],point[1],point[2]
+            new_red = default_drawing_color.red() + (1 - intensivity) * delta_red
+            new_blue = default_drawing_color.blue() + (1 - intensivity) * delta_blue
+            new_green = default_drawing_color.green() + (1 - intensivity) * delta_green
+            new_color = QtGui.QColor()
+            new_color.setRgb(new_red,new_blue,new_green)
             drawing_pen.setColor(new_color)
             self.scene.addLine(prev_x,prev_y,x,y,drawing_pen)
             prev_x = x
@@ -112,3 +118,6 @@ class Canvas(QtWidgets.QGraphicsView):
     def changePenColor(self,color):
         self.pen.setColor(color)
 
+    def clearCanvas(self):
+        self.scene.clear()
+        self.scene.update()

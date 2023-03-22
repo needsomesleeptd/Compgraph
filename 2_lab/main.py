@@ -22,10 +22,11 @@ class UI(QtWidgets.QMainWindow):
         self.ui.brez_float.pressed.connect(lambda: self.changeAlgotype("brezFloat"))
         self.ui.brez_smooth.pressed.connect(lambda: self.changeAlgotype("brezSmooth"))
         self.ui.standard.pressed.connect(lambda : self.changeAlgotype("defaultAlgo"))
+        self.ui.CDA.pressed.connect(lambda : self.changeAlgotype("CDA"))
 
         self.ui.draw_spectre.clicked.connect(self.processSpectre)
 
-
+        self.ui.clear_canvas.clicked.connect(self.clear_calnvas)
         self.ui.choose_colors_button.clicked.connect(self.changeCanvasLineColor)
 
         self.show()
@@ -53,12 +54,14 @@ class UI(QtWidgets.QMainWindow):
 
 
 
-
+    def clear_calnvas(self):
+        self.ui.canvas.clearCanvas()
 
     def changeCanvasBackGroundColor(self):
         background_color = QtWidgets.QColorDialog.getColor()
         if (background_color.isValid()):
             brush = QtGui.QBrush(background_color)
+            self.ui.canvas.backgroundColor = background_color
             self.ui.canvas.setBackgroundBrush(brush)
     def changeCanvasLineColor(self):
         button_color = QtWidgets.QColorDialog.getColor()
