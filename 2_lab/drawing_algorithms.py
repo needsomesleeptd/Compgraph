@@ -277,12 +277,16 @@ def CDA(x1, y1, x2, y2, stepmode=False):
     return pointsList
 
 
+
+
+def f_part(x):
+    return abs(x - int(x))
 def VU(x1, y1, x2, y2, stepmode=False):
-    x1, y1, x2, y2 = map(int, (x1, y1, x2, y2))
-    if (x1 > x2):
-        x1, x2 = x2, x1
-    if (y1 > y2):
-        y1, y2 = y2, y1
+    #x1, y1, x2, y2 = map(int, (x1, y1, x2, y2))
+    #if (x1 > x2):
+    #    x1, x2 = x2, x1
+    #if (y1 > y2):
+    #    y1, y2 = y2, y1
 
     coloredPoints = []
 
@@ -313,35 +317,53 @@ def VU(x1, y1, x2, y2, stepmode=False):
     dx = x2 - x1
     dy = y2 - y1
     tg = dy / dx
-    xend = round(x1)
-    yend = y1 + tg * (xend - x1)
-    xpx1 = xend
-    y = yend + tg
+    if not swapped:
+        xend = round(x1)
+        yend = y1 + tg  * (xend - x1)
+        xgap = 1 - (abs(x1 - xend) + 0.5)
+        xpxl1 = xend
+        ypxl1 = int(yend)
+        coloredPoints.append([xpxl1,ypxl1,(1 - f_part(yend)) *  xgap])
+        coloredPoints.append([xpxl1, ypxl1 + 1, f_part(yend) * xgap])
 
-    xend = int(x2 + 0.5)
-    xpx2 = xend
-    st = 0
-    if swapped:
-        for x in range(xpx1, xpx2):
-            point_from = [int(y), x + 1]
-            point_to = [int(y) + 1, x + 2]
-            point_from_another = [int(y) + 1, x + 1]
-            point_to_another = [int(y) + 2, x + 2]
-            coloredPoints.append([*point_from, abs(1 - y + int(y))])
-            coloredPoints.append([*point_to, abs(y + int(y))])
-            coloredPoints.append([*point_from_another, abs(1 - y + int(y))])
-            coloredPoints.append([*point_to_another, abs(y + int(y))])
+        intery = yend + tg
 
+        xend = round(x2)
+        yend = y2  + tg * (xend - x2)
+        xgap = f_part(x2 + 0.5)
+        xpxl2 = xend
+        ypxl2 = int(yend)
+        coloredPoints.append([xpxl2, ypxl2, (1 - f_part(yend)) * xgap])
+        coloredPoints.append([xpxl2, ypxl2 + 1, f_part(yend) * xgap])
 
+        for x in range(xpxl1 + 1 ,xpxl2):
+            coloredPoints.append([x, int(intery), 1 - f_part(intery)])
+            coloredPoints.append([x, int(intery) + 1,  f_part(intery)])
+            intery = intery + tg
     else:
-        for x in range(xpx1, xpx2):
-            point_from = [x + 1, int(y)]
-            point_to = [x + 2, int(y) + 1]
-            point_from_another = [x + 1, int(y) + 1]
-            point_to_another = [x + 2, int(y) + 2]
-            coloredPoints.append([*point_from, abs(1 - y + int(y))])
-            coloredPoints.append([*point_to, abs(y + int(y))])
-            coloredPoints.append([*point_from_another, abs(1 - y + int(y))])
-            coloredPoints.append([*point_to_another, abs(y + int(y))])
-    y += tg
+
+        yend = round(y1)
+        xend = x1 + tg * (yend - y1)
+        ygap = 1 - (abs(y1 - yend) + 0.5)
+        ypxl1 = yend
+        xpxl1 = int(xend)
+        coloredPoints.append([ypxl1, xpxl1, (1 - f_part(xend)) * ygap])
+        coloredPoints.append([ypxl1, xpxl1 + 1, f_part(xend) * ygap])
+
+        intery = xend + tg
+
+        yend = round(y2)
+        xend = x2 + tg * (yend - y2)
+        ygap = f_part(y2 + 0.5)
+        ypxl2 = yend
+        xpxl2 = int(xend)
+        coloredPoints.append([ypxl2, xpxl2, (1 - f_part(xend)) * ygap])
+        coloredPoints.append([ypxl2, xpxl2 + 1, f_part(xend) * ygap])
+
+        for x in range(xpxl1 + 1, xpxl2):
+            coloredPoints.append([int(intery), x, 1 - f_part(intery)])
+            coloredPoints.append([int(intery) + 1, x, f_part(intery)])
+            intery = intery + tg
+
+
     return coloredPoints
