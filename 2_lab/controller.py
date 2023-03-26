@@ -41,6 +41,8 @@ def handle_request(req:request):
     elif (req.request_type == "CDA"):
         points = CDA(*req.dots)
         req.canvas.drawLineByPoints(points)
+    elif (req.request_type == "Vu"):
+        points = VU(*req.dots)
 
     elif (req.request_type== "brezSmoothSpectre"):
         spectre_coords = get_spectre_coords(req.spectre_line_len, req.dots, req.min_angle)
@@ -64,6 +66,12 @@ def handle_request(req:request):
         spectre_coords = get_spectre_coords(req.spectre_line_len, req.dots, req.min_angle)
         all_lines = getSpectreDots(spectre_coords, CDA)
         req.canvas.drawSpectre(all_lines, req.request_type)
+
+    elif (req.request_type == "VuSpectre"):
+        spectre_coords = get_spectre_coords(req.spectre_line_len, req.dots, req.min_angle)
+        all_lines = getSpectreDots(spectre_coords, VU)
+        req.canvas.drawSpectre(all_lines, req.request_type)
+
 
 
 

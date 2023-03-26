@@ -22,6 +22,7 @@ class UI(QtWidgets.QMainWindow):
         self.ui.brez_smooth.pressed.connect(lambda: self.changeAlgotype("brezSmooth"))
         self.ui.standard.pressed.connect(lambda: self.changeAlgotype("defaultAlgo"))
         self.ui.CDA.pressed.connect(lambda: self.changeAlgotype("CDA"))
+        self.ui.Vu.pressed.connect(lambda:  self.changeAlgotype("Vu"))
 
         self.ui.draw_spectre.clicked.connect(self.processSpectre)
 

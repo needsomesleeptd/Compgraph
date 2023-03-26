@@ -33,9 +33,9 @@ def rotate_OZ(x, y, angle_degrees):
     return [x, y]
 
 
-def get_spectre_coords(line_len,point_center, min_angle_diff):
+def get_spectre_coords(line_len, point_center, min_angle_diff):
     spectre_coords = []
-    point_1 = [0,0]
+    point_1 = [0, 0]
     point_2 = [0, line_len]
     angle = 0
     while (angle < 360):
@@ -183,7 +183,7 @@ def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=7, stepmode=False):
     x1, y1, x2, y2 = map(int, (x1, y1, x2, y2))
     coloredPoints = []
     if isclose(x1, x2) and isclose(y1, y2):
-        coloredPoints.append([x1, y1, maxIntensivity / 2])
+        coloredPoints.append([x1, y1, 1])
         return coloredPoints
 
     colors_intersinty = np.linspace(0, maxIntensivity, num=maxIntensivity)
@@ -275,3 +275,73 @@ def CDA(x1, y1, x2, y2, stepmode=False):
     if stepmode:
         return steps
     return pointsList
+
+
+def VU(x1, y1, x2, y2, stepmode=False):
+    x1, y1, x2, y2 = map(int, (x1, y1, x2, y2))
+    if (x1 > x2):
+        x1, x2 = x2, x1
+    if (y1 > y2):
+        y1, y2 = y2, y1
+
+    coloredPoints = []
+
+    if (isclose(x1, x2)):
+        for y_cur in range(int(y1), round(y2)):
+            coloredPoints.append([x1, y_cur, 1])
+
+    elif (isclose(y1, y2)):
+        for x_cur in range(int(x1), round(x2)):
+            coloredPoints.append([x_cur, y1, 1])
+
+    if (x1 == x2 or y1 == y2):  # if the line is straight
+        return coloredPoints
+
+    if isclose(x1, x2) and isclose(y1, y2):
+        coloredPoints.append([x1, y1, 1])  # 100 percent
+        return coloredPoints
+
+    swapped = abs(y2 - y1) > abs(x2 - x1)
+
+    if swapped:
+        x1, y1 = y1, x1
+        x2, y2 = y2, x2
+
+    if x1 > x2:
+        x2, x1 = x1, x2
+
+    dx = x2 - x1
+    dy = y2 - y1
+    tg = dy / dx
+    xend = round(x1)
+    yend = y1 + tg * (xend - x1)
+    xpx1 = xend
+    y = yend + tg
+
+    xend = int(x2 + 0.5)
+    xpx2 = xend
+    st = 0
+    if swapped:
+        for x in range(xpx1, xpx2):
+            point_from = [int(y), x + 1]
+            point_to = [int(y) + 1, x + 2]
+            point_from_another = [int(y) + 1, x + 1]
+            point_to_another = [int(y) + 2, x + 2]
+            coloredPoints.append([*point_from, abs(1 - y + int(y))])
+            coloredPoints.append([*point_to, abs(y + int(y))])
+            coloredPoints.append([*point_from_another, abs(1 - y + int(y))])
+            coloredPoints.append([*point_to_another, abs(y + int(y))])
+
+
+    else:
+        for x in range(xpx1, xpx2):
+            point_from = [x + 1, int(y)]
+            point_to = [x + 2, int(y) + 1]
+            point_from_another = [x + 1, int(y) + 1]
+            point_to_another = [x + 2, int(y) + 2]
+            coloredPoints.append([*point_from, abs(1 - y + int(y))])
+            coloredPoints.append([*point_to, abs(y + int(y))])
+            coloredPoints.append([*point_from_another, abs(1 - y + int(y))])
+            coloredPoints.append([*point_to_another, abs(y + int(y))])
+    y += tg
+    return coloredPoints

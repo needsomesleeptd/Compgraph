@@ -10,21 +10,20 @@ import matplotlib
 from matplotlib.artist import Artist
 from PyQt5 import QtGui
 from PyQt5.QtGui import QMouseEvent
+
 matplotlib.use('QT5Agg')
 
+from copy import deepcopy, copy
 
-
-
-from copy import deepcopy,copy
 
 class Canvas(QtWidgets.QGraphicsView):
 
-    def __init__(self,parent):
+    def __init__(self, parent):
         super().__init__(parent)
         self.scene = self.CreateGraphicsScene()
         self.pen = QtGui.QPen(Qt.red)
         self.backgroundColor = QtGui.QColor(Qt.white)
-        self._zoom = 2 #times which picture is zoomed
+        self._zoom = 2  # times which picture is zoomed
 
     def fitInView(self, scale=True):
         rect = QtCore.QRectF(self.rect())
@@ -39,6 +38,7 @@ class Canvas(QtWidgets.QGraphicsView):
                      viewrect.height() / scenerect.height())
         self.scale(factor, factor)
         self._zoom = 0
+
     def wheelEvent(self, event):
 
         if event.angleDelta().y() > 0:
@@ -50,8 +50,6 @@ class Canvas(QtWidgets.QGraphicsView):
         self.scale(factor, factor)
         newPos = self.mapToScene(event.pos())
 
-
-
     def mousePressEvent(self, event):
         oldPos = self.mapToScene(self.viewport().rect().center())
 
@@ -61,59 +59,51 @@ class Canvas(QtWidgets.QGraphicsView):
         delta = oldPos - newPos
         self.translate(delta.x(), delta.y())
 
-        #super().mousePressEvent(event)
-
-
+        # super().mousePressEvent(event)
 
     def CreateGraphicsScene(self):
         scene = QtWidgets.QGraphicsScene()
         self.setScene(scene)
-        #scene.setSceneRect(-self.width() / 2, -self.height() / 2,self.width(),self.height())
+        # scene.setSceneRect(-self.width() / 2, -self.height() / 2,self.width(),self.height())
         return scene
 
-
     def drawLine(self, x0, y0, x1, y1):
-        self.scene.addLine(x0,y0,x1,y1,self.pen)
+        self.scene.addLine(x0, y0, x1, y1, self.pen)
 
-    def drawLineByPoints(self,points):
-            self.scene.addPolygon(points,self.pen)
+    def drawLineByPoints(self, points):
+        self.scene.addPolygon(points, self.pen)
 
-    def drawLineIntensivityByPoints(self,coloredPoints):
+    def drawLineIntensivityByPoints(self, coloredPoints):
 
         default_drawing_color = self.pen.color()
         drawing_pen = QtGui.QPen(default_drawing_color)
-        prev_x,prev_y = coloredPoints[0][0],coloredPoints[0][1]
-        
+        prev_x, prev_y = coloredPoints[0][0], coloredPoints[0][1]
 
         for point in coloredPoints:
-            x,y,intensivity = point[0],point[1],point[2]
+            x, y, intensivity = point[0], point[1], point[2]
             new_red = default_drawing_color.red()
             new_blue = default_drawing_color.blue()
             new_green = default_drawing_color.green()
             new_color = QtGui.QColor()
-            new_color.setRgb(new_red,new_blue,new_green)
+            new_color.setRgb(new_red, new_blue, new_green)
             new_color.setAlphaF(intensivity)
             drawing_pen.setColor(new_color)
 
-            self.scene.addLine(prev_x,prev_y,x,y,drawing_pen)
+            self.scene.addLine(prev_x, prev_y, x, y, drawing_pen)
             prev_x = x
             prev_y = y
 
-
-    def drawSpectre(self,spectreLines,method):
+    def drawSpectre(self, spectreLines, method):
         for line in spectreLines:
-            if (method == "brezSmoothSpectre"):
+            if (method == "brezSmoothSpectre" or method == "VuSpectre"):
                 self.drawLineIntensivityByPoints(line)
             elif (method == "defaultAlgoSpectre"):
-                self.drawLine(*line[0],*line[1])
+                self.drawLine(*line[0], *line[1])
             else:
                 self.drawLineByPoints(line)
         self.update()
 
-
-
-
-    def changePenColor(self,color):
+    def changePenColor(self, color):
         self.pen.setColor(color)
 
     def clearCanvas(self):
