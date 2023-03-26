@@ -24,6 +24,7 @@ class UI(QtWidgets.QMainWindow):
         self.ui.CDA.pressed.connect(lambda: self.changeAlgotype("CDA"))
         self.ui.Vu.pressed.connect(lambda:  self.changeAlgotype("Vu"))
         self.ui.measurements_time.triggered.connect(plot_bars_timing)
+        self.ui.measurements_steps.triggered.connect(plot_graph_steps)
         self.ui.draw_spectre.clicked.connect(self.processSpectre)
 
         self.ui.clear_canvas.clicked.connect(self.clear_calnvas)

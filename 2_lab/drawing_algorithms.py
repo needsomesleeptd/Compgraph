@@ -49,19 +49,17 @@ def get_spectre_coords(line_len, point_center, min_angle_diff):
     return spectre_coords
 
 
-
-
-def bresenhamAlogorithmFloat(xFr: float, yFr: float, xTo: float, yTo: float):
+def bresenhamAlogorithmFloat(xFr: float, yFr: float, xTo: float, yTo: float, stepmode=False):
     pointsList = QPolygonF()
     xTo = round(xTo)
     yTo = round(yTo)
-
+    steps = 0
     if isclose(xFr, xTo) and isclose(yFr, yTo):
         pointsList.append(QPoint(xFr, yFr))
     else:
         dx = xTo - xFr
         dy = yTo - yFr
-
+        steps = 1
         sx = sign(dx)
         sy = sign(dy)
 
@@ -78,6 +76,9 @@ def bresenhamAlogorithmFloat(xFr: float, yFr: float, xTo: float, yTo: float):
         e = tg - 0.5
         x = xFr
         y = yFr
+
+        xb = x
+        yb = y
 
         while not isclose(x, xTo) or not isclose(y, yTo):
             pointsList.append(QPoint(x, y))
@@ -96,10 +97,17 @@ def bresenhamAlogorithmFloat(xFr: float, yFr: float, xTo: float, yTo: float):
                     y += sy
                 e += tg
 
+            if stepmode:
+                if xb != x and yb != y:
+                    steps += 1
+                xb = x
+                yb = y
+    if stepmode:
+        return steps
     return pointsList
 
 
-def bresenhamAlogorithmInt(x1, y1, x2, y2, colour='black', stepmode=False):
+def bresenhamAlogorithmInt(x1, y1, x2, y2, stepmode=False):
     pointsList = QPolygonF()
     x2 = round(x2)
     y2 = round(y2)

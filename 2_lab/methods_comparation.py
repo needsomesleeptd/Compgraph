@@ -40,8 +40,9 @@ def plot_bars_timing(spectre_line_len=100, dots=[0, 0], min_angle=12):
 
     time_VU = timing(VU)
     time_vu = time_VU(spectre_line_len, dots, min_angle)
+
     fake_scene = QtWidgets.QGraphicsScene()
-    time_lib = timing_default_function(spectre_line_len, dots, min_angle,fake_scene)
+    time_lib = timing_default_function(spectre_line_len, dots, min_angle, fake_scene)
 
     labels = ["1.Алгоритм Брезенхема с дробными числами", "2.Алгоритм Брезенхема с целыми числами",
               "3.Алгоритм Брезенхема со сглаживаем", "4.Алгоритм ЦДА", "5.Алгоритм Ву", "6.Стадартная библиотека"]
@@ -55,6 +56,43 @@ def plot_bars_timing(spectre_line_len=100, dots=[0, 0], min_angle=12):
     # plt.bar(x, times,labels = labels)
     plt.xlabel("Выбранный алгоритм")
     plt.ylabel("Затраченное время на построение(ms)")
+    plt.title(
+        '''Зависимость времени исполнения от выбора алгоритма(замер производился при вычислении координат и интесивностей точек спектра 
+        с длиной прямых:{0} 
+        и расстоянием между прямыми в градусах{1})'''.format(spectre_line_len, min_angle))
+    plt.legend()
+    plt.grid()
+    plt.show()
+
+
+# ______________________________STEPS_COMPARATION_________________________________________________
+
+
+def plot_graph_steps(x1=0, y1=0, x2=1000, y2=1000):
+    x = 1
+    y = 1
+    steps = [[], [], [], [], []]
+    line_lens = []
+    while (x < x2 and y < y2):
+        brez_float_steps = bresenhamAlogorithmFloat(x1, y1, x, y, stepmode=True)
+        brez_int_steps = bresenhamAlogorithmInt(x1, y1, x, y, stepmode=True)
+        cda_steps = CDA(x1, y1, x, y, stepmode=True)
+        vu_steps = VU(x1, y1, x, y, step_count=True)
+        brez_smooth_steps = bresenhamAlogorithmSmooth(x1, y1, x, y, stepmode=True)
+        steps[0].append(brez_float_steps)
+        steps[1].append(brez_int_steps)
+        steps[2].append(brez_smooth_steps)
+        steps[3].append(cda_steps)
+        steps[4].append(vu_steps)
+        line_lens.append(sqrt(x ** 2 + y ** 2))
+        x += 10
+        y += 10
+
+    labels = ["Алгоритм Брезенхема с дробными числами", "Алгоритм Брезенхема с целыми числами",
+              "Алгоритм Брезенхема со сглаживаем", "Алгоритм ЦДА", "Алгоритм Ву"]
+    for i in range(len(labels)):
+        plt.plot(line_lens, steps[i], label=labels[i])
+
     plt.legend()
     plt.grid()
     plt.show()
