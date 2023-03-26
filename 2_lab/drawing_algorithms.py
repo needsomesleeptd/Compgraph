@@ -277,93 +277,73 @@ def CDA(x1, y1, x2, y2, stepmode=False):
     return pointsList
 
 
-
-
 def f_part(x):
     return abs(x - int(x))
-def VU(x1, y1, x2, y2, stepmode=False):
-    #x1, y1, x2, y2 = map(int, (x1, y1, x2, y2))
-    #if (x1 > x2):
-    #    x1, x2 = x2, x1
-    #if (y1 > y2):
-    #    y1, y2 = y2, y1
 
-    coloredPoints = []
 
-    if (isclose(x1, x2)):
-        for y_cur in range(int(y1), round(y2)):
-            coloredPoints.append([x1, y_cur, 1])
-
-    elif (isclose(y1, y2)):
-        for x_cur in range(int(x1), round(x2)):
-            coloredPoints.append([x_cur, y1, 1])
-
-    if (x1 == x2 or y1 == y2):  # if the line is straight
-        return coloredPoints
-
-    if isclose(x1, x2) and isclose(y1, y2):
-        coloredPoints.append([x1, y1, 1])  # 100 percent
-        return coloredPoints
-
-    swapped = abs(y2 - y1) > abs(x2 - x1)
-
-    if swapped:
-        x1, y1 = y1, x1
-        x2, y2 = y2, x2
-
-    if x1 > x2:
-        x2, x1 = x1, x2
-
+def VU(x1, y1, x2, y2, step_count=False):
     dx = x2 - x1
     dy = y2 - y1
-    tg = dy / dx
-    if not swapped:
-        xend = round(x1)
-        yend = y1 + tg  * (xend - x1)
-        xgap = 1 - (abs(x1 - xend) + 0.5)
-        xpxl1 = xend
-        ypxl1 = int(yend)
-        coloredPoints.append([xpxl1,ypxl1,(1 - f_part(yend)) *  xgap])
-        coloredPoints.append([xpxl1, ypxl1 + 1, f_part(yend) * xgap])
 
-        intery = yend + tg
+    if dx == 0 and dy == 0:
+        return [x1, y1, 1]
 
-        xend = round(x2)
-        yend = y2  + tg * (xend - x2)
-        xgap = f_part(x2 + 0.5)
-        xpxl2 = xend
-        ypxl2 = int(yend)
-        coloredPoints.append([xpxl2, ypxl2, (1 - f_part(yend)) * xgap])
-        coloredPoints.append([xpxl2, ypxl2 + 1, f_part(yend) * xgap])
+    m = 1
 
-        for x in range(xpxl1 + 1 ,xpxl2):
-            coloredPoints.append([x, int(intery), 1 - f_part(intery)])
-            coloredPoints.append([x, int(intery) + 1,  f_part(intery)])
-            intery = intery + tg
+    step = 1
+    steps = 0
+    points = []
+
+    if abs(dy) >= abs(dx):
+        if dy != 0:
+            m = dx / dy
+
+        m1 = m
+
+        if y1 > y2:
+            m1 *= -1
+            step *= -1
+
+        bord = round(y2) - 1 if dy < dx else round(y2) + 1
+
+        for y in range(round(y1), bord, step):
+            d1 = x1 - floor(x1)
+            d2 = 1 - d1
+
+            if step_count == False:
+                points.append([int(x1) + 1, y, fabs(d2)])
+                points.append([int(x1), y, fabs(d1)])
+
+            elif y < round(y2) and int(x1) != int(x1 + m):
+                steps += 1
+
+            x1 += m1
     else:
+        if dx != 0:
+            m = dy / dx
 
-        yend = round(y1)
-        xend = x1 + tg * (yend - y1)
-        ygap = 1 - (abs(y1 - yend) + 0.5)
-        ypxl1 = yend
-        xpxl1 = int(xend)
-        coloredPoints.append([ypxl1, xpxl1, (1 - f_part(xend)) * ygap])
-        coloredPoints.append([ypxl1, xpxl1 + 1, f_part(xend) * ygap])
+        m1 = m
 
-        intery = xend + tg
+        if x1 > x2:
+            step *= -1
+            m1 *= -1
 
-        yend = round(y2)
-        xend = x2 + tg * (yend - y2)
-        ygap = f_part(y2 + 0.5)
-        ypxl2 = yend
-        xpxl2 = int(xend)
-        coloredPoints.append([ypxl2, xpxl2, (1 - f_part(xend)) * ygap])
-        coloredPoints.append([ypxl2, xpxl2 + 1, f_part(xend) * ygap])
+        bord = round(x2) - 1 if dy > dx else round(x2) + 1
 
-        for x in range(xpxl1 + 1, xpxl2):
-            coloredPoints.append([int(intery), x, 1 - f_part(intery)])
-            coloredPoints.append([int(intery) + 1, x, f_part(intery)])
-            intery = intery + tg
+        for x in range(round(x1), bord, step):
+            d1 = y1 - floor(y1)
+            d2 = 1 - d1
 
+            if step_count == False:
+                points.append([x, int(y1) + 1, fabs(d2)])
+                points.append([x, int(y1), fabs(d1)])
 
-    return coloredPoints
+            elif x < round(x2) and int(y1) != int(y1 + m):
+                steps += 1
+
+            y1 += m1
+
+    if step_count:
+        return steps
+    else:
+        return points
