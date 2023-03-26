@@ -126,8 +126,11 @@
               <pointsize>12</pointsize>
              </font>
             </property>
+            <property name="minimum">
+             <double>-500.000000000000000</double>
+            </property>
             <property name="maximum">
-             <double>1000.000000000000000</double>
+             <double>500.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -152,8 +155,11 @@
               <pointsize>12</pointsize>
              </font>
             </property>
+            <property name="minimum">
+             <double>-500.000000000000000</double>
+            </property>
             <property name="maximum">
-             <double>1000.000000000000000</double>
+             <double>500.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -293,10 +299,10 @@
              </font>
             </property>
             <property name="minimum">
-             <double>-400.000000000000000</double>
+             <double>-500.000000000000000</double>
             </property>
             <property name="maximum">
-             <double>400.000000000000000</double>
+             <double>500.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -328,10 +334,10 @@
              </font>
             </property>
             <property name="minimum">
-             <double>-400.000000000000000</double>
+             <double>-500.000000000000000</double>
             </property>
             <property name="maximum">
-             <double>400.000000000000000</double>
+             <double>500.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -363,10 +369,10 @@
              </font>
             </property>
             <property name="minimum">
-             <double>-400.000000000000000</double>
+             <double>-500.000000000000000</double>
             </property>
             <property name="maximum">
-             <double>400.000000000000000</double>
+             <double>500.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -398,10 +404,10 @@
              </font>
             </property>
             <property name="minimum">
-             <double>-400.000000000000000</double>
+             <double>-500.000000000000000</double>
             </property>
             <property name="maximum">
-             <double>400.000000000000000</double>
+             <double>500.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -422,6 +428,14 @@
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Замеры</string>
+    </property>
+    <addaction name="measurements_time"/>
+    <addaction name="measurements_steps"/>
+   </widget>
+   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -435,6 +449,16 @@
     <bool>false</bool>
    </attribute>
   </widget>
+  <action name="measurements_time">
+   <property name="text">
+    <string>Время исполнения</string>
+   </property>
+  </action>
+  <action name="measurements_steps">
+   <property name="text">
+    <string>Количество ступеней</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>

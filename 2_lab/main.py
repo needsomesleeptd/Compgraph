@@ -3,7 +3,7 @@ from PyQt5 import QtWidgets, QtGui, QtCore, uic
 from PyQt5.QtCore import Qt
 import layout
 from PyQt5.QtWidgets import QMessageBox
-from drawing_algorithms import *
+from methods_comparation import *
 
 from controller import *
 
@@ -23,7 +23,7 @@ class UI(QtWidgets.QMainWindow):
         self.ui.standard.pressed.connect(lambda: self.changeAlgotype("defaultAlgo"))
         self.ui.CDA.pressed.connect(lambda: self.changeAlgotype("CDA"))
         self.ui.Vu.pressed.connect(lambda:  self.changeAlgotype("Vu"))
-
+        self.ui.measurements_time.triggered.connect(plot_bars_timing)
         self.ui.draw_spectre.clicked.connect(self.processSpectre)
 
         self.ui.clear_canvas.clicked.connect(self.clear_calnvas)
