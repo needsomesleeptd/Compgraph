@@ -43,25 +43,25 @@ def handle_request(req:request):
         req.canvas.drawLineByPoints(points)
 
     elif (req.request_type== "brezSmoothSpectre"):
-        spectre_coords = get_spectre_coords(req.spectre_line_len,req.min_angle)
+        spectre_coords = get_spectre_coords(req.spectre_line_len, req.dots, req.min_angle)
         all_lines = getSpectreDots(spectre_coords, bresenhamAlogorithmSmooth)
         req.canvas.drawSpectre(all_lines,req.request_type)
     elif (req.request_type == "brezIntSpectre"):
-        spectre_coords = get_spectre_coords(req.spectre_line_len, req.min_angle)
+        spectre_coords = get_spectre_coords(req.spectre_line_len, req.dots, req.min_angle)
         all_lines = getSpectreDots(spectre_coords, bresenhamAlogorithmInt)
         req.canvas.drawSpectre(all_lines,req.request_type)
 
     elif (req.request_type == "brezFloatSpectre"):
-        spectre_coords = get_spectre_coords(req.spectre_line_len, req.min_angle)
+        spectre_coords = get_spectre_coords(req.spectre_line_len, req.dots, req.min_angle)
         all_lines = getSpectreDots(spectre_coords,bresenhamAlogorithmFloat)
         req.canvas.drawSpectre(all_lines,req.request_type)
 
     elif (req.request_type == "defaultAlgoSpectre"):
-        spectre_coords = get_spectre_coords(req.spectre_line_len, req.min_angle)
+        spectre_coords = get_spectre_coords(req.spectre_line_len, req.dots, req.min_angle)
         req.canvas.drawSpectre(spectre_coords, req.request_type)
 
     elif (req.request_type == "CDASpectre"):
-        spectre_coords = get_spectre_coords(req.spectre_line_len, req.min_angle)
+        spectre_coords = get_spectre_coords(req.spectre_line_len, req.dots, req.min_angle)
         all_lines = getSpectreDots(spectre_coords, CDA)
         req.canvas.drawSpectre(all_lines, req.request_type)
 

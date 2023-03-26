@@ -81,22 +81,20 @@ class Canvas(QtWidgets.QGraphicsView):
     def drawLineIntensivityByPoints(self,coloredPoints):
 
         default_drawing_color = self.pen.color()
-        default_background_color = self.backgroundColor
         drawing_pen = QtGui.QPen(default_drawing_color)
         prev_x,prev_y = coloredPoints[0][0],coloredPoints[0][1]
-        delta_red =  default_background_color.red() -  default_drawing_color.red()
-        delta_blue = default_background_color.blue() - default_drawing_color.blue()
-        delta_green = default_background_color.green() - default_drawing_color.green()
         
 
         for point in coloredPoints:
             x,y,intensivity = point[0],point[1],point[2]
-            new_red = default_drawing_color.red() + (1 - intensivity) * delta_red
-            new_blue = default_drawing_color.blue() + (1 - intensivity) * delta_blue
-            new_green = default_drawing_color.green() + (1 - intensivity) * delta_green
+            new_red = default_drawing_color.red()
+            new_blue = default_drawing_color.blue()
+            new_green = default_drawing_color.green()
             new_color = QtGui.QColor()
             new_color.setRgb(new_red,new_blue,new_green)
+            new_color.setAlphaF(intensivity)
             drawing_pen.setColor(new_color)
+
             self.scene.addLine(prev_x,prev_y,x,y,drawing_pen)
             prev_x = x
             prev_y = y
