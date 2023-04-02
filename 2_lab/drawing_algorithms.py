@@ -170,7 +170,11 @@ def bresenhamAlogorithmInt(x1, y1, x2, y2, stepmode=False):
 
 
 def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=7, stepmode=False):
-    x1, y1, x2, y2 = map(int, (x1, y1, x2, y2))
+    #x1, y1, x2, y2 = map(int, (x1, y1, x2, y2))
+    x2 = ceil(x2)
+    y2 = ceil(y2)
+    x1 = floor(x1)
+    y1 = floor(y1)
     coloredPoints = []
     if isclose(x1, x2) and isclose(y1, y2):
         coloredPoints.append([x1, y1, 1])
@@ -233,6 +237,10 @@ def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=7, stepmode=False):
 
 
 def CDA(x1, y1, x2, y2, stepmode=False):
+    x2 = ceil(x2)
+    y2 = ceil(y2)
+    x1 = floor(x1)
+    y1 = floor(y1)
     pointsList = QPolygonF()
     steps = 0
 
