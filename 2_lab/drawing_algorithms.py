@@ -364,7 +364,7 @@ def VU(x1, y1, x2, y2, stepmode=False):
             dx, dy = dy, dx
             exchange = 1
 
-        steps = 1
+        steps = 0
         sx = sign(dx)
         sy = sign(dy)
 
@@ -388,13 +388,16 @@ def VU(x1, y1, x2, y2, stepmode=False):
                 coloredPoints.append([x, int(intery), 1 - f_part(intery)])
                 coloredPoints.append([x, int(intery) + sy, f_part(intery)])
 
-            intery = intery + gradient
 
             if stepmode:
-                if xb != x and yb != y:
+                if int(xb) != int(x) and int(yb) != int(intery):
                     steps += 1
                 xb = x
-                yb = y
+                yb = intery
+
+            intery = intery + gradient
+
+
         if (stepmode):
             return steps
         return coloredPoints

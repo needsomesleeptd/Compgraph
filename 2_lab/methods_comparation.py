@@ -8,7 +8,7 @@ import timeit
 
 
 def timing(f):
-    def wrap(spectre_line_len, dots, min_angle,count = 10):
+    def wrap(spectre_line_len, dots, min_angle, count=10):
         sum = 0
         for i in range(count):
             time_start = timeit.default_timer()
@@ -22,7 +22,7 @@ def timing(f):
     return wrap
 
 
-def timing_default_function(spectre_line_len, dots, min_angle, canvas,count = 10):
+def timing_default_function(spectre_line_len, dots, min_angle, canvas, count=10):
     spectre_coords = get_spectre_coords(spectre_line_len, dots, min_angle)
     sum = 0
     for i in range(count):
@@ -68,7 +68,8 @@ def plot_bars_timing(spectre_line_len=500, dots=[0, 0], min_angle=12):
     plt.ylabel("Затраченное время на построение(ms)")
     plt.title(
         '''Зависимость времени исполнения от выбора алгоритма
-        (Замер производился при вычислении координат и интесивностей точек спектра с длиной прямых:{0} и расстоянием между прямыми в градусах:{1})'''.format(spectre_line_len, min_angle))
+        (Замер производился при вычислении координат и интесивностей точек спектра с длиной прямых:{0} и расстоянием между прямыми в градусах:{1})'''.format(
+            spectre_line_len, min_angle))
     plt.legend()
     plt.grid()
     plt.show()
@@ -77,31 +78,35 @@ def plot_bars_timing(spectre_line_len=500, dots=[0, 0], min_angle=12):
 # ______________________________STEPS_COMPARATION_________________________________________________
 
 
-def plot_graph_steps(x1=0, y1=0, x2=1000, y2=1000):
-    x = 1
-    y = 1
+def plot_graph_steps(spectre_line_len=100, min_angle=12):
+
     steps = [[], [], [], [], []]
-    line_lens = []
-    while (x < x2 and y < y2):
-        brez_float_steps = bresenhamAlogorithmFloat(x1, y1, x, y, stepmode=True)
-        brez_int_steps = bresenhamAlogorithmInt(x1, y1, x, y, stepmode=True)
-        cda_steps = CDA(x1, y1, x, y, stepmode=True)
-        vu_steps = VU(x1, y1, x, y, step_count=True)
-        brez_smooth_steps = bresenhamAlogorithmSmooth(x1, y1, x, y, stepmode=True)
-        steps[0].append(brez_float_steps)
-        steps[1].append(brez_int_steps)
-        steps[2].append(brez_smooth_steps)
-        steps[3].append(cda_steps)
-        steps[4].append(vu_steps)
-        line_lens.append(sqrt(x ** 2 + y ** 2))
-        x += 10
-        y += 10
+
+    angles = [i for i in range(0,360, min_angle)]
+    spectre_coords = get_spectre_coords(spectre_line_len, [0, 0], min_angle)
+    vu_steps = getSpectreDots(spectre_coords, VU, True)
+    brez_float_steps = getSpectreDots(spectre_coords, bresenhamAlogorithmFloat, True)
+    brez_int_steps = getSpectreDots(spectre_coords, bresenhamAlogorithmInt, True)
+    cda_steps = getSpectreDots(spectre_coords, CDA, True)
+    brez_smooth_steps = getSpectreDots(spectre_coords, bresenhamAlogorithmSmooth, stepmode=True)
+
+    steps[0].append(brez_float_steps)
+    steps[1].append(brez_int_steps)
+    steps[2].append(brez_smooth_steps)
+    steps[3].append(cda_steps)
+    steps[4].append(vu_steps)
+
 
     labels = ["Алгоритм Брезенхема с дробными числами", "Алгоритм Брезенхема с целыми числами",
               "Алгоритм Брезенхема со сглаживаем", "Алгоритм ЦДА", "Алгоритм Ву"]
     for i in range(len(labels)):
-        plt.plot(line_lens, steps[i], label=labels[i])
+        plt.plot(angles, *steps[i], label=labels[i])
 
+    plt.title(
+        '''Зависимость количества ступеней  от угла под которым идет прямая(длина прямых:{0}, шаг угла:{1})'''.format(spectre_line_len, min_angle))
+    plt.xlabel("Угол поворота прямой")
+    plt.ylabel("Количество ступеней")
     plt.legend()
     plt.grid()
     plt.show()
+

@@ -2,10 +2,10 @@ from canvas import *
 from drawing_algorithms import *
 
 
-def getSpectreDots(spectreDots, method):
+def getSpectreDots(spectreDots, method, stepmode=False):
     allLines = []
     for line in spectreDots:
-        allLines.append(method(*line[0], *line[1]))
+        allLines.append(method(*line[0], *line[1], stepmode=stepmode))
     return allLines
 
 
@@ -29,6 +29,7 @@ def recursive_len(item):
         return sum(recursive_len(subitem) for subitem in item)
     else:
         return 1
+
 
 def handle_request(req: request):
     if (req.request_type == "defaultAlgo"):
@@ -92,5 +93,3 @@ def handle_request(req: request):
         all_lines = getSpectreDots(spectre_coords, VU)
         len_obj = req.canvas.drawSpectre(all_lines, req.request_type)
         req.canvas.figure_items_count.append(len_obj)
-
-
