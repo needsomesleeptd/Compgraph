@@ -6,6 +6,7 @@ from math import *
 
 EPS = 1e-7
 
+
 def my_isclose(x, y, EPS=0.1):
     return isclose(x, y, abs_tol=EPS)
 
@@ -41,7 +42,7 @@ def get_spectre_coords(line_len, point_center, min_angle_diff):
     angle = 0
     while (angle < 360):
         new_coord = [rotate_OZ(*point_1, angle), rotate_OZ(*point_2, angle)]
-        if (fabs(new_coord[1][0]) < EPS): # Убираем погрешность при повороте
+        if (fabs(new_coord[1][0]) < EPS):  # Убираем погрешность при повороте
             new_coord[1][0] = 0
 
         new_coord[0][0] += point_center[0]
@@ -94,7 +95,6 @@ def bresenhamAlogorithmFloat(xFr: float, yFr: float, xTo: float, yTo: float, ste
                 pointsList.append(QPoint(y, x))
             else:
                 pointsList.append(QPoint(x, y))
-
 
             if (e > 0.5):
                 y += sy
@@ -151,7 +151,6 @@ def bresenhamAlogorithmInt(x1, y1, x2, y2, stepmode=False):
             else:
                 pointsList.append(QPoint(x, y))
 
-
             if (e >= 0):
                 y += sy
                 e = e - 2 * dx
@@ -196,7 +195,8 @@ def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=255, stepmode=False
 
         dy = abs(dy)
         dx = abs(dx)
-        tg = (dy / dx) * maxIntensivity  # тангенс угла наклона (умножаем на инт., чтобы не приходилось умножать внутри цикла
+        tg = (
+                     dy / dx) * maxIntensivity  # тангенс угла наклона (умножаем на инт., чтобы не приходилось умножать внутри цикла
         e = maxIntensivity / 2  # интенсивность для высвечивания начального пикселя
         w = maxIntensivity - tg  # пороговое значение
 
@@ -229,6 +229,7 @@ def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=255, stepmode=False
     if stepmode:
         return steps
     return coloredPoints
+
 
 '''def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=12, stepmode=False):
     # x1, y1, x2, y2 = map(int, (x1, y1, x2, y2))
@@ -296,6 +297,8 @@ def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=255, stepmode=False
         return steps
     return coloredPoints
 '''
+
+
 def CDA(x1, y1, x2, y2, stepmode=False):
     x2 = ceil(x2)
     y2 = ceil(y2)
@@ -342,69 +345,56 @@ def f_part(x):
     return abs(x - int(x))
 
 
-def VU(x1, y1, x2, y2, step_count=False):
-    dx = x2 - x1
-    dy = y2 - y1
-
-    if dx == 0 and dy == 0:
-        return [[x1, y1, 1]]
-
-    m = 1
-
-    step = 1
-    steps = 0
-    points = []
-
-    if abs(dy) >= abs(dx):
-        if dy != 0:
-            m = dx / dy
-
-        m1 = m
-
-        if y1 > y2:
-            m1 *= -1
-            step *= -1
-
-        bord = round(y2) - 1 if dy < dx else round(y2) + 1
-
-        for y in range(round(y1), bord, step):
-            d1 = x1 - floor(x1)
-            d2 = 1 - d1
-
-            if step_count == False:
-                points.append([int(x1) + 1, y, fabs(d2)])
-                points.append([int(x1), y, fabs(d1)])
-
-            elif y < round(y2) and int(x1) != int(x1 + m):
-                steps += 1
-
-            x1 += m1
+def VU(x1, y1, x2, y2, stepmode=False):
+    coloredPoints = []
+    # x2 = ceil(x2)
+    # y2 = ceil(y2)
+    # x1 = floor(x1)
+    # y1 = floor(y1)
+    if isclose(x1, x2) and isclose(y1, y2):
+        coloredPoints.append([x1, y1, 1])
     else:
-        if dx != 0:
-            m = dy / dx
+        dx = x2 - x1
+        dy = y2 - y1
 
-        m1 = m
+        exchange = 0
+        if (abs(dy) > abs(dx)):
+            x1, y1 = y1, x1
+            x2, y2 = y2, x2
+            dx, dy = dy, dx
+            exchange = 1
 
-        if x1 > x2:
-            step *= -1
-            m1 *= -1
+        steps = 1
+        sx = sign(dx)
+        sy = sign(dy)
 
-        bord = round(x2) - 1 if dy > dx else round(x2) + 1
+        dy = abs(dy)
+        dx = abs(dx)
 
-        for x in range(round(x1), bord, step):
-            d1 = y1 - floor(y1)
-            d2 = 1 - d1
+        x = x1
+        y = y1
 
-            if step_count == False:
-                points.append([x, int(y1) + 1, fabs(d2)])
-                points.append([x, int(y1), fabs(d1)])
+        xb = x
+        yb = y
+        gradient = (dy * sy) / (dx * sx)
 
-            elif x < round(x2) and int(y1) != int(y1 + m):
-                steps += 1
+        intery = y1 + gradient
 
-            y1 += m1
+        for x in range(floor(x1), ceil(x2) + sx, sx):
+            if exchange:
+                coloredPoints.append([int(intery), x, 1 - f_part(intery)])
+                coloredPoints.append([int(intery) + sy, x, f_part(intery)])
+            else:
+                coloredPoints.append([x, int(intery), 1 - f_part(intery)])
+                coloredPoints.append([x, int(intery) + sy, f_part(intery)])
 
-    if step_count:
-        return steps
-    else:
-        return points
+            intery = intery + gradient
+
+            if stepmode:
+                if xb != x and yb != y:
+                    steps += 1
+                xb = x
+                yb = y
+        if (stepmode):
+            return steps
+        return coloredPoints
