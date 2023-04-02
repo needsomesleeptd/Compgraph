@@ -23,11 +23,10 @@ class Canvas(QtWidgets.QGraphicsView):
         self.scene = self.CreateGraphicsScene()
         self.pen = QtGui.QPen(Qt.red)
         self.pen.setJoinStyle(Qt.MiterJoin)
-        #self.pen.setMiterLimit(0)
+        # self.pen.setMiterLimit(0)
         self.backgroundColor = QtGui.QColor(Qt.white)
         self._zoom = 2  # times which picture is zoomed
         self.last_added_state = []
-
 
     def fitInView(self, scale=True):
         rect = QtCore.QRectF(self.rect())
@@ -72,21 +71,26 @@ class Canvas(QtWidgets.QGraphicsView):
         return scene
 
     def drawLine(self, x0, y0, x1, y1):
+      #  self.last_added_state = [[x0, y0, x1, y1], "draw_line_default"]
         self.scene.addLine(x0, y0, x1, y1, self.pen)
 
     def drawLineByPoints(self, points):
-        #self.scene.addPolygon(points, self.pen)
+        # self.scene.addPolygon(points, self.pen)
+      #  self.last_added_state = [[], "draw_line_points"]
         for point in points:
-            x,y = point.x(),point.y()
+         #   self.last_added_state[0].append(point)
+            x, y = point.x(), point.y()
             self.scene.addRect(x, y, 1, 1, self.pen)
+
     def drawLineIntensivityByPoints(self, coloredPoints):
 
         default_drawing_color = self.pen.color()
         drawing_pen = QtGui.QPen(default_drawing_color)
         drawing_pen.setJoinStyle(Qt.MiterJoin)
-        prev_x, prev_y = coloredPoints[0][0], coloredPoints[0][1]
 
+       # self.last_added_state = [[], "draw_line_intensivity"]
         for point in coloredPoints:
+          #  self.last_added_state[0].append(point)
             x, y, intensivity = point[0], point[1], point[2]
             new_red = default_drawing_color.red()
             new_blue = default_drawing_color.blue()
@@ -96,9 +100,8 @@ class Canvas(QtWidgets.QGraphicsView):
             new_color.setAlphaF(intensivity)
             drawing_pen.setColor(new_color)
 
-            #self.scene.addLine(prev_x, prev_y, x, y, drawing_pen)
-            self.scene.addRect(x,y,1,1,drawing_pen)
-
+            # self.scene.addLine(prev_x, prev_y, x, y, drawing_pen)
+            self.scene.addRect(x, y, 1, 1, drawing_pen)
 
     def drawSpectre(self, spectreLines, method):
         for line in spectreLines:
@@ -111,11 +114,16 @@ class Canvas(QtWidgets.QGraphicsView):
         self.update()
 
     def changePenColor(self, color):
-
+        #self.last_added_state = [self.pen.color(), 'color_pen']
         self.pen.setColor(color)
 
-
-
+    def changeCanvasBackGroundColor(self):
+        #self.last_added_state = [self.backgroundColor, 'color_background']
+        background_color = QtWidgets.QColorDialog.getColor()
+        if (background_color.isValid()):
+            brush = QtGui.QBrush(background_color)
+            self.backgroundColor = background_color
+            self.setBackgroundBrush(brush)
     def clearCanvas(self):
         self.scene.clear()
         self.scene.update()

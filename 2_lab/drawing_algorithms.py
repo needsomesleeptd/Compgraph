@@ -4,6 +4,7 @@ import numpy as np
 
 from math import *
 
+EPS = 1e-7
 
 def my_isclose(x, y, EPS=0.1):
     return isclose(x, y, abs_tol=EPS)
@@ -40,10 +41,14 @@ def get_spectre_coords(line_len, point_center, min_angle_diff):
     angle = 0
     while (angle < 360):
         new_coord = [rotate_OZ(*point_1, angle), rotate_OZ(*point_2, angle)]
+        if (fabs(new_coord[1][0]) < EPS): # Убираем погрешность при повороте
+            new_coord[1][0] = 0
+
         new_coord[0][0] += point_center[0]
         new_coord[0][1] += point_center[1]
         new_coord[1][0] += point_center[0]
         new_coord[1][1] += point_center[1]
+
         spectre_coords.append(new_coord)
         angle += min_angle_diff
     return spectre_coords
@@ -164,7 +169,7 @@ def bresenhamAlogorithmInt(x1, y1, x2, y2, stepmode=False):
     return pointsList
 
 
-def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=120, stepmode=False):
+def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=255, stepmode=False):
     coloredPoints = []
     x2 = ceil(x2)
     y2 = ceil(y2)
@@ -225,7 +230,72 @@ def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=120, stepmode=False
         return steps
     return coloredPoints
 
+'''def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=12, stepmode=False):
+    # x1, y1, x2, y2 = map(int, (x1, y1, x2, y2))
+    x2 = ceil(x2)
+    y2 = ceil(y2)
+    x1 = floor(x1)
+    y1 = floor(y1)
+    coloredPoints = []
+    if isclose(x1, x2) and isclose(y1, y2):
+        coloredPoints.append([x1, y1, 1])
+        return coloredPoints
 
+    colors_intersinty = np.linspace(0, maxIntensivity, num=maxIntensivity)
+
+    dx = x2 - x1
+    dy = y2 - y1
+    sx = sign(dx)
+    sy = sign(dy)
+    dy = abs(dy)
+    dx = abs(dx)
+
+    if dy >= dx:
+        dx, dy = dy, dx
+        swap = 1  #
+    else:
+        swap = 0  #
+    tg = dy / dx * maxIntensivity  # тангенс угла наклона (умножаем на инт., чтобы не приходилось умножать внутри цикла
+    e = maxIntensivity / 2  # интенсивность для высвечивания начального пикселя
+    w = maxIntensivity - tg  # пороговое значение
+    x = x1
+    y = y1
+
+    xb = x
+    yb = y
+    steps = 0
+
+    # i <= dx i = 0
+    # for i in range(0, dx + 1):
+    # i = 0
+    # while i <= dx:
+    while not (my_isclose(x, x2) and my_isclose(y, y2)):
+        if not stepmode:
+            if (e >= 2):
+                coloredPoints.append([x, y, colors_intersinty[round(e) - 1] / maxIntensivity])
+        # canvas.create_oval(x, y, x, y, outline=fill[round(e) - 1])
+        if e < w:
+            if swap == 0:  # dy < dx
+                x += sx  # -1 if dx < 0, 0 if dx = 0, 1 if dx > 0
+            else:  # dy >= dx
+                y += sy  # -1 if dy < 0, 0 if dy = 0, 1 if dy > 0
+            e += tg
+        elif e >= w:
+            x += sx
+            y += sy
+            e -= w
+
+        if stepmode:
+            if xb != x and yb != y:
+                steps += 1
+            xb = x
+            yb = y
+    # print(x,y,x2,y2)
+
+    if stepmode:
+        return steps
+    return coloredPoints
+'''
 def CDA(x1, y1, x2, y2, stepmode=False):
     x2 = ceil(x2)
     y2 = ceil(y2)

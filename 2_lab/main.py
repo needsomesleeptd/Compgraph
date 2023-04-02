@@ -15,7 +15,7 @@ class UI(QtWidgets.QMainWindow):
         self.ui = layout.Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.draw_line_button.pressed.connect(self.processLine)
-        self.ui.choose_background_colors_button.pressed.connect(self.changeCanvasBackGroundColor)
+        self.ui.choose_background_colors_button.pressed.connect(self.ui.canvas.changeCanvasBackGroundColor)
 
         self.ui.brez_int.pressed.connect(lambda: self.changeAlgotype("brezInt"))
         self.ui.brez_float.pressed.connect(lambda: self.changeAlgotype("brezFloat"))
@@ -57,12 +57,7 @@ class UI(QtWidgets.QMainWindow):
     def clear_calnvas(self):
         self.ui.canvas.clearCanvas()
 
-    def changeCanvasBackGroundColor(self):
-        background_color = QtWidgets.QColorDialog.getColor()
-        if (background_color.isValid()):
-            brush = QtGui.QBrush(background_color)
-            self.ui.canvas.backgroundColor = background_color
-            self.ui.canvas.setBackgroundBrush(brush)
+
 
     def changeCanvasLineColor(self):
         button_color = QtWidgets.QColorDialog.getColor()
