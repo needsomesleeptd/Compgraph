@@ -69,17 +69,17 @@ class Canvas(QtWidgets.QGraphicsView):
         return scene
 
     def drawLine(self, x0, y0, x1, y1):
-
+        self.curr_state.append(1) # добавили 1 объект - прямую
         return self.scene.addLine(x0, y0, x1, y1, self.pen)
 
     def drawLineByPoints(self, points):
-
+        self.curr_state.append(len(points))  # добавили какое-то количество точек
         for point in points:
             x, y = point.x(), point.y()
             self.scene.addRect(x, y, 1, 1, self.pen)
 
     def drawLineIntensivityByPoints(self, coloredPoints):
-
+        self.curr_state.append(len(coloredPoints)) # добавили какое-то количество точек
         default_drawing_color = self.pen.color()
         drawing_pen = QtGui.QPen(default_drawing_color)
         drawing_pen.setJoinStyle(Qt.MiterJoin)
@@ -96,16 +96,24 @@ class Canvas(QtWidgets.QGraphicsView):
 
             self.scene.addRect(x, y, 1, 1, drawing_pen)
 
+
+
+
     def drawSpectre(self, spectreLines, method, undo=False):
-        if not undo:
-            self.curr_state.append([spectreLines, method, True])
+
+
+        overall_items_count = 0
         for line in spectreLines:
             if (method == "brezSmoothSpectre" or method == "VuSpectre"):
                 self.drawLineIntensivityByPoints(line)
             elif (method == "defaultAlgoSpectre"):
                 self.drawLine(*line[0], *line[1])
+                overall_items_count -= 1
             else:
                 self.drawLineByPoints(line)
+            overall_items_count += len(line)
+        if not undo:
+            self.curr_state.append(overall_items_count)
         self.update()
 
     def changePenColor(self, color):
@@ -125,8 +133,10 @@ class Canvas(QtWidgets.QGraphicsView):
         self.scene.update()
 
     def undo_action(self):
-        self.clearCanvas()
-        if (len(self.curr_state) > 0):
+        items = self.scene.items()
+        #self.clearCanvas()
+        if (len(self.curr_state) > 0 and len(items) != 0):
+            for items_added_count in range(self.curr_state[-1]):
+                self.scene.removeItem(items[items_added_count])
             self.curr_state = self.curr_state[:-1]
-            for lines in self.curr_state:
-                self.drawSpectre(*lines)
+

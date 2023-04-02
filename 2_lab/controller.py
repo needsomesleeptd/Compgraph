@@ -72,4 +72,4 @@ def handle_request(req: request):
         all_lines = getSpectreDots(spectre_coords, VU)
         req.canvas.drawSpectre(all_lines, req.request_type)
 
-    #req.canvas.curr_state.append(req)
+
