@@ -13,8 +13,6 @@ from PyQt5.QtGui import QMouseEvent
 
 matplotlib.use('QT5Agg')
 
-from copy import deepcopy, copy
-
 
 class Canvas(QtWidgets.QGraphicsView):
 
@@ -26,7 +24,7 @@ class Canvas(QtWidgets.QGraphicsView):
         # self.pen.setMiterLimit(0)
         self.backgroundColor = QtGui.QColor(Qt.white)
         self._zoom = 2  # times which picture is zoomed
-        self.last_added_state = []
+        self.curr_state = []
 
     def fitInView(self, scale=True):
         rect = QtCore.QRectF(self.rect())
@@ -71,14 +69,12 @@ class Canvas(QtWidgets.QGraphicsView):
         return scene
 
     def drawLine(self, x0, y0, x1, y1):
-      #  self.last_added_state = [[x0, y0, x1, y1], "draw_line_default"]
-        self.scene.addLine(x0, y0, x1, y1, self.pen)
+
+        return self.scene.addLine(x0, y0, x1, y1, self.pen)
 
     def drawLineByPoints(self, points):
-        # self.scene.addPolygon(points, self.pen)
-      #  self.last_added_state = [[], "draw_line_points"]
+
         for point in points:
-         #   self.last_added_state[0].append(point)
             x, y = point.x(), point.y()
             self.scene.addRect(x, y, 1, 1, self.pen)
 
@@ -88,9 +84,7 @@ class Canvas(QtWidgets.QGraphicsView):
         drawing_pen = QtGui.QPen(default_drawing_color)
         drawing_pen.setJoinStyle(Qt.MiterJoin)
 
-       # self.last_added_state = [[], "draw_line_intensivity"]
         for point in coloredPoints:
-          #  self.last_added_state[0].append(point)
             x, y, intensivity = point[0], point[1], point[2]
             new_red = default_drawing_color.red()
             new_blue = default_drawing_color.blue()
@@ -100,10 +94,11 @@ class Canvas(QtWidgets.QGraphicsView):
             new_color.setAlphaF(intensivity)
             drawing_pen.setColor(new_color)
 
-            # self.scene.addLine(prev_x, prev_y, x, y, drawing_pen)
             self.scene.addRect(x, y, 1, 1, drawing_pen)
 
-    def drawSpectre(self, spectreLines, method):
+    def drawSpectre(self, spectreLines, method, undo=False):
+        if not undo:
+            self.curr_state.append([spectreLines, method, True])
         for line in spectreLines:
             if (method == "brezSmoothSpectre" or method == "VuSpectre"):
                 self.drawLineIntensivityByPoints(line)
@@ -114,16 +109,24 @@ class Canvas(QtWidgets.QGraphicsView):
         self.update()
 
     def changePenColor(self, color):
-        #self.last_added_state = [self.pen.color(), 'color_pen']
+
         self.pen.setColor(color)
 
     def changeCanvasBackGroundColor(self):
-        #self.last_added_state = [self.backgroundColor, 'color_background']
+
         background_color = QtWidgets.QColorDialog.getColor()
         if (background_color.isValid()):
             brush = QtGui.QBrush(background_color)
             self.backgroundColor = background_color
             self.setBackgroundBrush(brush)
+
     def clearCanvas(self):
         self.scene.clear()
         self.scene.update()
+
+    def undo_action(self):
+        self.clearCanvas()
+        if (len(self.curr_state) > 0):
+            self.curr_state = self.curr_state[:-1]
+            for lines in self.curr_state:
+                self.drawSpectre(*lines)

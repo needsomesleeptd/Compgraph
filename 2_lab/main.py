@@ -11,11 +11,13 @@ from controller import *
 class UI(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
+
+
         self.cur_method = "brezFloat"
         self.ui = layout.Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.draw_line_button.pressed.connect(self.processLine)
-        self.ui.choose_background_colors_button.pressed.connect(self.ui.canvas.changeCanvasBackGroundColor)
+
 
         self.ui.brez_int.pressed.connect(lambda: self.changeAlgotype("brezInt"))
         self.ui.brez_float.pressed.connect(lambda: self.changeAlgotype("brezFloat"))
@@ -23,12 +25,16 @@ class UI(QtWidgets.QMainWindow):
         self.ui.standard.pressed.connect(lambda: self.changeAlgotype("defaultAlgo"))
         self.ui.CDA.pressed.connect(lambda: self.changeAlgotype("CDA"))
         self.ui.Vu.pressed.connect(lambda:  self.changeAlgotype("Vu"))
+
         self.ui.measurements_time.triggered.connect(lambda : plot_bars_timing())
         self.ui.measurements_steps.triggered.connect(lambda : plot_graph_steps())
+
         self.ui.draw_spectre.clicked.connect(self.processSpectre)
 
         self.ui.clear_canvas.clicked.connect(self.clear_calnvas)
         self.ui.choose_colors_button.clicked.connect(self.changeCanvasLineColor)
+        self.ui.choose_background_colors_button.pressed.connect(self.ui.canvas.changeCanvasBackGroundColor)
+        self.ui.revert.clicked.connect(self.ui.canvas.undo_action)
 
         self.show()
 
@@ -69,6 +75,9 @@ class UI(QtWidgets.QMainWindow):
         text = "Данная работа была выполнена студентом Разиным Андреем группы ИУ7-44Б\n\n" \
                "Если бы он знал о polygon его жизнь была бы проще"
         self.show_message(title, text)
+
+
+
 
     def about_program_message(self):
         title = "О программе"
