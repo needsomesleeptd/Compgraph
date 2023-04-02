@@ -25,8 +25,9 @@ class Canvas(QtWidgets.QGraphicsView):
         # self.pen.setMiterLimit(0)
         self.backgroundColor = QtGui.QColor(Qt.white)
         self._zoom = 2  # times which picture is zoomed
-        self.curr_state = []
+        self.figure_items_count = []
         self.saved_scene = QtWidgets.QGraphicsScene()
+        self.curr_state_saved_len = -1
 
     def fitInView(self, scale=True):
         rect = QtCore.QRectF(self.rect())
@@ -71,17 +72,19 @@ class Canvas(QtWidgets.QGraphicsView):
         return scene
 
     def drawLine(self, x0, y0, x1, y1):
-        self.curr_state.append(1) # добавили 1 объект - прямую
-        return self.scene.addLine(x0, y0, x1, y1, self.pen)
+
+        self.scene.addLine(x0, y0, x1, y1, self.pen)
+        return 1 #one object
 
     def drawLineByPoints(self, points):
-        self.curr_state.append(len(points))  # добавили какое-то количество точек
+
         for point in points:
             x, y = point.x(), point.y()
             self.scene.addRect(x, y, 1, 1, self.pen)
+        return len(points)
 
     def drawLineIntensivityByPoints(self, coloredPoints):
-        self.curr_state.append(len(coloredPoints)) # добавили какое-то количество точек
+
         default_drawing_color = self.pen.color()
         drawing_pen = QtGui.QPen(default_drawing_color)
         drawing_pen.setJoinStyle(Qt.MiterJoin)
@@ -97,6 +100,7 @@ class Canvas(QtWidgets.QGraphicsView):
             drawing_pen.setColor(new_color)
 
             self.scene.addRect(x, y, 1, 1, drawing_pen)
+        return len(coloredPoints)
 
 
 
@@ -104,19 +108,18 @@ class Canvas(QtWidgets.QGraphicsView):
     def drawSpectre(self, spectreLines, method, undo=False):
 
 
-        overall_items_count = 0
+        len_obj = 0
         for line in spectreLines:
             if (method == "brezSmoothSpectre" or method == "VuSpectre"):
-                self.drawLineIntensivityByPoints(line)
+                len_obj += self.drawLineIntensivityByPoints(line)
             elif (method == "defaultAlgoSpectre"):
-                self.drawLine(*line[0], *line[1])
-                overall_items_count -= 1
+                len_obj += self.drawLine(*line[0], *line[1])
+
             else:
-                self.drawLineByPoints(line)
-            overall_items_count += len(line)
-        if not undo:
-            self.curr_state.append(overall_items_count)
+                len_obj += self.drawLineByPoints(line)
+
         self.update()
+        return len_obj
 
     def changePenColor(self, color):
 
@@ -133,20 +136,22 @@ class Canvas(QtWidgets.QGraphicsView):
     def clearCanvas(self):
         for item in self.scene.items():
             self.saved_scene.addItem(item)
+        self.curr_state_saved_len = len(self.figure_items_count)
         self.scene.clear()
         self.scene.update()
 
     def undo_action(self):
-        if (len(self.saved_scene.items()) == 0):
+        if (self.curr_state_saved_len != len(self.figure_items_count)):
             items = self.scene.items()
-            if (len(self.curr_state) > 0 and len(items) != 0):
-                for items_added_count in range(self.curr_state[-1]):
+            if (len(self.figure_items_count) > 0 and len(items) != 0):
+                for items_added_count in range(self.figure_items_count[-1]):
                     self.scene.removeItem(items[items_added_count])
-                self.curr_state = self.curr_state[:-1]
+                self.figure_items_count = self.figure_items_count[:-1]
         else:
             self.scene = self.saved_scene
             self.setScene(self.scene)
             self.scene.update()
             self.update()
-        self.saved_scene = QtWidgets.QGraphicsScene()
+            self.saved_scene = QtWidgets.QGraphicsScene()
+        self.curr_state_saved_len  = -1
 

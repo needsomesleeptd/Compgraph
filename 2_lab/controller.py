@@ -24,52 +24,73 @@ class request:
         self.spectre_line_len = len
 
 
+def recursive_len(item):
+    if type(item) == list or type(item) == QPolygonF:
+        return sum(recursive_len(subitem) for subitem in item)
+    else:
+        return 1
+
 def handle_request(req: request):
     if (req.request_type == "defaultAlgo"):
-        req.canvas.drawLine(*req.dots)
+        len_obj = req.canvas.drawLine(*req.dots)
+        req.canvas.figure_items_count.append(len_obj)
+
     elif (req.request_type == "brezFloat"):
         points = bresenhamAlogorithmFloat(*req.dots)
-        req.canvas.drawLineByPoints(points)
+        len_obj = req.canvas.drawLineByPoints(points)
+        req.canvas.figure_items_count.append(len_obj)
     elif (req.request_type == "brezInt"):
         points = bresenhamAlogorithmInt(*req.dots)
-        req.canvas.drawLineByPoints(points)
+        len_obj = req.canvas.drawLineByPoints(points)
+        req.canvas.figure_items_count.append(len_obj)
     elif (req.request_type == "brezSmooth"):
         coloredPoints = bresenhamAlogorithmSmooth(*req.dots)
-        req.canvas.drawLineIntensivityByPoints(coloredPoints)
+        len_obj = req.canvas.drawLineIntensivityByPoints(coloredPoints)
+        req.canvas.figure_items_count.append(len_obj)
 
     elif (req.request_type == "CDA"):
         points = CDA(*req.dots)
-        req.canvas.drawLineByPoints(points)
+        len_obj = req.canvas.drawLineByPoints(points)
+        req.canvas.figure_items_count.append(len_obj)
+
     elif (req.request_type == "Vu"):
         coloredPoints = VU(*req.dots)
-        req.canvas.drawLineIntensivityByPoints(coloredPoints)
+        len_obj = req.canvas.drawLineIntensivityByPoints(coloredPoints)
+        req.canvas.figure_items_count.append(len_obj)
 
     elif (req.request_type == "brezSmoothSpectre"):
         spectre_coords = get_spectre_coords(req.spectre_line_len, req.dots, req.min_angle)
         all_lines = getSpectreDots(spectre_coords, bresenhamAlogorithmSmooth)
-        req.canvas.drawSpectre(all_lines, req.request_type)
+        len_obj = req.canvas.drawSpectre(all_lines, req.request_type)
+        req.canvas.figure_items_count.append(len_obj)
     elif (req.request_type == "brezIntSpectre"):
         spectre_coords = get_spectre_coords(req.spectre_line_len, req.dots, req.min_angle)
         all_lines = getSpectreDots(spectre_coords, bresenhamAlogorithmInt)
-        req.canvas.drawSpectre(all_lines, req.request_type)
+        len_obj = req.canvas.drawSpectre(all_lines, req.request_type)
+        req.canvas.figure_items_count.append(len_obj)
 
     elif (req.request_type == "brezFloatSpectre"):
         spectre_coords = get_spectre_coords(req.spectre_line_len, req.dots, req.min_angle)
         all_lines = getSpectreDots(spectre_coords, bresenhamAlogorithmFloat)
-        req.canvas.drawSpectre(all_lines, req.request_type)
+        len_obj = req.canvas.drawSpectre(all_lines, req.request_type)
+        req.canvas.figure_items_count.append(len_obj)
 
     elif (req.request_type == "defaultAlgoSpectre"):
         spectre_coords = get_spectre_coords(req.spectre_line_len, req.dots, req.min_angle)
-        req.canvas.drawSpectre(spectre_coords, req.request_type)
+
+        len_obj = req.canvas.drawSpectre(spectre_coords, req.request_type)
+        req.canvas.figure_items_count.append(len_obj)
 
     elif (req.request_type == "CDASpectre"):
         spectre_coords = get_spectre_coords(req.spectre_line_len, req.dots, req.min_angle)
         all_lines = getSpectreDots(spectre_coords, CDA)
-        req.canvas.drawSpectre(all_lines, req.request_type)
+        len_obj = req.canvas.drawSpectre(all_lines, req.request_type)
+        req.canvas.figure_items_count.append(len_obj)
 
     elif (req.request_type == "VuSpectre"):
         spectre_coords = get_spectre_coords(req.spectre_line_len, req.dots, req.min_angle)
         all_lines = getSpectreDots(spectre_coords, VU)
-        req.canvas.drawSpectre(all_lines, req.request_type)
+        len_obj = req.canvas.drawSpectre(all_lines, req.request_type)
+        req.canvas.figure_items_count.append(len_obj)
 
 
