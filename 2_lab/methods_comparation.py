@@ -8,23 +8,31 @@ import timeit
 
 
 def timing(f):
-    def wrap(spectre_line_len, dots, min_angle):
-        time_start = timeit.default_timer()
-        spectre_coords = get_spectre_coords(spectre_line_len, dots, min_angle)
-        values = getSpectreDots(spectre_coords, f)
-        time_end = timeit.default_timer()
-        return time_end - time_start
+    def wrap(spectre_line_len, dots, min_angle,count = 10):
+        sum = 0
+        for i in range(count):
+            time_start = timeit.default_timer()
+            spectre_coords = get_spectre_coords(spectre_line_len, dots, min_angle)
+            values = getSpectreDots(spectre_coords, f)
+            time_end = timeit.default_timer()
+            sum += time_end - time_start
+
+        return sum / count
 
     return wrap
 
 
-def timing_default_function(spectre_line_len, dots, min_angle, canvas):
+def timing_default_function(spectre_line_len, dots, min_angle, canvas,count = 10):
     spectre_coords = get_spectre_coords(spectre_line_len, dots, min_angle)
-    time_1 = timeit.default_timer()
-    for i in range(len(spectre_coords)):
-        canvas.addLine(*spectre_coords[i][0], *spectre_coords[i][1])
-    time_2 = timeit.default_timer()
-    return time_2 - time_1
+    sum = 0
+    for i in range(count):
+        time_1 = timeit.default_timer()
+        for i in range(len(spectre_coords)):
+            canvas.addLine(*spectre_coords[i][0], *spectre_coords[i][1])
+        time_2 = timeit.default_timer()
+        sum += time_2 - time_1
+
+    return sum / count
 
 
 def plot_bars_timing(spectre_line_len=500, dots=[0, 0], min_angle=12):
@@ -59,9 +67,8 @@ def plot_bars_timing(spectre_line_len=500, dots=[0, 0], min_angle=12):
     plt.xlabel("Выбранный алгоритм")
     plt.ylabel("Затраченное время на построение(ms)")
     plt.title(
-        '''Зависимость времени исполнения от выбора алгоритма(замер производился при вычислении координат и интесивностей точек спектра 
-        с длиной прямых:{0} 
-        и расстоянием между прямыми в градусах:{1})'''.format(spectre_line_len, min_angle))
+        '''Зависимость времени исполнения от выбора алгоритма
+        (Замер производился при вычислении координат и интесивностей точек спектра с длиной прямых:{0} и расстоянием между прямыми в градусах:{1})'''.format(spectre_line_len, min_angle))
     plt.legend()
     plt.grid()
     plt.show()
