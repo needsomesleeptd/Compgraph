@@ -84,16 +84,17 @@ def bresenhamAlogorithmFloat(xFr: float, yFr: float, xTo: float, yTo: float, ste
         xb = x
         yb = y
 
-        for x in range(xFr, xTo + 1, sx):
+        for x in range(xFr, xTo + sx, sx):
             if exchange:
                 pointsList.append(QPoint(y, x))
             else:
                 pointsList.append(QPoint(x, y))
 
-            e += tg
+
             if (e > 0.5):
                 y += sy
                 e = e - 1
+            e += tg
 
             if stepmode:
                 if xb != x and yb != y:
@@ -139,16 +140,18 @@ def bresenhamAlogorithmInt(x1, y1, x2, y2, stepmode=False):
         xb = x
         yb = y
 
-        for x in range(x1, x2 + 1, sx):
+        for x in range(x1, x2 + sx, sx):
             if exchange:
                 pointsList.append(QPoint(y, x))
             else:
                 pointsList.append(QPoint(x, y))
 
-            e += 2 * dy
+
             if (e >= 0):
                 y += sy
                 e = e - 2 * dx
+
+            e += 2 * dy
 
             if stepmode:
                 if xb != x and yb != y:
@@ -161,67 +164,62 @@ def bresenhamAlogorithmInt(x1, y1, x2, y2, stepmode=False):
     return pointsList
 
 
-def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=7, stepmode=False):
-    # x1, y1, x2, y2 = map(int, (x1, y1, x2, y2))
+def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=5, stepmode=False):
+    coloredPoints = []
     x2 = ceil(x2)
     y2 = ceil(y2)
     x1 = floor(x1)
     y1 = floor(y1)
-    coloredPoints = []
     if isclose(x1, x2) and isclose(y1, y2):
         coloredPoints.append([x1, y1, 1])
-        return coloredPoints
-
-    colors_intersinty = np.linspace(0, maxIntensivity, num=maxIntensivity)
-
-    dx = x2 - x1
-    dy = y2 - y1
-    sx = sign(dx)
-    sy = sign(dy)
-    dy = abs(dy)
-    dx = abs(dx)
-
-    if dy >= dx:
-        dx, dy = dy, dx
-        swap = 1  #
     else:
-        swap = 0  #
-    tg = dy / dx * maxIntensivity  # тангенс угла наклона (умножаем на инт., чтобы не приходилось умножать внутри цикла
-    e = maxIntensivity / 2  # интенсивность для высвечивания начального пикселя
-    w = maxIntensivity - tg  # пороговое значение
-    x = x1
-    y = y1
+        dx = x2 - x1
+        dy = y2 - y1
 
-    xb = x
-    yb = y
-    steps = 0
+        exchange = 0
+        if (abs(dy) > abs(dx)):
+            x1, y1 = y1, x1
+            x2, y2 = y2, x2
+            dx, dy = dy, dx
+            exchange = 1
 
-    # i <= dx i = 0
-    # for i in range(0, dx + 1):
-    # i = 0
-    # while i <= dx:
-    while not (my_isclose(x, x2) and my_isclose(y, y2)):
-        if not stepmode:
-            if (e >= 2):
-                coloredPoints.append([x, y, colors_intersinty[round(e) - 1] / maxIntensivity])
-        # canvas.create_oval(x, y, x, y, outline=fill[round(e) - 1])
-        if e < w:
-            if swap == 0:  # dy < dx
-                x += sx  # -1 if dx < 0, 0 if dx = 0, 1 if dx > 0
-            else:  # dy >= dx
-                y += sy  # -1 if dy < 0, 0 if dy = 0, 1 if dy > 0
-            e += tg
-        elif e >= w:
-            x += sx
-            y += sy
-            e -= w
+        # colors_intersinty = np.linspace(0, maxIntensivity, num=maxIntensivity)
 
-        if stepmode:
-            if xb != x and yb != y:
-                steps += 1
-            xb = x
-            yb = y
-    # print(x,y,x2,y2)
+        steps = 1
+        sx = sign(dx)
+        sy = sign(dy)
+
+        dy = abs(dy)
+        dx = abs(dx)
+        tg = (dy / dx) * maxIntensivity  # тангенс угла наклона (умножаем на инт., чтобы не приходилось умножать внутри цикла
+        e = maxIntensivity / 2  # интенсивность для высвечивания начального пикселя
+        w = maxIntensivity - tg  # пороговое значение
+
+        x = x1
+        y = y1
+
+        xb = x
+        yb = y
+
+        for x in range(x1, x2 + sx, sx):
+
+            if not stepmode:
+                if exchange:
+                    coloredPoints.append([y, x, e / maxIntensivity])
+                else:
+                    coloredPoints.append([x, y, e / maxIntensivity])
+
+            if e >= w:
+                e -= w
+                y += sy
+            else:
+                e += tg
+
+            if stepmode:
+                if xb != x and yb != y:
+                    steps += 1
+                xb = x
+                yb = y
 
     if stepmode:
         return steps
@@ -256,11 +254,13 @@ def CDA(x1, y1, x2, y2, stepmode=False):
 
         # i <= lenght i = 0
         # while abs(x - x2) > 1 or abs(y - y2) > 1:
-        for i in range(0, int(length) + 1):
+        for i in range(0, round(length) + 1):
+
             if not stepmode:
                 pointsList.append((QPoint(round(x), round(y))))
             elif round(x + dx) != round(x) and round(y + dy) != round(y):
                 steps += 1
+
             x += dx
             y += dy
     if stepmode:

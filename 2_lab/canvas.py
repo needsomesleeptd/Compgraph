@@ -96,8 +96,7 @@ class Canvas(QtWidgets.QGraphicsView):
 
             #self.scene.addLine(prev_x, prev_y, x, y, drawing_pen)
             self.scene.addRect(x,y,1,1,drawing_pen)
-            prev_x = x
-            prev_y = y
+
 
     def drawSpectre(self, spectreLines, method):
         for line in spectreLines:
