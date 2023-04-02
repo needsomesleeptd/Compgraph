@@ -22,6 +22,8 @@ class Canvas(QtWidgets.QGraphicsView):
         super().__init__(parent)
         self.scene = self.CreateGraphicsScene()
         self.pen = QtGui.QPen(Qt.red)
+        self.pen.setJoinStyle(Qt.MiterJoin)
+        #self.pen.setMiterLimit(0)
         self.backgroundColor = QtGui.QColor(Qt.white)
         self._zoom = 2  # times which picture is zoomed
 
@@ -71,12 +73,15 @@ class Canvas(QtWidgets.QGraphicsView):
         self.scene.addLine(x0, y0, x1, y1, self.pen)
 
     def drawLineByPoints(self, points):
-        self.scene.addPolygon(points, self.pen)
-
+        #self.scene.addPolygon(points, self.pen)
+        for point in points:
+            x,y = point.x(),point.y()
+            self.scene.addRect(x, y, 1, 1, self.pen)
     def drawLineIntensivityByPoints(self, coloredPoints):
 
         default_drawing_color = self.pen.color()
         drawing_pen = QtGui.QPen(default_drawing_color)
+        drawing_pen.setJoinStyle(Qt.MiterJoin)
         prev_x, prev_y = coloredPoints[0][0], coloredPoints[0][1]
 
         for point in coloredPoints:
@@ -89,7 +94,8 @@ class Canvas(QtWidgets.QGraphicsView):
             new_color.setAlphaF(intensivity)
             drawing_pen.setColor(new_color)
 
-            self.scene.addLine(prev_x, prev_y, x, y, drawing_pen)
+            #self.scene.addLine(prev_x, prev_y, x, y, drawing_pen)
+            self.scene.addRect(x,y,1,1,drawing_pen)
             prev_x = x
             prev_y = y
 

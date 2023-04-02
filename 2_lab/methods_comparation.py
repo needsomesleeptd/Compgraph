@@ -9,9 +9,11 @@ import timeit
 
 def timing(f):
     def wrap(spectre_line_len, dots, min_angle):
+        time_start = timeit.default_timer()
         spectre_coords = get_spectre_coords(spectre_line_len, dots, min_angle)
-        time = timeit.timeit(stmt=lambda: getSpectreDots(spectre_coords, f), number=10)
-        return time / 10
+        values = getSpectreDots(spectre_coords, f)
+        time_end = timeit.default_timer()
+        return time_end - time_start
 
     return wrap
 
@@ -25,7 +27,7 @@ def timing_default_function(spectre_line_len, dots, min_angle, canvas):
     return (time_2 - time_1)
 
 
-def plot_bars_timing(spectre_line_len=100, dots=[0, 0], min_angle=12):
+def plot_bars_timing(spectre_line_len=500, dots=[0, 0], min_angle=12):
     time_BrezFloat = timing(bresenhamAlogorithmFloat)
     time_brez_float = time_BrezFloat(spectre_line_len, dots, min_angle)
 
@@ -59,7 +61,7 @@ def plot_bars_timing(spectre_line_len=100, dots=[0, 0], min_angle=12):
     plt.title(
         '''Зависимость времени исполнения от выбора алгоритма(замер производился при вычислении координат и интесивностей точек спектра 
         с длиной прямых:{0} 
-        и расстоянием между прямыми в градусах{1})'''.format(spectre_line_len, min_angle))
+        и расстоянием между прямыми в градусах:{1})'''.format(spectre_line_len, min_angle))
     plt.legend()
     plt.grid()
     plt.show()

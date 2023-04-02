@@ -51,8 +51,10 @@ def get_spectre_coords(line_len, point_center, min_angle_diff):
 
 def bresenhamAlogorithmFloat(xFr: float, yFr: float, xTo: float, yTo: float, stepmode=False):
     pointsList = QPolygonF()
-    xTo = round(xTo)
-    yTo = round(yTo)
+    xTo = ceil(xTo)
+    yTo = ceil(yTo)
+    xFr = floor(xFr)
+    yFr = floor(yFr)
     steps = 0
     if isclose(xFr, xTo) and isclose(yFr, yTo):
         pointsList.append(QPoint(xFr, yFr))
@@ -109,8 +111,10 @@ def bresenhamAlogorithmFloat(xFr: float, yFr: float, xTo: float, yTo: float, ste
 
 def bresenhamAlogorithmInt(x1, y1, x2, y2, stepmode=False):
     pointsList = QPolygonF()
-    x2 = round(x2)
-    y2 = round(y2)
+    x2 = ceil(x2)
+    y2 = ceil(y2)
+    x1 = floor(x1)
+    y1 = floor(y1)
     if isclose(x1, x2) and isclose(y1, y2):
         pointsList.append(QPoint(x1, y1))
     else:
@@ -231,6 +235,7 @@ def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=7, stepmode=False):
 def CDA(x1, y1, x2, y2, stepmode=False):
     pointsList = QPolygonF()
     steps = 0
+
     if x1 == x2 and y1 == y2:
         pointsList.append(QPoint(round(x1), round(y1)))
     else:
