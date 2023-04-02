@@ -112,6 +112,7 @@ class Canvas(QtWidgets.QGraphicsView):
     def changePenColor(self, color):
         self.pen.setColor(color)
 
+
     def clearCanvas(self):
         self.scene.clear()
         self.scene.update()

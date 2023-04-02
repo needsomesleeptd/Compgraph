@@ -59,8 +59,16 @@ def bresenhamAlogorithmFloat(xFr: float, yFr: float, xTo: float, yTo: float, ste
     if isclose(xFr, xTo) and isclose(yFr, yTo):
         pointsList.append(QPoint(xFr, yFr))
     else:
+
         dx = xTo - xFr
         dy = yTo - yFr
+        exchange = 0
+        if (abs(dy) > abs(dx)):
+            xFr, yFr = yFr, xFr
+            xTo, yTo = yTo, xTo
+            dx, dy = dy, dx
+            exchange = 1
+
         steps = 1
         sx = sign(dx)
         sy = sign(dy)
@@ -68,42 +76,31 @@ def bresenhamAlogorithmFloat(xFr: float, yFr: float, xTo: float, yTo: float, ste
         dy = abs(dy)
         dx = abs(dx)
 
-        if dy > dx:
-            dx, dy = dy, dx
-            exchange = 1
-        else:
-            exchange = 0
-
         tg = dy / dx
-        e = tg - 0.5
+        e = tg
         x = xFr
         y = yFr
 
         xb = x
         yb = y
 
-        while not isclose(x, xTo) or not isclose(y, yTo):
-            pointsList.append(QPoint(x, y))
+        for x in range(xFr, xTo + 1, sx):
+            if exchange:
+                pointsList.append(QPoint(y, x))
+            else:
+                pointsList.append(QPoint(x, y))
 
-            if e >= 0:
-                if exchange == 1:
-                    x += sx
-                else:
-                    y += sy
-                e -= 1
-
-            if e <= 0:
-                if exchange == 0:
-                    x += sx
-                else:
-                    y += sy
-                e += tg
+            e += tg
+            if (e > 0.5):
+                y += sy
+                e = e - 1
 
             if stepmode:
                 if xb != x and yb != y:
                     steps += 1
                 xb = x
                 yb = y
+
     if stepmode:
         return steps
     return pointsList
@@ -121,17 +118,19 @@ def bresenhamAlogorithmInt(x1, y1, x2, y2, stepmode=False):
         dx = x2 - x1
         dy = y2 - y1
 
+        exchange = 0
+        if (abs(dy) > abs(dx)):
+            x1, y1 = y1, x1
+            x2, y2 = y2, x2
+            dx, dy = dy, dx
+            exchange = 1
+
+        steps = 1
         sx = sign(dx)
         sy = sign(dy)
 
         dy = abs(dy)
         dx = abs(dx)
-
-        if dy > dx:
-            dx, dy = dy, dx
-            exchange = 1
-        else:
-            exchange = 0
 
         e = 2 * dy - dx
         x = x1
@@ -139,24 +138,17 @@ def bresenhamAlogorithmInt(x1, y1, x2, y2, stepmode=False):
 
         xb = x
         yb = y
-        steps = 0
 
-        while not isclose(x, x2) or not isclose(y, y2):
-            if stepmode == False:
+        for x in range(x1, x2 + 1, sx):
+            if exchange:
+                pointsList.append(QPoint(y, x))
+            else:
                 pointsList.append(QPoint(x, y))
 
-            if e >= 0:
-                if exchange == 1:
-                    x += sx
-                else:
-                    y += sy
-                e -= 2 * dx  # отличие от вещественного (e -= 1)
-            if e <= 0:
-                if exchange == 0:
-                    x += sx
-                else:
-                    y += sy
-                e += 2 * dy  # difference (e += tg)
+            e += 2 * dy
+            if (e >= 0):
+                y += sy
+                e = e - 2 * dx
 
             if stepmode:
                 if xb != x and yb != y:
@@ -164,13 +156,13 @@ def bresenhamAlogorithmInt(x1, y1, x2, y2, stepmode=False):
                 xb = x
                 yb = y
 
-        if stepmode:
-            return steps
+    if stepmode:
+        return steps
     return pointsList
 
 
 def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=7, stepmode=False):
-    #x1, y1, x2, y2 = map(int, (x1, y1, x2, y2))
+    # x1, y1, x2, y2 = map(int, (x1, y1, x2, y2))
     x2 = ceil(x2)
     y2 = ceil(y2)
     x1 = floor(x1)
@@ -285,7 +277,7 @@ def VU(x1, y1, x2, y2, step_count=False):
     dy = y2 - y1
 
     if dx == 0 and dy == 0:
-        return [x1, y1, 1]
+        return [[x1, y1, 1]]
 
     m = 1
 
