@@ -42,7 +42,8 @@ def handle_request(req:request):
         points = CDA(*req.dots)
         req.canvas.drawLineByPoints(points)
     elif (req.request_type == "Vu"):
-        points = VU(*req.dots)
+        coloredPoints = VU(*req.dots)
+        req.canvas.drawLineIntensivityByPoints(coloredPoints)
 
     elif (req.request_type== "brezSmoothSpectre"):
         spectre_coords = get_spectre_coords(req.spectre_line_len, req.dots, req.min_angle)

@@ -24,7 +24,7 @@ def timing_default_function(spectre_line_len, dots, min_angle, canvas):
     for i in range(len(spectre_coords)):
         canvas.addLine(*spectre_coords[i][0], *spectre_coords[i][1])
     time_2 = timeit.default_timer()
-    return (time_2 - time_1)
+    return time_2 - time_1
 
 
 def plot_bars_timing(spectre_line_len=500, dots=[0, 0], min_angle=12):
