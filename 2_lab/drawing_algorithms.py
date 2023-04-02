@@ -164,7 +164,7 @@ def bresenhamAlogorithmInt(x1, y1, x2, y2, stepmode=False):
     return pointsList
 
 
-def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=5, stepmode=False):
+def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=120, stepmode=False):
     coloredPoints = []
     x2 = ceil(x2)
     y2 = ceil(y2)

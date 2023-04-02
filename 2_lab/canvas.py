@@ -26,6 +26,8 @@ class Canvas(QtWidgets.QGraphicsView):
         #self.pen.setMiterLimit(0)
         self.backgroundColor = QtGui.QColor(Qt.white)
         self._zoom = 2  # times which picture is zoomed
+        self.last_added_state = []
+
 
     def fitInView(self, scale=True):
         rect = QtCore.QRectF(self.rect())
@@ -109,7 +111,9 @@ class Canvas(QtWidgets.QGraphicsView):
         self.update()
 
     def changePenColor(self, color):
+
         self.pen.setColor(color)
+
 
 
     def clearCanvas(self):

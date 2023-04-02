@@ -71,6 +71,9 @@
               <pointsize>12</pointsize>
              </font>
             </property>
+            <property name="minimum">
+             <double>1.000000000000000</double>
+            </property>
             <property name="maximum">
              <double>360.000000000000000</double>
             </property>
@@ -98,7 +101,7 @@
              </font>
             </property>
             <property name="minimum">
-             <double>0.000000000000000</double>
+             <double>1.000000000000000</double>
             </property>
             <property name="maximum">
              <double>1000.000000000000000</double>
@@ -203,6 +206,19 @@
             </property>
             <property name="text">
              <string>Очистить канвас</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="revert">
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Вернуть на состояние назад</string>
             </property>
            </widget>
           </item>
@@ -425,7 +441,7 @@
      <x>0</x>
      <y>0</y>
      <width>1214</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
