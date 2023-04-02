@@ -11,6 +11,7 @@ from matplotlib.artist import Artist
 from PyQt5 import QtGui
 from PyQt5.QtGui import QMouseEvent
 
+from copy import deepcopy
 matplotlib.use('QT5Agg')
 
 
@@ -25,6 +26,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.backgroundColor = QtGui.QColor(Qt.white)
         self._zoom = 2  # times which picture is zoomed
         self.curr_state = []
+        self.saved_scene = QtWidgets.QGraphicsScene()
 
     def fitInView(self, scale=True):
         rect = QtCore.QRectF(self.rect())
@@ -129,14 +131,22 @@ class Canvas(QtWidgets.QGraphicsView):
             self.setBackgroundBrush(brush)
 
     def clearCanvas(self):
+        for item in self.scene.items():
+            self.saved_scene.addItem(item)
         self.scene.clear()
         self.scene.update()
 
     def undo_action(self):
-        items = self.scene.items()
-        #self.clearCanvas()
-        if (len(self.curr_state) > 0 and len(items) != 0):
-            for items_added_count in range(self.curr_state[-1]):
-                self.scene.removeItem(items[items_added_count])
-            self.curr_state = self.curr_state[:-1]
+        if (len(self.saved_scene.items()) == 0):
+            items = self.scene.items()
+            if (len(self.curr_state) > 0 and len(items) != 0):
+                for items_added_count in range(self.curr_state[-1]):
+                    self.scene.removeItem(items[items_added_count])
+                self.curr_state = self.curr_state[:-1]
+        else:
+            self.scene = self.saved_scene
+            self.setScene(self.scene)
+            self.scene.update()
+            self.update()
+        self.saved_scene = QtWidgets.QGraphicsScene()
 
