@@ -7,6 +7,18 @@ from math import *
 EPS = 1e-7
 
 
+def reflect_by_x(xc, yc, dots):
+    for i in range(len(dots)):
+        dots.append(QPoint(xc -(dots[i].x()), dots[i].y()))
+    return dots
+
+
+def reflect_by_y(xc, yc, dots):
+    for i in range(len(dots)):
+        dots.append(QPoint(dots[i].x(),yc -(dots[i].y())))
+    return dots
+
+
 def my_isclose(x, y, EPS=0.1):
     return isclose(x, y, abs_tol=EPS)
 
@@ -166,6 +178,49 @@ def bresenhamAlogorithmInt(x1, y1, x2, y2, stepmode=False):
     if stepmode:
         return steps
     return pointsList
+
+
+def cannonicalEllipse(xc, yc, A, B, stepmode=False):
+    points = QPolygonF()
+    sqr_ra = A * A
+    sqr_rb = B * B
+
+    border_x = round(xc + A / sqrt(1 + sqr_rb / sqr_ra))
+    border_y = round(yc + B / sqrt(1 + sqr_ra / sqr_rb))
+
+    for x in range(round(xc), border_x + 1):
+        y = yc + sqrt(sqr_ra * sqr_rb - (x - xc) ** 2 * sqr_rb) / A
+
+        points.append(QPoint(x + xc, y + yc))
+
+    for y in range(border_y, round(yc) - 1, -1):
+        x = xc + sqrt(sqr_ra * sqr_rb - (y - yc) ** 2 * sqr_ra) / B
+
+        points.append(QPoint(x + xc, y + yc))
+
+    reflect_by_x(xc, yc, points)
+    reflect_by_y(xc, yc, points)
+    return points
+
+
+def parameterEllipse(xc, yc, A, B):
+    points = QPolygonF()
+    if A > B:
+        step = 1 / A
+    else:
+        step = 1 / B
+
+    i = 0
+    while i <= pi / 2 + step:
+        x = xc + round(A * cos(i))
+        y = yc + round(B * sin(i))
+
+        points.append(QPoint(x,y))
+
+        i += step
+    reflect_by_x(xc, yc, points)
+    reflect_by_y(xc, yc, points)
+    return points
 
 
 def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=255, stepmode=False):
@@ -388,7 +443,6 @@ def VU(x1, y1, x2, y2, stepmode=False):
                 coloredPoints.append([x, int(intery), 1 - f_part(intery)])
                 coloredPoints.append([x, int(intery) + sy, f_part(intery)])
 
-
             if stepmode:
                 if int(xb) != int(x) and int(yb) != int(intery):
                     steps += 1
@@ -396,7 +450,6 @@ def VU(x1, y1, x2, y2, stepmode=False):
                 yb = intery
 
             intery = intery + gradient
-
 
         if (stepmode):
             return steps
