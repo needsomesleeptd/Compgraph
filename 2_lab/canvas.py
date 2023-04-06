@@ -90,16 +90,21 @@ class Canvas(QtWidgets.QGraphicsView):
         drawing_pen.setJoinStyle(Qt.MiterJoin)
 
         for point in coloredPoints:
-            x, y, intensivity = point[0], point[1], point[2]
-            new_red = default_drawing_color.red()
-            new_blue = default_drawing_color.blue()
-            new_green = default_drawing_color.green()
-            new_color = QtGui.QColor()
-            new_color.setRgb(new_red, new_blue, new_green)
-            new_color.setAlphaF(intensivity)
-            drawing_pen.setColor(new_color)
+            x, y = point[0], point[1]
+            if (len(point) >=3):
+                intensivity =point[2]
+                new_red = default_drawing_color.red()
+                new_blue = default_drawing_color.blue()
+                new_green = default_drawing_color.green()
+                new_color = QtGui.QColor()
+                new_color.setRgb(new_red, new_blue, new_green)
+                new_color.setAlphaF(intensivity)
+                drawing_pen.setColor(new_color)
 
-            self.scene.addRect(x, y, 1, 1, drawing_pen)
+                self.scene.addRect(x, y, 1, 1, drawing_pen)
+            else:
+                self.scene.addRect(x, y, 1, 1, drawing_pen)
+
         return len(coloredPoints)
 
 

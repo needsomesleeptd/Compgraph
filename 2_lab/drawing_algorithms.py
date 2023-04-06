@@ -8,20 +8,20 @@ EPS = 1e-7
 
 
 def reflect_by_x(xc, yc, dots):
+    reflected = QPolygonF()
     for i in range(len(dots)):
-        dots.append(QPoint(xc -(dots[i].x()), dots[i].y()))
-    return dots
+        reflected.append(QPoint(2*xc - dots[i].x() , dots[i].y()))
+    return reflected
 
 
 def reflect_by_y(xc, yc, dots):
+    reflected = QPolygonF()
     for i in range(len(dots)):
-        dots.append(QPoint(dots[i].x(),yc -(dots[i].y())))
-    return dots
-
+        reflected.append(QPoint(dots[i].x(), 2*yc - dots[i].y()))
+    return reflected
 
 def my_isclose(x, y, EPS=0.1):
     return isclose(x, y, abs_tol=EPS)
-
 
 def sign(x):
     if (x > 0):
@@ -31,10 +31,8 @@ def sign(x):
     else:
         return -1
 
-
 def to_radians(angle_degrees):
     return angle_degrees * pi / 180.0
-
 
 def rotate_OZ(x, y, angle_degrees):
     cos_val = cos(to_radians(angle_degrees))
@@ -45,7 +43,6 @@ def rotate_OZ(x, y, angle_degrees):
     x = (x) * cos_val + (y) * sin_val
     y = (save_x) * -sin_val + (y) * cos_val
     return [x, y]
-
 
 def get_spectre_coords(line_len, point_center, min_angle_diff):
     spectre_coords = []
@@ -65,7 +62,6 @@ def get_spectre_coords(line_len, point_center, min_angle_diff):
         spectre_coords.append(new_coord)
         angle += min_angle_diff
     return spectre_coords
-
 
 def bresenhamAlogorithmFloat(xFr: float, yFr: float, xTo: float, yTo: float, stepmode=False):
     pointsList = QPolygonF()
@@ -123,7 +119,6 @@ def bresenhamAlogorithmFloat(xFr: float, yFr: float, xTo: float, yTo: float, ste
         return steps
     return pointsList
 
-
 def bresenhamAlogorithmInt(x1, y1, x2, y2, stepmode=False):
     pointsList = QPolygonF()
     x2 = ceil(x2)
@@ -179,7 +174,6 @@ def bresenhamAlogorithmInt(x1, y1, x2, y2, stepmode=False):
         return steps
     return pointsList
 
-
 def cannonicalEllipse(xc, yc, A, B, stepmode=False):
     points = QPolygonF()
     sqr_ra = A * A
@@ -191,17 +185,17 @@ def cannonicalEllipse(xc, yc, A, B, stepmode=False):
     for x in range(round(xc), border_x + 1):
         y = yc + sqrt(sqr_ra * sqr_rb - (x - xc) ** 2 * sqr_rb) / A
 
-        points.append(QPoint(x + xc, y + yc))
+        points.append(QPoint(x, y))
 
     for y in range(border_y, round(yc) - 1, -1):
         x = xc + sqrt(sqr_ra * sqr_rb - (y - yc) ** 2 * sqr_ra) / B
+        points.append(QPoint(x, y))
 
-        points.append(QPoint(x + xc, y + yc))
 
-    reflect_by_x(xc, yc, points)
-    reflect_by_y(xc, yc, points)
+
+    points += reflect_by_x(xc, yc, points)
+    points += reflect_by_y(xc, yc, points)
     return points
-
 
 def parameterEllipse(xc, yc, A, B):
     points = QPolygonF()
@@ -215,13 +209,12 @@ def parameterEllipse(xc, yc, A, B):
         x = xc + round(A * cos(i))
         y = yc + round(B * sin(i))
 
-        points.append(QPoint(x,y))
+        points.append(QPoint(x, y))
 
         i += step
     reflect_by_x(xc, yc, points)
     reflect_by_y(xc, yc, points)
     return points
-
 
 def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=255, stepmode=False):
     coloredPoints = []
@@ -284,7 +277,6 @@ def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=255, stepmode=False
     if stepmode:
         return steps
     return coloredPoints
-
 
 '''def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=12, stepmode=False):
     # x1, y1, x2, y2 = map(int, (x1, y1, x2, y2))
@@ -353,7 +345,6 @@ def bresenhamAlogorithmSmooth(x1, y1, x2, y2, maxIntensivity=255, stepmode=False
     return coloredPoints
 '''
 
-
 def CDA(x1, y1, x2, y2, stepmode=False):
     x2 = ceil(x2)
     y2 = ceil(y2)
@@ -395,10 +386,8 @@ def CDA(x1, y1, x2, y2, stepmode=False):
         return steps
     return pointsList
 
-
 def f_part(x):
     return abs(x - int(x))
-
 
 def VU(x1, y1, x2, y2, stepmode=False):
     coloredPoints = []
