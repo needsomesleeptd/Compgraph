@@ -33,7 +33,7 @@ def recursive_len(item):
 
 def handle_request(req: request):
     if (req.request_type == "defaultAlgo"):
-        len_obj = req.canvas.drawLine(*req.dots)
+        len_obj = req.canvas.drawEllipseStandard(*req.dots)
         req.canvas.figure_items_count.append(len_obj)
 
     elif (req.request_type == "brezFloat"):
@@ -81,7 +81,7 @@ def handle_request(req: request):
     elif (req.request_type == "defaultAlgoSpectre"):
         spectre_coords = get_spectre_coords(req.spectre_line_len, req.dots, req.min_angle)
 
-        len_obj = req.canvas.drawSpectre(spectre_coords, req.request_type)
+        len_obj = req.canvas.drawEllipseStandard(*req.dots, req.spectre_line_len, req.min_angle)
         req.canvas.figure_items_count.append(len_obj)
 
     elif (req.request_type == "CDASpectre"):
@@ -89,7 +89,6 @@ def handle_request(req: request):
         len_obj = req.canvas.drawLineByPoints(all_lines)
 
     elif (req.request_type == "VuSpectre"):
-        spectre_coords = get_spectre_coords(req.spectre_line_len, req.dots, req.min_angle)
-        all_lines = getSpectreDots(spectre_coords, VU)
-        len_obj = req.canvas.drawSpectre(all_lines, req.request_type)
-        req.canvas.figure_items_count.append(len_obj)
+        all_lines = bresenhamEllipse(*req.dots, req.spectre_line_len, req.min_angle)
+
+        len_obj = req.canvas.drawLineByPoints(all_lines)

@@ -71,9 +71,9 @@ class Canvas(QtWidgets.QGraphicsView):
         # scene.setSceneRect(-self.width() / 2, -self.height() / 2,self.width(),self.height())
         return scene
 
-    def drawLine(self, x0, y0, x1, y1):
+    def drawEllipseStandard(self, xc, yc, A, B):
 
-        self.scene.addLine(x0, y0, x1, y1, self.pen)
+        self.scene.addEllipse(xc,yc,A,B,self.pen)
         return 1 #one object
 
     def drawLineByPoints(self, points):

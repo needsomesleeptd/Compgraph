@@ -38,7 +38,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Нарисовать спектр</string>
+           <string>Нарисовать эллипс</string>
           </property>
          </widget>
         </item>
@@ -53,7 +53,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Угол между отрезками в спектре</string>
+             <string>A:</string>
             </property>
            </widget>
           </item>
@@ -88,7 +88,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Длина отрезка</string>
+             <string>B:</string>
             </property>
            </widget>
           </item>
@@ -250,7 +250,7 @@
         <item>
          <widget class="QRadioButton" name="brez_float">
           <property name="text">
-           <string>Алгоритм Брезенхема</string>
+           <string>Каноническая форма </string>
           </property>
           <property name="checked">
            <bool>true</bool>
@@ -274,14 +274,14 @@
         <item>
          <widget class="QRadioButton" name="CDA">
           <property name="text">
-           <string>Алгоритм ЦДА</string>
+           <string>Параметрическая форма</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QRadioButton" name="Vu">
           <property name="text">
-           <string>Алгоритм Ву</string>
+           <string>Алгоритм Брезенхема</string>
           </property>
          </widget>
         </item>
@@ -441,7 +441,7 @@
      <x>0</x>
      <y>0</y>
      <width>1214</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

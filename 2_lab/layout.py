@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'main.ui'
+# Form implementation generated from reading ui file '.\main.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -237,7 +237,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addLayout(self.Main_Horixontal_layout)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1214, 26))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1214, 22))
         self.menubar.setObjectName("menubar")
         self.menu = QtWidgets.QMenu(self.menubar)
         self.menu.setObjectName("menu")
@@ -262,9 +262,9 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.draw_spectre.setText(_translate("MainWindow", "Нарисовать спектр"))
-        self.Label.setText(_translate("MainWindow", "Угол между отрезками в спектре"))
-        self.Label_2.setText(_translate("MainWindow", "Длина отрезка"))
+        self.draw_spectre.setText(_translate("MainWindow", "Нарисовать эллипс"))
+        self.Label.setText(_translate("MainWindow", "A:"))
+        self.Label_2.setText(_translate("MainWindow", "B:"))
         self.xcLabel.setText(_translate("MainWindow", "Xc"))
         self.ycLabel.setText(_translate("MainWindow", "Yc"))
         self.choose_colors_button.setText(_translate("MainWindow", "Выбрать цвета линий"))
@@ -273,11 +273,11 @@ class Ui_MainWindow(object):
         self.revert.setText(_translate("MainWindow", "Вернуть на состояние назад"))
         self.draw_line_button.setText(_translate("MainWindow", "Нарисовать Отрезок"))
         self.standard.setText(_translate("MainWindow", "Стандартный алгоритм"))
-        self.brez_float.setText(_translate("MainWindow", "Алгоритм Брезенхема"))
+        self.brez_float.setText(_translate("MainWindow", "Каноническая форма "))
         self.brez_int.setText(_translate("MainWindow", "Алгоритм Брезенхема с целыми числами"))
         self.brez_smooth.setText(_translate("MainWindow", "Алгоритм Брезенхема со сглаживанием"))
-        self.CDA.setText(_translate("MainWindow", "Алгоритм ЦДА"))
-        self.Vu.setText(_translate("MainWindow", "Алгоритм Ву"))
+        self.CDA.setText(_translate("MainWindow", "Параметрическая форма"))
+        self.Vu.setText(_translate("MainWindow", "Алгоритм Брезенхема"))
         self.xLineBeginLabel.setText(_translate("MainWindow", "X0"))
         self.x0Label.setText(_translate("MainWindow", "Y0"))
         self.x1Label_2.setText(_translate("MainWindow", "X1"))
