@@ -260,14 +260,7 @@
         <item>
          <widget class="QRadioButton" name="brez_int">
           <property name="text">
-           <string>Алгоритм Брезенхема с целыми числами</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="brez_smooth">
-          <property name="text">
-           <string>Алгоритм Брезенхема со сглаживанием</string>
+           <string>Алгоритм средней точки</string>
           </property>
          </widget>
         </item>

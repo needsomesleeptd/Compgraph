@@ -430,3 +430,53 @@ def VU(x1, y1, x2, y2, stepmode=False):
         if (stepmode):
             return steps
         return coloredPoints
+
+
+
+
+def midpointEllipse(xc, yc, A, B):
+    pointsList = QPolygonF()
+    sqr_ra = A * A
+    sqr_rb = B * B
+
+    x = 0
+    y = B
+
+
+    pointsList.append(QPoint(x + xc, y + yc))
+
+    border = round(A / sqrt(1 + sqr_rb / sqr_ra))
+    delta = sqr_rb - round(sqr_ra * (B - 1 / 4))
+
+    while x <= border:
+        if delta < 0:
+            x += 1
+            delta += 2 * sqr_rb * x + 1
+        else:
+            x += 1
+            y -= 1
+            delta += 2 * sqr_rb * x - 2 * sqr_ra * y + 1
+
+        pointsList.append(QPoint(x + xc, y + yc))
+
+    x = A
+    y = 0
+
+    pointsList.append(QPoint(x + xc, y + yc))
+
+    border = round(B / sqrt(1 + sqr_ra / sqr_rb))
+    delta = sqr_ra - round(sqr_rb * (A - 1 / 4))
+
+    while y <= border:
+        if delta < 0:
+            y += 1
+            delta += 2 * sqr_ra * y + 1
+        else:
+            x -= 1
+            y += 1
+            delta += 2 * sqr_ra * y - 2 * sqr_rb * x + 1
+
+        pointsList.append(QPoint(x + xc, y + yc))
+    pointsList += reflect_by_x(xc,yc,pointsList)
+    pointsList += reflect_by_y(xc, yc, pointsList)
+    return pointsList

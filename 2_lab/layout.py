@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\main.ui'
+# Form implementation generated from reading ui file 'main.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -153,9 +153,6 @@ class Ui_MainWindow(object):
         self.brez_int = QtWidgets.QRadioButton(self.centralwidget)
         self.brez_int.setObjectName("brez_int")
         self.Main_Vertical_Layout.addWidget(self.brez_int)
-        self.brez_smooth = QtWidgets.QRadioButton(self.centralwidget)
-        self.brez_smooth.setObjectName("brez_smooth")
-        self.Main_Vertical_Layout.addWidget(self.brez_smooth)
         self.CDA = QtWidgets.QRadioButton(self.centralwidget)
         self.CDA.setObjectName("CDA")
         self.Main_Vertical_Layout.addWidget(self.CDA)
@@ -274,8 +271,7 @@ class Ui_MainWindow(object):
         self.draw_line_button.setText(_translate("MainWindow", "Нарисовать Отрезок"))
         self.standard.setText(_translate("MainWindow", "Стандартный алгоритм"))
         self.brez_float.setText(_translate("MainWindow", "Каноническая форма "))
-        self.brez_int.setText(_translate("MainWindow", "Алгоритм Брезенхема с целыми числами"))
-        self.brez_smooth.setText(_translate("MainWindow", "Алгоритм Брезенхема со сглаживанием"))
+        self.brez_int.setText(_translate("MainWindow", "Алгоритм средней точки"))
         self.CDA.setText(_translate("MainWindow", "Параметрическая форма"))
         self.Vu.setText(_translate("MainWindow", "Алгоритм Брезенхема"))
         self.xLineBeginLabel.setText(_translate("MainWindow", "X0"))
