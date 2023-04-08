@@ -16,7 +16,7 @@ class UI(QtWidgets.QMainWindow):
         self.cur_method = "canonic"
         self.ui = layout.Ui_MainWindow()
         self.ui.setupUi(self)
-        self.ui.draw_circle_button.clicked.connect(self.processLine)
+        self.ui.draw_circle_button.clicked.connect(self.processCircle)
 
 
         self.ui.canonic.pressed.connect(lambda: self.changeAlgotype("canonic"))
@@ -51,12 +51,14 @@ class UI(QtWidgets.QMainWindow):
         req.setEllipseDim(A_ellipse,B_ellipse)
         handle_request(req)
 
-    def processLine(self):
-        x0 = self.ui.X0.value()
-        y0 = self.ui.Y0.value()
-        x1 = self.ui.X1.value()
-        y1 = self.ui.Y1.value()
-        req = request([x0, y0, x1, y1], self.cur_method, self.ui.canvas)
+    def processCircle(self):
+        x0 = int(self.ui.Xc.value())
+        y0 = ceil(self.ui.Yc.value())
+
+
+        self.cur_method += "Circle"
+        req = request([x0, y0], self.cur_method, self.ui.canvas)
+
         handle_request(req)
 
     def clear_calnvas(self):

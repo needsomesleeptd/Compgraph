@@ -1,5 +1,6 @@
 from canvas import *
-from drawing_algorithms import *
+from algos_ellipses import *
+from algos_circles import *
 
 
 def getSpectreDots(spectreDots, method, stepmode=False):
@@ -23,6 +24,8 @@ class request:
     def setEllipseDim(self, A,B):
         self.A_ellipse = A
         self.B_ellipse = B
+    def setR(self,R):
+        self.R = R
 
     def setSpectreParams(self, spectreStep,spectreLen):
         self.spectreStep = spectreStep
@@ -59,5 +62,29 @@ def handle_request(req: request):
     elif (req.request_type == "brezEllipse"):
         all_lines = bresenhamEllipse(*req.dots, req.B_ellipse, req.A_ellipse)
         len_obj = req.canvas.drawLineByPoints(all_lines)
+
+    #here cicrcles start
+    elif (req.request_type == "midPointCircle"):
+        all_lines = midpointCircle(*req.dots, req.R)
+        len_obj = req.canvas.drawLineByPoints(all_lines)
+
+    elif (req.request_type == "canonicCircle"):
+
+        all_lines = cannonicalCircle(*req.dots,  req.R)
+        len_obj = req.canvas.drawLineByPoints(all_lines)
+
+    elif (req.request_type == "standardCircle"):
+
+        len_obj = req.canvas.drawCircleStandard(*req.dots,  req.R)
+        req.canvas.figure_items_count.append(len_obj)
+
+    elif (req.request_type == "parametricCircle"):
+        all_lines = parametricCircle(*req.dots,  req.R)
+        len_obj = req.canvas.drawLineByPoints(all_lines)
+
+    elif (req.request_type == "brezCircle"):
+        all_lines = bresenhamCircle(*req.dots,  req.R)
+        len_obj = req.canvas.drawLineByPoints(all_lines)
+
 
 

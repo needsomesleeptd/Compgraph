@@ -1,4 +1,4 @@
-from drawing_algorithms import *
+from algos_ellipses import *
 from canvas import *
 from controller import *
 from matplotlib import pyplot as plt

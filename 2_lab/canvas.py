@@ -2,7 +2,7 @@ import sys
 import random
 import numpy
 import numpy as np
-from drawing_algorithms import *
+from algos_ellipses import *
 
 from PyQt5 import QtCore, QtWidgets, uic
 from PyQt5.QtCore import Qt
@@ -75,6 +75,10 @@ class Canvas(QtWidgets.QGraphicsView):
 
         self.scene.addEllipse(xc,yc,A,B,self.pen)
         return 1 #one object
+    def drawCircleStandard(self,xc,yc,r):
+        self.scene.addEllipse(xc, yc, r, r, self.pen)
+        return 1  # one object
+
 
     def drawLineByPoints(self, points):
 
