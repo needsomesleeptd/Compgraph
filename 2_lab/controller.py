@@ -59,3 +59,5 @@ def handle_request(req: request):
     elif (req.request_type == "brezEllipse"):
         all_lines = bresenhamEllipse(*req.dots, req.B_ellipse, req.A_ellipse)
         len_obj = req.canvas.drawLineByPoints(all_lines)
+
+
