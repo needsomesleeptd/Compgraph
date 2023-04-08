@@ -86,6 +86,13 @@ class Canvas(QtWidgets.QGraphicsView):
             x, y = point.x(), point.y()
             self.scene.addRect(x, y, 1, 1, self.pen)
         return len(points)
+    def drawLinesByPoints(self, lines):
+        overall_len = 0
+        for i in range(len(lines)):
+            points = lines[i]
+            overall_len += self.drawLineByPoints(points)
+        return overall_len
+
 
     def drawLineIntensivityByPoints(self, coloredPoints):
 
@@ -143,9 +150,9 @@ class Canvas(QtWidgets.QGraphicsView):
             self.setBackgroundBrush(brush)
 
     def clearCanvas(self):
-        for item in self.scene.items():
-            self.saved_scene.addItem(item)
-        self.curr_state_saved_len = len(self.figure_items_count)
+       # for item in self.scene.items():
+      #      self.saved_scene.addItem(item)
+      #  self.curr_state_saved_len = len(self.figure_items_count)
         self.scene.clear()
         self.scene.update()
 

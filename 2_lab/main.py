@@ -16,7 +16,7 @@ class UI(QtWidgets.QMainWindow):
         self.cur_method = "canonic"
         self.ui = layout.Ui_MainWindow()
         self.ui.setupUi(self)
-        self.ui.draw_circle_button.clicked.connect(self.processCircle)
+
 
 
         self.ui.canonic.pressed.connect(lambda: self.changeAlgotype("canonic"))
@@ -30,6 +30,8 @@ class UI(QtWidgets.QMainWindow):
         self.ui.measurements_steps.triggered.connect(lambda : plot_graph_steps())
 
         self.ui.draw_ellipse_button.clicked.connect(self.processElllipse)
+        self.ui.draw_circle_button.clicked.connect(self.processCircle)
+        self.ui.draw_circle_spectre_button.clicked.connect(self.processSpectreCircle)
 
         self.ui.clear_canvas.clicked.connect(self.clear_calnvas)
         self.ui.choose_colors_button.clicked.connect(self.changeCanvasLineColor)
@@ -54,11 +56,25 @@ class UI(QtWidgets.QMainWindow):
     def processCircle(self):
         x0 = int(self.ui.Xc.value())
         y0 = ceil(self.ui.Yc.value())
+        R = ceil(self.ui.Radius.value())
 
+        method = self.cur_method + "Circle"
+        req = request([x0, y0], method, self.ui.canvas)
+        req.setR(R)
 
-        self.cur_method += "Circle"
-        req = request([x0, y0], self.cur_method, self.ui.canvas)
+        handle_request(req)
 
+    def processSpectreCircle(self):
+        x0 = int(self.ui.Xc.value())
+        y0 = ceil(self.ui.Yc.value())
+        R = ceil(self.ui.Radius.value())
+
+        spectre_step = self.ui.spectre_step.value()
+        spectre_elem_count = self.ui.spectre_elem_count.value()
+        method = self.cur_method + "Circle"
+        req = request([x0, y0], method, self.ui.canvas)
+        req.setR(R)
+        req.setSpectreParams(spectre_step,spectre_elem_count)
         handle_request(req)
 
     def clear_calnvas(self):
