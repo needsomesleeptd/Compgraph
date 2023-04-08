@@ -37,57 +37,25 @@ def recursive_len(item):
 
 
 def handle_request(req: request):
-    if (req.request_type == "defaultAlgo"):
-        len_obj = req.canvas.drawEllipseStandard(*req.dots)
-        req.canvas.figure_items_count.append(len_obj)
 
-    elif (req.request_type == "brezFloat"):
-        points = bresenhamAlogorithmFloat(*req.dots)
-        len_obj = req.canvas.drawLineByPoints(points)
-        req.canvas.figure_items_count.append(len_obj)
-    elif (req.request_type == "brezInt"):
-        points = bresenhamAlogorithmInt(*req.dots)
-        len_obj = req.canvas.drawLineByPoints(points)
-        req.canvas.figure_items_count.append(len_obj)
-    elif (req.request_type == "brezSmooth"):
-        coloredPoints = bresenhamAlogorithmSmooth(*req.dots)
-        len_obj = req.canvas.drawLineIntensivityByPoints(coloredPoints)
-        req.canvas.figure_items_count.append(len_obj)
-
-    elif (req.request_type == "CDA"):
-        points = CDA(*req.dots)
-        len_obj = req.canvas.drawLineByPoints(points)
-        req.canvas.figure_items_count.append(len_obj)
-
-    elif (req.request_type == "Vu"):
-        coloredPoints = VU(*req.dots)
-        len_obj = req.canvas.drawLineIntensivityByPoints(coloredPoints)
-        req.canvas.figure_items_count.append(len_obj)
-
-    elif (req.request_type == "brezSmoothSpectre"):
-        spectre_coords = get_spectre_coords(req.B_ellipse, req.dots, req.A_ellipse)
-        all_lines = getSpectreDots(spectre_coords, bresenhamAlogorithmSmooth)
-        len_obj = req.canvas.drawSpectre(all_lines, req.request_type)
-        req.canvas.figure_items_count.append(len_obj)
-    elif (req.request_type == "brezIntSpectre"):
+    if (req.request_type == "midPointEllipse"):
         all_lines = midpointEllipse(*req.dots, req.B_ellipse, req.A_ellipse)
         len_obj = req.canvas.drawLineByPoints(all_lines)
 
-    elif (req.request_type == "brezFloatSpectre"):
+    elif (req.request_type == "canonicEllipse"):
 
         all_lines = cannonicalEllipse(*req.dots, req.B_ellipse, req.A_ellipse)
         len_obj = req.canvas.drawLineByPoints(all_lines)
 
-    elif (req.request_type == "defaultAlgoSpectre"):
+    elif (req.request_type == "standardEllipse"):
 
         len_obj = req.canvas.drawEllipseStandard(*req.dots, req.B_ellipse, req.A_ellipse)
         req.canvas.figure_items_count.append(len_obj)
 
-    elif (req.request_type == "CDASpectre"):
+    elif (req.request_type == "parametricEllipse"):
         all_lines = parameterEllipse(*req.dots, req.B_ellipse, req.A_ellipse)
         len_obj = req.canvas.drawLineByPoints(all_lines)
 
-    elif (req.request_type == "VuSpectre"):
+    elif (req.request_type == "brezEllipse"):
         all_lines = bresenhamEllipse(*req.dots, req.B_ellipse, req.A_ellipse)
-
         len_obj = req.canvas.drawLineByPoints(all_lines)

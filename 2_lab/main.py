@@ -16,7 +16,7 @@ class UI(QtWidgets.QMainWindow):
         self.cur_method = "canonic"
         self.ui = layout.Ui_MainWindow()
         self.ui.setupUi(self)
-        self.ui.draw_circle_button.connect(self.processLine)
+        self.ui.draw_circle_button.clicked.connect(self.processLine)
 
 
         self.ui.canonic.pressed.connect(lambda: self.changeAlgotype("canonic"))
