@@ -30,7 +30,63 @@
       <item>
        <layout class="QVBoxLayout" name="Main_Vertical_Layout">
         <item>
-         <widget class="QPushButton" name="draw_spectre">
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QPushButton" name="choose_colors_button">
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Выбрать цвета линий</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="choose_background_colors_button">
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Изменить цвет фона</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="clear_canvas">
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Очистить канвас</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="revert">
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Вернуть на состояние назад</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="draw_ellipse_button">
           <property name="font">
            <font>
             <family>Times New Roman</family>
@@ -58,7 +114,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QDoubleSpinBox" name="sprectre_angle_val">
+           <widget class="QDoubleSpinBox" name="A_ellipse">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -93,7 +149,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QDoubleSpinBox" name="spectre_line_len">
+           <widget class="QDoubleSpinBox" name="B_ellipse">
             <property name="font">
              <font>
               <family>Times New Roman</family>
@@ -169,66 +225,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <item>
-           <widget class="QPushButton" name="choose_colors_button">
-            <property name="font">
-             <font>
-              <family>Times New Roman</family>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Выбрать цвета линий</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="choose_background_colors_button">
-            <property name="font">
-             <font>
-              <family>Times New Roman</family>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Изменить цвет фона</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="clear_canvas">
-            <property name="font">
-             <font>
-              <family>Times New Roman</family>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Очистить канвас</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="revert">
-            <property name="font">
-             <font>
-              <family>Times New Roman</family>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Вернуть на состояние назад</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout"/>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QPushButton" name="draw_line_button">
+         <widget class="QPushButton" name="draw_circle_button">
           <property name="font">
            <font>
             <family>Times New Roman</family>
@@ -236,7 +233,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Нарисовать Отрезок</string>
+           <string>Нарисовать окружность</string>
           </property>
          </widget>
         </item>
@@ -248,7 +245,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QRadioButton" name="brez_float">
+         <widget class="QRadioButton" name="canonic">
           <property name="text">
            <string>Каноническая форма </string>
           </property>
@@ -258,21 +255,21 @@
          </widget>
         </item>
         <item>
-         <widget class="QRadioButton" name="brez_int">
+         <widget class="QRadioButton" name="mid_point">
           <property name="text">
            <string>Алгоритм средней точки</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QRadioButton" name="CDA">
+         <widget class="QRadioButton" name="parametric">
           <property name="text">
            <string>Параметрическая форма</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QRadioButton" name="Vu">
+         <widget class="QRadioButton" name="brez">
           <property name="text">
            <string>Алгоритм Брезенхема</string>
           </property>

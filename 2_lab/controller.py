@@ -14,14 +14,19 @@ class request:
         self.dots = dots
         self.request_type = request_type
         self.canvas = canvas
-        self.min_angle = 10
-        self.spectre_line_len = 100
+        self.A_ellipse = 10
+        self.B_ellipse = 10
+        self.R = 10
+        self.spectreStep = 100
+        self.spectreLen = 10
 
-    def setMinAngle(self, angle):
-        self.min_angle = angle
+    def setEllipseDim(self, A,B):
+        self.A_ellipse = A
+        self.B_ellipse = B
 
-    def setSpectreLen(self, len):
-        self.spectre_line_len = len
+    def setSpectreParams(self, spectreStep,spectreLen):
+        self.spectreStep = spectreStep
+        self.spectreLen = spectreLen
 
 
 def recursive_len(item):
@@ -60,29 +65,29 @@ def handle_request(req: request):
         req.canvas.figure_items_count.append(len_obj)
 
     elif (req.request_type == "brezSmoothSpectre"):
-        spectre_coords = get_spectre_coords(req.spectre_line_len, req.dots, req.min_angle)
+        spectre_coords = get_spectre_coords(req.B_ellipse, req.dots, req.A_ellipse)
         all_lines = getSpectreDots(spectre_coords, bresenhamAlogorithmSmooth)
         len_obj = req.canvas.drawSpectre(all_lines, req.request_type)
         req.canvas.figure_items_count.append(len_obj)
     elif (req.request_type == "brezIntSpectre"):
-        all_lines = midpointEllipse(*req.dots, req.spectre_line_len, req.min_angle)
+        all_lines = midpointEllipse(*req.dots, req.B_ellipse, req.A_ellipse)
         len_obj = req.canvas.drawLineByPoints(all_lines)
 
     elif (req.request_type == "brezFloatSpectre"):
 
-        all_lines = cannonicalEllipse(*req.dots, req.spectre_line_len, req.min_angle)
+        all_lines = cannonicalEllipse(*req.dots, req.B_ellipse, req.A_ellipse)
         len_obj = req.canvas.drawLineByPoints(all_lines)
 
     elif (req.request_type == "defaultAlgoSpectre"):
 
-        len_obj = req.canvas.drawEllipseStandard(*req.dots, req.spectre_line_len, req.min_angle)
+        len_obj = req.canvas.drawEllipseStandard(*req.dots, req.B_ellipse, req.A_ellipse)
         req.canvas.figure_items_count.append(len_obj)
 
     elif (req.request_type == "CDASpectre"):
-        all_lines = parameterEllipse(*req.dots, req.spectre_line_len, req.min_angle)
+        all_lines = parameterEllipse(*req.dots, req.B_ellipse, req.A_ellipse)
         len_obj = req.canvas.drawLineByPoints(all_lines)
 
     elif (req.request_type == "VuSpectre"):
-        all_lines = bresenhamEllipse(*req.dots, req.spectre_line_len, req.min_angle)
+        all_lines = bresenhamEllipse(*req.dots, req.B_ellipse, req.A_ellipse)
 
         len_obj = req.canvas.drawLineByPoints(all_lines)

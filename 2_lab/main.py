@@ -13,23 +13,23 @@ class UI(QtWidgets.QMainWindow):
         super().__init__()
 
 
-        self.cur_method = "brezFloat"
+        self.cur_method = "canonic"
         self.ui = layout.Ui_MainWindow()
         self.ui.setupUi(self)
-        self.ui.draw_line_button.pressed.connect(self.processLine)
+        self.ui.draw_circle_button.connect(self.processLine)
 
 
-        self.ui.brez_int.pressed.connect(lambda: self.changeAlgotype("brezInt"))
-        self.ui.brez_float.pressed.connect(lambda: self.changeAlgotype("brezFloat"))
-        self.ui.brez_smooth.pressed.connect(lambda: self.changeAlgotype("brezSmooth"))
-        self.ui.standard.pressed.connect(lambda: self.changeAlgotype("defaultAlgo"))
-        self.ui.CDA.pressed.connect(lambda: self.changeAlgotype("CDA"))
-        self.ui.Vu.pressed.connect(lambda:  self.changeAlgotype("Vu"))
+        self.ui.canonic.pressed.connect(lambda: self.changeAlgotype("canonic"))
+        self.ui.parametric.pressed.connect(lambda: self.changeAlgotype("parametric"))
+        self.ui.standard.pressed.connect(lambda: self.changeAlgotype("standard"))
+        self.ui.brez.pressed.connect(lambda: self.changeAlgotype("brez"))
+        self.ui.mid_point.pressed.connect(lambda: self.changeAlgotype("midPoint"))
+
 
         self.ui.measurements_time.triggered.connect(lambda : plot_bars_timing())
         self.ui.measurements_steps.triggered.connect(lambda : plot_graph_steps())
 
-        self.ui.draw_spectre.clicked.connect(self.processSpectre)
+        self.ui.draw_ellipse_button.clicked.connect(self.processElllipse)
 
         self.ui.clear_canvas.clicked.connect(self.clear_calnvas)
         self.ui.choose_colors_button.clicked.connect(self.changeCanvasLineColor)
@@ -41,15 +41,14 @@ class UI(QtWidgets.QMainWindow):
     def changeAlgotype(self, algo_type: str):
         self.cur_method = algo_type
 
-    def processSpectre(self):
-        min_angle = self.ui.sprectre_angle_val.value()
-        lines_len = self.ui.spectre_line_len.value()
+    def processElllipse(self):
+        A_ellipse = self.ui.A_ellipse.value()
+        B_ellipse = self.ui.B_ellipse.value()
         x0 = self.ui.Xc.value()
         y0 = self.ui.Yc.value()
-        method = self.cur_method + "Spectre"
+        method = self.cur_method + "Ellipse"
         req = request([x0, y0], method, self.ui.canvas)
-        req.setMinAngle(min_angle)
-        req.setSpectreLen(lines_len)
+        req.setEllipseDim(A_ellipse,B_ellipse)
         handle_request(req)
 
     def processLine(self):
