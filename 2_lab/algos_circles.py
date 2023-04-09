@@ -102,7 +102,7 @@ def midpointCircle(xc, yc, r):
 
     while (x <= y):
 
-        pointsList.append(QPoint(x, y))
+        pointsList.append(QPoint(x +xc, y + yc))
 
         x += 1
 
