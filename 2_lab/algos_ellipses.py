@@ -151,58 +151,52 @@ def bresenhamEllipse(xc, yc, A, B):
 
 def midpointEllipse(xc, yc, A, B):
     pointsList = QPolygonF()
+    sqr_A = A * A
+    sqr_B = B * B
+
     x = 0
     y = B
 
-    # Initial decision parameter of region 1
-    d1 = ((B * B) - (A * A * B) +
-          (0.25 * A * A))
-    dx = 2 * B * B * x
-    dy = 2 * A * A * y
 
-    # For region 1
-    while (dx < dy):
 
-        # Print points based on 4-way symmet
 
-        pointsList.append(QPoint(x + xc, y + yc))
 
-        # Checking and updating value of
-        # decision parameter based on algorithm
-        if (d1 < 0):
+    pointsList.append(QPoint(x + xc, y + yc))
+
+    border = round(A / sqrt(1 + sqr_B / sqr_A))
+    delta = sqr_B - round(sqr_A * (B - 1 / 4))
+
+    while x <= border:
+        if delta < 0:
             x += 1
-            dx = dx + (2 * B * B)
-            d1 = d1 + dx + (B * B)
+            delta += 2 * sqr_B * x + 1
         else:
             x += 1
             y -= 1
-            dx = dx + (2 * B * B)
-            dy = dy - (2 * A * A)
-            d1 = d1 + dx - dy + (B * B)
+            delta += 2 * sqr_B * x - 2 * sqr_A * y + 1
 
-    # Decision parameter of region 2
-    d2 = (((B * B) * ((x + 0.5) * (x + 0.5))) +
-          ((A * A) * ((y - 1) * (y - 1))) -
-          (A * A * B * B))
-
-    # Plotting points of region 2
-    while (y >= 0):
-
-        # printing points based on 4-way symmetB
         pointsList.append(QPoint(x + xc, y + yc))
 
-        # Checking and updating parameter
-        # value based on algorithm
-        if (d2 > 0):
-            y -= 1
-            dy = dy - (2 * A * A)
-            d2 = d2 + (A * A) - dy
+    x = A
+    y = 0
+
+    pointsList.append(QPoint(x + xc, y + yc))
+
+    border = round(B / sqrt(1 + sqr_A / sqr_B))
+    delta = sqr_A - round(sqr_B * (A - 1 / 4))
+
+    while y <= border:
+        if delta < 0:
+            y += 1
+            delta += 2 * sqr_A * y + 1
         else:
-            y -= 1
-            x += 1
-            dx = dx + (2 * B * B)
-            dy = dy - (2 * A * A)
-            d2 = d2 + dx - dy + (A * A)
+            x -= 1
+            y += 1
+            delta += 2 * sqr_A * y - 2 * sqr_B * x + 1
+
+        pointsList.append(QPoint(x + xc, y + yc))
+
+
     pointsList += reflect_by_y(xc, yc, pointsList)
     pointsList += reflect_by_x(xc, yc, pointsList)
     return pointsList
