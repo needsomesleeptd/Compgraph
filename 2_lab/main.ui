@@ -228,7 +228,7 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>A:</string>
+                   <string>B:</string>
                   </property>
                  </widget>
                 </item>
@@ -252,6 +252,9 @@
                   <property name="maximum">
                    <double>360.000000000000000</double>
                   </property>
+                  <property name="value">
+                   <double>10.000000000000000</double>
+                  </property>
                  </widget>
                 </item>
                 <item row="1" column="0">
@@ -263,7 +266,7 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>B:</string>
+                   <string>A:</string>
                   </property>
                  </widget>
                 </item>
@@ -280,6 +283,9 @@
                   </property>
                   <property name="maximum">
                    <double>1000.000000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>10.000000000000000</double>
                   </property>
                  </widget>
                 </item>
@@ -320,6 +326,9 @@
                   <property name="maximum">
                    <double>1000.000000000000000</double>
                   </property>
+                  <property name="value">
+                   <double>10.000000000000000</double>
+                  </property>
                  </widget>
                 </item>
                </layout>
@@ -336,7 +345,7 @@
                <font>
                 <family>Times New Roman</family>
                 <pointsize>14</pointsize>
-                <bold>false</bold>
+                <bold>true</bold>
                </font>
               </property>
               <property name="text">
@@ -372,6 +381,9 @@
                 </property>
                 <property name="maximum">
                  <double>100.000000000000000</double>
+                </property>
+                <property name="value">
+                 <double>10.000000000000000</double>
                 </property>
                </widget>
               </item>
@@ -415,6 +427,9 @@
                 <property name="minimum">
                  <double>1.000000000000000</double>
                 </property>
+                <property name="value">
+                 <double>2.000000000000000</double>
+                </property>
                </widget>
               </item>
               <item row="2" column="0">
@@ -444,6 +459,9 @@
                 <property name="maximum">
                  <double>100.000000000000000</double>
                 </property>
+                <property name="value">
+                 <double>10.000000000000000</double>
+                </property>
                </widget>
               </item>
               <item row="2" column="1">
@@ -459,6 +477,9 @@
                 </property>
                 <property name="maximum">
                  <double>100.000000000000000</double>
+                </property>
+                <property name="value">
+                 <double>10.000000000000000</double>
                 </property>
                </widget>
               </item>
@@ -578,9 +599,16 @@
      <string>Замеры</string>
     </property>
     <addaction name="measurements_time"/>
-    <addaction name="measurements_steps"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>О создателе...</string>
+    </property>
+    <addaction name="about_programm"/>
+    <addaction name="about_creator"/>
    </widget>
    <addaction name="menu"/>
+   <addaction name="menu_2"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -602,6 +630,16 @@
   <action name="measurements_steps">
    <property name="text">
     <string>Количество ступеней</string>
+   </property>
+  </action>
+  <action name="about_programm">
+   <property name="text">
+    <string>Информация о программе</string>
+   </property>
+  </action>
+  <action name="about_creator">
+   <property name="text">
+    <string>Информация об авторе</string>
    </property>
   </action>
  </widget>
