@@ -116,38 +116,35 @@ def bresenhamEllipse(xc, yc, A, B):
     x = 0
     y = B
 
-    points.append(QPoint(x + xc, y + yc))
-
     sqr_ra = A * A
     sqr_rb = B * B
-    delta = sqr_rb - sqr_ra * (2 * B + 1)
-
-    while y >= 0:
-
-        if delta < 0:
-            d1 = 2 * delta + sqr_ra * (2 * y + 2)
-
-            x += 1
-            if d1 < 0:
-                delta += sqr_rb * (2 * x + 1)
-            else:
-                y -= 1
-                delta += sqr_rb * (2 * x + 1) + sqr_ra * (1 - 2 * y)
-        elif delta > 0:
-            d2 = 2 * delta + sqr_rb * (2 - 2 * x)
-
-            y -= 1
-            if d2 > 0:
-                delta += sqr_ra * (1 - 2 * y)
-            else:
-                x += 1
-                delta += sqr_rb * (2 * x + 1) + sqr_ra * (1 - 2 * y)
-        else:
-            y -= 1
-            x += 1
-            delta += sqr_rb * (2 * x + 1) + sqr_ra * (1 - 2 * y)
+    delta = 4 * sqr_rb * ((x + 1) * (x + 1)) + sqr_ra * ((2 * y - 1) * (2 * y - 1)) - 4 * sqr_ra * sqr_rb
+    # Теперь рассматриваем функцию от (x + 1, y - 1 / 2)
+    while sqr_ra * (2 * y - 1) > 2 * sqr_rb * (x + 1):
 
         points.append(QPoint(x + xc, y + yc))
+        if (delta < 0):
+            x += 1
+            delta += 4 * sqr_rb * (2 * x + 3)
+        else:
+            x += 1
+            delta = delta - 8 * sqr_ra * (y - 1) + 4 * sqr_rb * (2 * x + 3)
+            y -= 1
+
+    delta = sqr_rb * ((2 * x + 1) * (2 * x + 1)) + 4 * sqr_ra * ((y + 1) * (y + 1)) - 4 * sqr_ra * sqr_rb
+    # Теперь рассматриваем функцию от (x + 1/2, y - 1)
+
+    while (y + 1 > 0):
+        points.append(QPoint(x + xc, y + yc))
+        if (delta < 0):
+            y -= 1
+            delta += 4 * sqr_ra * (2 * y + 3)
+        else:
+            y -= 1
+            delta = delta - 8 * sqr_rb * (x + 1) + 4 * sqr_ra * (2 * y + 3)
+            x += 1
+
+
     points += reflect_by_x(xc, yc, points)
     points += reflect_by_y(xc, yc, points)
     return points
@@ -198,6 +195,3 @@ def midpointEllipse(xc, yc, A, B):
     pointsList += reflect_by_x(xc, yc, pointsList)
     pointsList += reflect_by_y(xc, yc, pointsList)
     return pointsList
-
-
-
