@@ -21,6 +21,13 @@ def reflect_by_y(xc, yc, dots):
     return reflected
 
 
+def circle_symmetric_pixels(xc,yc,dots):
+    symmetric = QPolygonF()
+    for i in range(len(dots)):
+        symmetric.append(QPoint(-dots[i].y() + yc + xc, -dots[i].x() + xc + yc))
+
+    return symmetric
+
 def cannonicalCircle(xc, yc, r):
     pointsList = QPolygonF()
 
@@ -32,6 +39,7 @@ def cannonicalCircle(xc, yc, r):
         y = yc + sqrt(sqr_r - (x - xc) ** 2)
         pointsList.append(QPoint(x, round(y)))
 
+    pointsList += circle_symmetric_pixels(xc, yc, pointsList)
     pointsList += reflect_by_x(xc, yc, pointsList)
     pointsList += reflect_by_y(xc, yc, pointsList)
     return pointsList
@@ -86,7 +94,8 @@ def midpointCircle(xc, yc, r):
     delta = 1 - r
 
     while (x <= y):
-        pointsList.append(QPoint(x + xc, y + yc))
+
+        pointsList.append(QPoint(x,y))
 
         x += 1
 
@@ -96,24 +105,11 @@ def midpointCircle(xc, yc, r):
             y -= 1
             delta = delta + 2 * (x - y) + 1
 
-    x = r
-    y = 0
-
-    delta = 1 - r  # 5/4 - r
-
-    while x >= y:
-        if delta >= 0:
-            x -= 1
-            y += 1
-            delta += 2 * y + 1 - 2 * x
-        else:
-            y += 1
-            delta += 2 * y + 1
-
-            pointsList.append(QPoint(x + xc, y + yc))
-
+    pointsList += circle_symmetric_pixels(xc, yc, pointsList)
     pointsList += reflect_by_x(xc, yc, pointsList)
-    pointsList += reflect_by_y(xc, yc, pointsList)  # TODO:: adjust if possiable
+    pointsList += reflect_by_y(xc, yc, pointsList)
+
+
     return pointsList
 
 
