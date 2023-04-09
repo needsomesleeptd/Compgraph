@@ -90,19 +90,38 @@ def handle_request(req: request):
             len_obj = req.canvas.drawLineByPoints(all_lines)
 
     elif (req.request_type == "canonicCircle"):
-
-        all_lines = cannonicalCircle(*req.dots, req.R)
-        len_obj = req.canvas.drawLineByPoints(all_lines)
+        if (req.spectreLen != 0):
+            requests = getSpectreRequestsCircle(req, req.spectreStep, req.spectreLen)
+            Circles = getSpectrePolygons(requests, cannonicalCircle)
+            len_obj = req.canvas.drawLinesByPoints(Circles)
+        else:
+            all_lines = cannonicalCircle(*req.dots, req.R)
+            len_obj = req.canvas.drawLineByPoints(all_lines)
 
     elif (req.request_type == "standardCircle"):
+        if (req.spectreLen != 0):
+            requests = getSpectreRequestsCircle(req, req.spectreStep, req.spectreLen)
+            len_obj = req.canvas.drawCirclesStadard(requests)
+        else:
+            len_obj = req.canvas.drawCircleStandard(*req.dots, req.R)
 
-        len_obj = req.canvas.drawCircleStandard(*req.dots, req.R)
-        req.canvas.figure_items_count.append(len_obj)
 
     elif (req.request_type == "parametricCircle"):
-        all_lines = parametricCircle(*req.dots, req.R)
-        len_obj = req.canvas.drawLineByPoints(all_lines)
+        if (req.spectreLen != 0):
+            requests = getSpectreRequestsCircle(req, req.spectreStep, req.spectreLen)
+            Circles = getSpectrePolygons(requests, parametricCircle)
+            len_obj = req.canvas.drawLinesByPoints(Circles)
+        else:
+            all_lines = parametricCircle(*req.dots, req.R)
+            len_obj = req.canvas.drawLineByPoints(all_lines)
 
     elif (req.request_type == "brezCircle"):
-        all_lines = bresenhamCircle(*req.dots, req.R)
-        len_obj = req.canvas.drawLineByPoints(all_lines)
+        if (req.spectreLen != 0):
+            requests = getSpectreRequestsCircle(req, req.spectreStep, req.spectreLen)
+            Circles = getSpectrePolygons(requests, bresenhamCircle)
+            len_obj = req.canvas.drawLinesByPoints(Circles)
+        else:
+            all_lines = bresenhamCircle(*req.dots, req.R)
+            len_obj = req.canvas.drawLineByPoints(all_lines)
+
+    req.canvas.figure_items_count.append(len_obj)

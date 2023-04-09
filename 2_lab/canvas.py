@@ -12,6 +12,7 @@ from PyQt5 import QtGui
 from PyQt5.QtGui import QMouseEvent
 
 from copy import deepcopy
+
 matplotlib.use('QT5Agg')
 
 
@@ -73,12 +74,19 @@ class Canvas(QtWidgets.QGraphicsView):
 
     def drawEllipseStandard(self, xc, yc, A, B):
 
-        self.scene.addEllipse(xc,yc,A,B,self.pen)
-        return 1 #one object
-    def drawCircleStandard(self,xc,yc,r):
-        self.scene.addEllipse(xc, yc, r, r, self.pen)
+        self.scene.addEllipse(xc, yc, A, B, self.pen)
         return 1  # one object
 
+    def drawCircleStandard(self, xc, yc, r):
+        #print(xc,yc,r)
+        self.scene.addEllipse(xc - (r) / 2, yc - (r) / 2, r, r, self.pen)
+        return 1  # one object
+
+    def drawCirclesStadard(self, reqs):
+        overall_len = 0
+        for req in reqs:
+            overall_len += self.drawCircleStandard(*req.dots, req.R)
+        return overall_len
 
     def drawLineByPoints(self, points):
 
@@ -86,13 +94,13 @@ class Canvas(QtWidgets.QGraphicsView):
             x, y = point.x(), point.y()
             self.scene.addRect(x, y, 1, 1, self.pen)
         return len(points)
+
     def drawLinesByPoints(self, lines):
         overall_len = 0
         for i in range(len(lines)):
             points = lines[i]
             overall_len += self.drawLineByPoints(points)
         return overall_len
-
 
     def drawLineIntensivityByPoints(self, coloredPoints):
 
@@ -102,8 +110,8 @@ class Canvas(QtWidgets.QGraphicsView):
 
         for point in coloredPoints:
             x, y = point[0], point[1]
-            if (len(point) >=3):
-                intensivity =point[2]
+            if (len(point) >= 3):
+                intensivity = point[2]
                 new_red = default_drawing_color.red()
                 new_blue = default_drawing_color.blue()
                 new_green = default_drawing_color.green()
@@ -118,11 +126,7 @@ class Canvas(QtWidgets.QGraphicsView):
 
         return len(coloredPoints)
 
-
-
-
     def drawSpectre(self, spectreLines, method, undo=False):
-
 
         len_obj = 0
         for line in spectreLines:
@@ -150,9 +154,9 @@ class Canvas(QtWidgets.QGraphicsView):
             self.setBackgroundBrush(brush)
 
     def clearCanvas(self):
-       # for item in self.scene.items():
-      #      self.saved_scene.addItem(item)
-      #  self.curr_state_saved_len = len(self.figure_items_count)
+        # for item in self.scene.items():
+        #      self.saved_scene.addItem(item)
+        #  self.curr_state_saved_len = len(self.figure_items_count)
         self.scene.clear()
         self.scene.update()
 
@@ -169,5 +173,4 @@ class Canvas(QtWidgets.QGraphicsView):
             self.scene.update()
             self.update()
             self.saved_scene = QtWidgets.QGraphicsScene()
-        self.curr_state_saved_len  = -1
-
+        self.curr_state_saved_len = -1
