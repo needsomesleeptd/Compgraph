@@ -74,9 +74,14 @@ class Canvas(QtWidgets.QGraphicsView):
 
     def drawEllipseStandard(self, xc, yc, A, B):
 
-        self.scene.addEllipse(xc, yc, A, B, self.pen)
+        self.scene.addEllipse(xc - A / 2, yc - B / 2, A, B, self.pen)
         return 1  # one object
 
+    def drawEllipsesStandard(self,reqs):
+        overall_len = 0
+        for req in reqs:
+            overall_len += self.drawEllipseStandard(*req.dots, req.B_ellipse,req.A_ellipse)
+        return overall_len
     def drawCircleStandard(self, xc, yc, r):
         #print(xc,yc,r)
         self.scene.addEllipse(xc - (r) / 2, yc - (r) / 2, r, r, self.pen)

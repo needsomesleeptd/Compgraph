@@ -15,14 +15,27 @@ def getSpectrePolygons(spectreRequests, method):
     return allLines
 
 
-def getSpectreRequestsCircle(init_req, step, count):
+def getSpectreRequests(init_req, step, count):
     requests = []
-    R = init_req.R
-    for i in range(int(count)):
-        req = request(init_req.dots, init_req.request_type, init_req.canvas)
-        req.setR(R)
-        requests.append(req)
-        R+= step
+    if init_req.R > 0:
+        R = init_req.R
+        for i in range(int(count)):
+            req = request(init_req.dots, init_req.request_type, init_req.canvas)
+            req.setR(R)
+            requests.append(req)
+            R += step
+    else:
+        A = init_req.A_ellipse
+        B = init_req.B_ellipse
+        step_A = step[0]
+        step_B = step[1]
+        for i in range(int(count)):
+            req = request(init_req.dots, init_req.request_type, init_req.canvas)
+            req.setEllipseDim(A, B)
+            requests.append(req)
+            A += step_A
+            B += step_B
+
     return requests
 
 
@@ -36,6 +49,8 @@ class request:
         self.R = -1
         self.spectreStep = 0
         self.spectreLen = 0
+        self.ellipseStepA = 0
+        self.ellipsestepB = 0
 
     def setEllipseDim(self, A, B):
         self.A_ellipse = A
@@ -57,32 +72,56 @@ def recursive_len(item):
 
 
 def handle_request(req: request):
+    len_obj = 0
     if (req.request_type == "midPointEllipse"):
-        all_lines = midpointEllipse(*req.dots, req.B_ellipse, req.A_ellipse)
-        len_obj = req.canvas.drawLineByPoints(all_lines)
+        if (req.spectreLen != 0):
+            requests = getSpectreRequests(req, req.spectreStep, req.spectreLen)
+            Ellipses = getSpectrePolygons(requests, midpointEllipse)
+            len_obj = req.canvas.drawLinesByPoints(Ellipses)
+        else:
+            all_lines = midpointCircle(*req.dots, req.R)
+            len_obj = req.canvas.drawLineByPoints(all_lines)
 
     elif (req.request_type == "canonicEllipse"):
-
-        all_lines = cannonicalEllipse(*req.dots, req.B_ellipse, req.A_ellipse)
-        len_obj = req.canvas.drawLineByPoints(all_lines)
+        if (req.spectreLen != 0):
+            requests = getSpectreRequests(req, req.spectreStep, req.spectreLen)
+            Ellipses = getSpectrePolygons(requests, cannonicalEllipse)
+            len_obj = req.canvas.drawLinesByPoints(Ellipses)
+        else:
+            all_lines = cannonicalEllipse(*req.dots, req.B_ellipse, req.A_ellipse)
+            len_obj = req.canvas.drawLineByPoints(all_lines)
 
     elif (req.request_type == "standardEllipse"):
-
-        len_obj = req.canvas.drawEllipseStandard(*req.dots, req.B_ellipse, req.A_ellipse)
-        req.canvas.figure_items_count.append(len_obj)
+        if (req.spectreLen != 0):
+            requests = getSpectreRequests(req, req.spectreStep, req.spectreLen)
+            len_obj = req.canvas.drawEllipsesStandard(requests)
+        else:
+            len_obj = req.canvas.drawEllipseStandard(*req.dots, req.B_ellipse, req.A_ellipse)
+            req.canvas.figure_items_count.append(len_obj)
 
     elif (req.request_type == "parametricEllipse"):
-        all_lines = parameterEllipse(*req.dots, req.B_ellipse, req.A_ellipse)
-        len_obj = req.canvas.drawLineByPoints(all_lines)
+
+        if (req.spectreLen != 0):
+            requests = getSpectreRequests(req, req.spectreStep, req.spectreLen)
+            Ellipses = getSpectrePolygons(requests, parameterEllipse)
+            len_obj = req.canvas.drawLinesByPoints(Ellipses)
+        else:
+            all_lines = parameterEllipse(*req.dots, req.B_ellipse, req.A_ellipse)
+            len_obj = req.canvas.drawLineByPoints(all_lines)
 
     elif (req.request_type == "brezEllipse"):
-        all_lines = bresenhamEllipse(*req.dots, req.B_ellipse, req.A_ellipse)
-        len_obj = req.canvas.drawLineByPoints(all_lines)
+        if (req.spectreLen != 0):
+            requests = getSpectreRequests(req, req.spectreStep, req.spectreLen)
+            Ellipses = getSpectrePolygons(requests, bresenhamEllipse)
+            len_obj = req.canvas.drawLinesByPoints(Ellipses)
+        else:
+            all_lines = bresenhamEllipse(*req.dots, req.B_ellipse, req.A_ellipse)
+            len_obj = req.canvas.drawLineByPoints(all_lines)
 
     # here cicrcles start
     elif (req.request_type == "midPointCircle"):
         if (req.spectreLen != 0):
-            requests = getSpectreRequestsCircle(req,req.spectreStep,req.spectreLen)
+            requests = getSpectreRequests(req, req.spectreStep, req.spectreLen)
             Circles = getSpectrePolygons(requests, midpointCircle)
             len_obj = req.canvas.drawLinesByPoints(Circles)
         else:
@@ -91,7 +130,7 @@ def handle_request(req: request):
 
     elif (req.request_type == "canonicCircle"):
         if (req.spectreLen != 0):
-            requests = getSpectreRequestsCircle(req, req.spectreStep, req.spectreLen)
+            requests = getSpectreRequests(req, req.spectreStep, req.spectreLen)
             Circles = getSpectrePolygons(requests, cannonicalCircle)
             len_obj = req.canvas.drawLinesByPoints(Circles)
         else:
@@ -100,7 +139,7 @@ def handle_request(req: request):
 
     elif (req.request_type == "standardCircle"):
         if (req.spectreLen != 0):
-            requests = getSpectreRequestsCircle(req, req.spectreStep, req.spectreLen)
+            requests = getSpectreRequests(req, req.spectreStep, req.spectreLen)
             len_obj = req.canvas.drawCirclesStadard(requests)
         else:
             len_obj = req.canvas.drawCircleStandard(*req.dots, req.R)
@@ -108,7 +147,7 @@ def handle_request(req: request):
 
     elif (req.request_type == "parametricCircle"):
         if (req.spectreLen != 0):
-            requests = getSpectreRequestsCircle(req, req.spectreStep, req.spectreLen)
+            requests = getSpectreRequests(req, req.spectreStep, req.spectreLen)
             Circles = getSpectrePolygons(requests, parametricCircle)
             len_obj = req.canvas.drawLinesByPoints(Circles)
         else:
@@ -117,7 +156,7 @@ def handle_request(req: request):
 
     elif (req.request_type == "brezCircle"):
         if (req.spectreLen != 0):
-            requests = getSpectreRequestsCircle(req, req.spectreStep, req.spectreLen)
+            requests = getSpectreRequests(req, req.spectreStep, req.spectreLen)
             Circles = getSpectrePolygons(requests, bresenhamCircle)
             len_obj = req.canvas.drawLinesByPoints(Circles)
         else:

@@ -99,7 +99,6 @@
              <font>
               <family>Times New Roman</family>
               <pointsize>14</pointsize>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -131,6 +130,12 @@
                 <pointsize>12</pointsize>
                </font>
               </property>
+              <property name="minimum">
+               <double>-1000.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>1000.000000000000000</double>
+              </property>
              </widget>
             </item>
             <item row="1" column="0">
@@ -153,6 +158,12 @@
                 <family>Times New Roman</family>
                 <pointsize>12</pointsize>
                </font>
+              </property>
+              <property name="minimum">
+               <double>-1000.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>1000.000000000000000</double>
               </property>
              </widget>
             </item>
@@ -303,6 +314,9 @@
                   <property name="decimals">
                    <number>2</number>
                   </property>
+                  <property name="minimum">
+                   <double>1.000000000000000</double>
+                  </property>
                   <property name="maximum">
                    <double>1000.000000000000000</double>
                   </property>
@@ -322,7 +336,6 @@
                <font>
                 <family>Times New Roman</family>
                 <pointsize>14</pointsize>
-                <weight>50</weight>
                 <bold>false</bold>
                </font>
               </property>
@@ -354,9 +367,28 @@
                   <pointsize>12</pointsize>
                  </font>
                 </property>
+                <property name="minimum">
+                 <double>0.010000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>100.000000000000000</double>
+                </property>
                </widget>
               </item>
               <item row="1" column="0">
+               <widget class="QLabel" name="aLabel">
+                <property name="font">
+                 <font>
+                  <family>Times New Roman</family>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Шаг эллипса A:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
                <widget class="QLabel" name="Label_4">
                 <property name="font">
                  <font>
@@ -369,13 +401,64 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
+              <item row="3" column="1">
                <widget class="QDoubleSpinBox" name="spectre_elem_count">
                 <property name="font">
                  <font>
                   <family>Times New Roman</family>
                   <pointsize>12</pointsize>
                  </font>
+                </property>
+                <property name="decimals">
+                 <number>0</number>
+                </property>
+                <property name="minimum">
+                 <double>1.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="bLabel">
+                <property name="font">
+                 <font>
+                  <family>Times New Roman</family>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Шаг эллипса B:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QDoubleSpinBox" name="A_step">
+                <property name="font">
+                 <font>
+                  <family>Times New Roman</family>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="minimum">
+                 <double>0.010000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>100.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QDoubleSpinBox" name="B_step">
+                <property name="font">
+                 <font>
+                  <family>Times New Roman</family>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="minimum">
+                 <double>0.010000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>100.000000000000000</double>
                 </property>
                </widget>
               </item>
@@ -487,7 +570,7 @@
      <x>0</x>
      <y>0</y>
      <width>1233</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

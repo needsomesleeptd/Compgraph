@@ -12,12 +12,9 @@ class UI(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
 
-
         self.cur_method = "canonic"
         self.ui = layout.Ui_MainWindow()
         self.ui.setupUi(self)
-
-
 
         self.ui.canonic.pressed.connect(lambda: self.changeAlgotype("canonic"))
         self.ui.parametric.pressed.connect(lambda: self.changeAlgotype("parametric"))
@@ -25,13 +22,13 @@ class UI(QtWidgets.QMainWindow):
         self.ui.brez.pressed.connect(lambda: self.changeAlgotype("brez"))
         self.ui.mid_point.pressed.connect(lambda: self.changeAlgotype("midPoint"))
 
-
-        self.ui.measurements_time.triggered.connect(lambda : plot_bars_timing())
-        self.ui.measurements_steps.triggered.connect(lambda : plot_graph_steps())
+        self.ui.measurements_time.triggered.connect(lambda: plot_bars_timing())
+        self.ui.measurements_steps.triggered.connect(lambda: plot_graph_steps())
 
         self.ui.draw_ellipse_button.clicked.connect(self.processElllipse)
         self.ui.draw_circle_button.clicked.connect(self.processCircle)
         self.ui.draw_circle_spectre_button.clicked.connect(self.processSpectreCircle)
+        self.ui.draw_ellipse_spectre_button.clicked.connect(self.processSpectreEllipse)
 
         self.ui.clear_canvas.clicked.connect(self.clear_calnvas)
         self.ui.choose_colors_button.clicked.connect(self.changeCanvasLineColor)
@@ -50,7 +47,7 @@ class UI(QtWidgets.QMainWindow):
         y0 = self.ui.Yc.value()
         method = self.cur_method + "Ellipse"
         req = request([x0, y0], method, self.ui.canvas)
-        req.setEllipseDim(A_ellipse,B_ellipse)
+        req.setEllipseDim(A_ellipse, B_ellipse)
         handle_request(req)
 
     def processCircle(self):
@@ -65,7 +62,7 @@ class UI(QtWidgets.QMainWindow):
         handle_request(req)
 
     def processSpectreCircle(self):
-        x0 = int(self.ui.Xc.value())
+        x0 = ceil(self.ui.Xc.value())
         y0 = ceil(self.ui.Yc.value())
         R = ceil(self.ui.Radius.value())
 
@@ -74,13 +71,28 @@ class UI(QtWidgets.QMainWindow):
         method = self.cur_method + "Circle"
         req = request([x0, y0], method, self.ui.canvas)
         req.setR(R)
-        req.setSpectreParams(spectre_step,spectre_elem_count)
+        req.setSpectreParams(spectre_step, spectre_elem_count)
+        handle_request(req)
+
+    def processSpectreEllipse(self):
+        A_ellipse = self.ui.A_ellipse.value()
+        B_ellipse = self.ui.B_ellipse.value()
+        x0 = self.ui.Xc.value()
+        y0 = self.ui.Yc.value()
+
+        spectre_step_A = self.ui.A_step.value()
+        spectre_step_B = self.ui.B_step.value()
+        spectre_step = [spectre_step_A, spectre_step_B]
+        spectre_elem_count = self.ui.spectre_elem_count.value()
+
+        method = self.cur_method + "Ellipse"
+        req = request([x0, y0], method, self.ui.canvas)
+        req.setEllipseDim(A_ellipse, B_ellipse)
+        req.setSpectreParams(spectre_step, spectre_elem_count)
         handle_request(req)
 
     def clear_calnvas(self):
         self.ui.canvas.clearCanvas()
-
-
 
     def changeCanvasLineColor(self):
         button_color = QtWidgets.QColorDialog.getColor()
@@ -92,9 +104,6 @@ class UI(QtWidgets.QMainWindow):
         text = "Данная работа была выполнена студентом Разиным Андреем группы ИУ7-44Б\n\n" \
                "Если бы он знал о polygon его жизнь была бы проще"
         self.show_message(title, text)
-
-
-
 
     def about_program_message(self):
         title = "О программе"
