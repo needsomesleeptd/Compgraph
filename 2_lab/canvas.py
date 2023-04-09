@@ -29,6 +29,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.figure_items_count = []
         self.saved_scene = QtWidgets.QGraphicsScene()
         self.curr_state_saved_len = -1
+        self.save_request = []
 
     def fitInView(self, scale=True):
         rect = QtCore.QRectF(self.rect())
@@ -148,19 +149,24 @@ class Canvas(QtWidgets.QGraphicsView):
         return len_obj
 
     def changePenColor(self, color):
-
+        self.save_request = [self.pen.color(),"PenColor"]
         self.pen.setColor(color)
+
+
 
     def changeCanvasBackGroundColor(self):
 
         background_color = QtWidgets.QColorDialog.getColor()
         if (background_color.isValid()):
+            self.save_request = [self.backgroundColor, "BackgroundColor"]
             brush = QtGui.QBrush(background_color)
             self.backgroundColor = background_color
             self.setBackgroundBrush(brush)
 
     def clearCanvas(self):
+        self.save_request= []
         items = self.scene.items()
+        self.saved_scene = QtWidgets.QGraphicsScene()
         if (len(items) > 0):
             for i in range(len(items) - 1, 0, -1):
                 self.saved_scene.addItem(items[i])
@@ -169,17 +175,27 @@ class Canvas(QtWidgets.QGraphicsView):
         self.scene.update()
 
     def undo_action(self):
-        if (self.curr_state_saved_len != len(self.figure_items_count)):
-            items = self.scene.items()
-            if (len(self.figure_items_count) > 0 and len(items) != 0):
-                for items_added_count in range(self.figure_items_count[-1]):
-                    self.scene.removeItem(items[items_added_count])
-                self.figure_items_count = self.figure_items_count[:-1]
+        if (len(self.save_request) > 0):
+            if (self.save_request[1] == "BackgroundColor"):
+                background_color = self.save_request[0]
+                brush = QtGui.QBrush(background_color)
+                self.backgroundColor = background_color
+                self.setBackgroundBrush(brush)
+            else:
+                pen_color = self.save_request[0]
+                self.pen.setColor(pen_color)
         else:
-            self.scene = self.saved_scene
-            self.setScene(self.scene)
-            self.scene.update()
-            self.update()
-            self.saved_scene = QtWidgets.QGraphicsScene()
-            self.figure_items_count = []
-        self.curr_state_saved_len = -1
+            if (self.curr_state_saved_len != len(self.figure_items_count)):
+                items = self.scene.items()
+                if (len(self.figure_items_count) > 0 and len(items) != 0):
+                    for items_added_count in range(self.figure_items_count[-1]):
+                        self.scene.removeItem(items[items_added_count])
+                    self.figure_items_count = self.figure_items_count[:-1]
+            else:
+                self.scene = self.saved_scene
+                self.setScene(self.scene)
+                self.scene.update()
+                self.update()
+                self.saved_scene = QtWidgets.QGraphicsScene()
+                self.figure_items_count = []
+            self.curr_state_saved_len = -1

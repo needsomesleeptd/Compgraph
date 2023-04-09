@@ -162,5 +162,5 @@ def handle_request(req: request):
         else:
             all_lines = bresenhamCircle(*req.dots, req.R)
             len_obj = req.canvas.drawLineByPoints(all_lines)
-
+    req.canvas.save_request = []
     req.canvas.figure_items_count.append(len_obj)
