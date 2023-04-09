@@ -22,7 +22,7 @@ class UI(QtWidgets.QMainWindow):
         self.ui.brez.pressed.connect(lambda: self.changeAlgotype("brez"))
         self.ui.mid_point.pressed.connect(lambda: self.changeAlgotype("midPoint"))
 
-        self.ui.measurements_time.triggered.connect(lambda: plot_bars_timing())
+        self.ui.measurements_time.triggered.connect(lambda: plot_graphs_timing())
         self.ui.measurements_steps.triggered.connect(lambda: plot_graph_steps())
 
         self.ui.draw_ellipse_button.clicked.connect(self.processElllipse)

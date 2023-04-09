@@ -7,82 +7,122 @@ from PyQt5 import QtCore, QtWidgets, uic
 import timeit
 
 
-def timing(f):
-    def wrap(spectre_line_len, dots, min_angle, count=10):
+def timingCircles(f, dots=[0, 0], R=10, spectreStep=10, spectreLen=100, count=10):
+    fake_method = None
+    fake_canvas = None
+    req = request(dots, fake_method, fake_canvas)
+    req.setR(R)
+    req.setSpectreParams(spectreStep, spectreLen)
+    timings = []
+    for j in range(spectreLen):
         sum = 0
         for i in range(count):
             time_start = timeit.default_timer()
-            spectre_coords = get_spectre_coords(spectre_line_len, dots, min_angle)
-            values = getSpectreDots(spectre_coords, f)
+            values = f(*req.dots, req.R)
             time_end = timeit.default_timer()
             sum += time_end - time_start
 
-        return sum / count
-
-    return wrap
-
-
-def timing_default_function(spectre_line_len, dots, min_angle, canvas, count=10):
-    spectre_coords = get_spectre_coords(spectre_line_len, dots, min_angle)
-    sum = 0
-    for i in range(count):
-        time_1 = timeit.default_timer()
-        for i in range(len(spectre_coords)):
-            canvas.addLine(*spectre_coords[i][0], *spectre_coords[i][1])
-        time_2 = timeit.default_timer()
-        sum += time_2 - time_1
-
-    return sum / count
+        timings.append(sum / count)
+        req.R += spectreStep
+    return timings
 
 
-def plot_bars_timing(spectre_line_len=500, dots=[0, 0], min_angle=12):
-    time_BrezFloat = timing(bresenhamAlogorithmFloat)
-    time_brez_float = time_BrezFloat(spectre_line_len, dots, min_angle)
+def timingEllipses(f, dots=[0, 0], A=10, B=10, spectreStep=10, spectreLen=100, count=10):
+    fake_method = None
+    fake_canvas = None
+    req = request(dots, fake_method, fake_canvas)
+    req.setEllipseDim(A, B)
+    req.setSpectreParams(spectreStep, spectreLen)
+    timings = []
+    for j in range(spectreLen):
+        sum = 0
+        for i in range(count):
+            time_start = timeit.default_timer()
+            values = f(*req.dots, req.A_ellipse, req.B_ellipse)
+            time_end = timeit.default_timer()
+            sum += time_end - time_start
 
-    time_BrezInt = timing(bresenhamAlogorithmInt)
-    time_brez_int = time_BrezInt(spectre_line_len, dots, min_angle)
+        timings.append(sum / count)
+        req.A_ellipse += spectreStep
+        req.B_ellipse += spectreStep
+    return timings
 
-    time_BrezSmooth = timing(bresenhamAlogorithmSmooth)
-    time_brez_smooth = time_BrezSmooth(spectre_line_len, dots, min_angle)
 
-    time_CDA = timing(CDA)
-    time_cda = time_CDA(spectre_line_len, dots, min_angle)
-
-    time_VU = timing(VU)
-    time_vu = time_VU(spectre_line_len, dots, min_angle)
-
+def timingEllipsesDefault(dots=[0, 0], A=10, B=32, spectreStep=10, spectreLen=100, count=10):
     fake_scene = QtWidgets.QGraphicsScene()
-    time_lib = timing_default_function(spectre_line_len, dots, min_angle, fake_scene)
+    fake_method = None
+    fake_canvas = None
+    req = request(dots, fake_method, fake_canvas)
+    req.setEllipseDim(A, B)
+    req.setSpectreParams(spectreStep, spectreLen)
+    timings = []
+    for j in range(spectreLen):
+        sum = 0
+        for i in range(count):
+            time_start = timeit.default_timer()
+            fake_scene.addEllipse(*dots, req.A_ellipse, req.B_ellipse)
+            time_end = timeit.default_timer()
+            sum += time_end - time_start
 
-    labels = ["1.Алгоритм Брезенхема с дробными числами", "2.Алгоритм Брезенхема с целыми числами",
-              "3.Алгоритм Брезенхема со сглаживаем", "4.Алгоритм ЦДА", "5.Алгоритм Ву", "6.Стадартная библиотека"]
-    x = [i + 1 for i in range(6)]
+        timings.append(sum / count)
+        req.A_ellipse += spectreStep
+        req.B_ellipse += spectreStep
 
-    times = [time_brez_float, time_brez_int, time_brez_smooth, time_cda, time_vu, time_lib]
+    return timings
 
-    for i in range(len(times)):
-        plt.bar(x[i], times[i], label=labels[i])
 
-    # plt.bar(x, times,labels = labels)
-    plt.xlabel("Выбранный алгоритм")
-    plt.ylabel("Затраченное время на построение(ms)")
-    plt.title(
-        '''Зависимость времени исполнения от выбора алгоритма
-        (Замер производился при вычислении координат и интесивностей точек спектра с длиной прямых:{0} и расстоянием между прямыми в градусах:{1})'''.format(
-            spectre_line_len, min_angle))
-    plt.legend()
-    plt.grid()
-    plt.show()
+def plot_graphs_timing(dots=[0, 0], R=10, spectre_step=10, spectreLen=10, count=40):
+    fig, (axs) = plt.subplots(1, 2)
+    fig.set_size_inches((30, 8))
+    timeBrezCircles = timingCircles(bresenhamCircle, dots, R, spectre_step, spectreLen, count)
+    timeMidCircles = timingCircles(midpointCircle, dots, R, spectre_step, spectreLen, count)
+    timeCanonicalCircles = timingCircles(cannonicalCircle, dots, R, spectre_step, spectreLen, count)
+    timeParametricCircles = timingCircles(parametricCircle, dots, R, spectre_step, spectreLen, count)
+    timeDefaultCircles = timingEllipsesDefault(dots, R, R, spectre_step, spectreLen, count)
+
+    timeBrezEllipses = timingEllipses(bresenhamEllipse, dots, R, R, spectre_step, spectreLen, count)
+    timeMidEllipses = timingEllipses(midpointEllipse, dots, R, R, spectre_step, spectreLen, count)
+    timeCanonicalEllipses = timingEllipses(cannonicalEllipse, dots, R, R, spectre_step, spectreLen, count)
+    timeParametricEllipses = timingEllipses(parameterEllipse, dots, R, R, spectre_step, spectreLen, count)
+    timeDefaultEllipses = timingEllipsesDefault(dots, R, R, spectre_step, spectreLen, count)
+
+    labels = ["1.Алгоритм Брезенхема", "2.Алгоритм средней точки",
+              "3.Использование параметрического уравнения", "4.Использование канонического уравнения",
+              "5.Использование библиотеки"]
+    x = [R * i for i in range(1, spectreLen + 1)]
+
+    timesCircles = [timeBrezCircles, timeMidCircles,  timeParametricCircles,timeCanonicalCircles, timeDefaultCircles]
+    timesEllipses = [timeBrezEllipses, timeMidEllipses, timeParametricEllipses,timeCanonicalEllipses,
+                     timeDefaultEllipses]
+
+    for i in range(len(timesCircles)):
+        axs[0].plot(x, timesCircles[i], label=labels[i])
+    for i in range(len(timesCircles)):
+        axs[1].plot(x, timesEllipses[i], label=labels[i])
+
+    titleCircles ='''
+        Зависимость времени построения окружности от выбора алгоритма\n(Количество прогонок:{0})
+    '''.format(count)
+    titleEllipse = '''
+     Зависимость времени построения эллипса от выбора алгоритма\n(Количество прогонок:{0})
+    '''.format(count)
+    axs[0].set_title(titleCircles)
+    axs[1].set_title(titleEllipse)
+    for ax in axs.flat:
+        ax.legend()
+        ax.grid()
+        ax.set_xlabel("Радиус фигуры")
+        ax.set_ylabel("Время затраченное на вычисление(ms)")
+    fig.show()
 
 
 # ______________________________STEPS_COMPARATION_________________________________________________
 
 
 def plot_graph_steps(spectre_line_len=100, min_angle=12):
-
     steps = [[], [], [], [], []]
 
-    angles = [i for i in range(0,360, min_angle)]
+    '''angles = [i for i in range(0, 360, min_angle)]
     spectre_coords = get_spectre_coords(spectre_line_len, [0, 0], min_angle)
     vu_steps = getSpectreDots(spectre_coords, VU, True)
     brez_float_steps = getSpectreDots(spectre_coords, bresenhamAlogorithmFloat, True)
@@ -96,17 +136,14 @@ def plot_graph_steps(spectre_line_len=100, min_angle=12):
     steps[3].append(cda_steps)
     steps[4].append(vu_steps)
 
-
     labels = ["Алгоритм Брезенхема с дробными числами", "Алгоритм Брезенхема с целыми числами",
               "Алгоритм Брезенхема со сглаживаем", "Алгоритм ЦДА", "Алгоритм Ву"]
     for i in range(len(labels)):
         plt.plot(angles, *steps[i], label=labels[i])
 
-    plt.title(
-        '''Зависимость количества ступеней  от угла под которым идет прямая(длина прямых:{0}, шаг угла:{1})'''.format(spectre_line_len, min_angle))
+    
     plt.xlabel("Угол поворота прямой")
     plt.ylabel("Количество ступеней")
     plt.legend()
     plt.grid()
-    plt.show()
-
+    plt.show()'''
