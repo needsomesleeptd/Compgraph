@@ -48,7 +48,7 @@ def timingEllipses(f, dots=[0, 0], A=10, B=10, spectreStep=10, spectreLen=100, c
     return timings
 
 
-def timingEllipsesDefault(dots=[0, 0], A=10, B=32, spectreStep=10, spectreLen=100, count=10):
+def timingEllipsesDefault(dots=[0, 0], A=10, B=32, spectreStep=10, spectreLen=100, count=1):
     fake_scene = QtWidgets.QGraphicsScene()
     fake_method = None
     fake_canvas = None
@@ -71,7 +71,7 @@ def timingEllipsesDefault(dots=[0, 0], A=10, B=32, spectreStep=10, spectreLen=10
     return timings
 
 
-def plot_graphs_timing(dots=[0, 0], R=10, spectre_step=10, spectreLen=10, count=40):
+def plot_graphs_timing(dots=[0, 0], R=10, spectre_step=10, spectreLen=10, count=10):
     fig, (axs) = plt.subplots(1, 2)
     fig.set_size_inches((30, 8))
     timeBrezCircles = timingCircles(bresenhamCircle, dots, R, spectre_step, spectreLen, count)

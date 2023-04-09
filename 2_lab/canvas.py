@@ -77,13 +77,14 @@ class Canvas(QtWidgets.QGraphicsView):
         self.scene.addEllipse(xc - A / 2, yc - B / 2, A, B, self.pen)
         return 1  # one object
 
-    def drawEllipsesStandard(self,reqs):
+    def drawEllipsesStandard(self, reqs):
         overall_len = 0
         for req in reqs:
-            overall_len += self.drawEllipseStandard(*req.dots, req.B_ellipse,req.A_ellipse)
+            overall_len += self.drawEllipseStandard(*req.dots, req.B_ellipse, req.A_ellipse)
         return overall_len
+
     def drawCircleStandard(self, xc, yc, r):
-        #print(xc,yc,r)
+        # print(xc,yc,r)
         self.scene.addEllipse(xc - (r) / 2, yc - (r) / 2, r, r, self.pen)
         return 1  # one object
 
@@ -159,9 +160,11 @@ class Canvas(QtWidgets.QGraphicsView):
             self.setBackgroundBrush(brush)
 
     def clearCanvas(self):
-        # for item in self.scene.items():
-        #      self.saved_scene.addItem(item)
-        #  self.curr_state_saved_len = len(self.figure_items_count)
+        items = self.scene.items()
+        if (len(items) > 0):
+            for i in range(len(items) - 1, 0, -1):
+                self.saved_scene.addItem(items[i])
+            self.curr_state_saved_len = len(self.figure_items_count)
         self.scene.clear()
         self.scene.update()
 
@@ -178,4 +181,5 @@ class Canvas(QtWidgets.QGraphicsView):
             self.scene.update()
             self.update()
             self.saved_scene = QtWidgets.QGraphicsScene()
+            self.figure_items_count = []
         self.curr_state_saved_len = -1
