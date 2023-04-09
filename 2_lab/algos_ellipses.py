@@ -80,11 +80,11 @@ def cannonicalEllipse(xc, yc, A, B):
     for x in range(round(xc), border_x + 1):
         y = yc + sqrt(sqr_ra * sqr_rb - (x - xc) ** 2 * sqr_rb) / A
 
-        points.append(QPoint(x, y))
+        points.append(QPoint(x, round(y)))
 
     for y in range(border_y, round(yc) - 1, -1):
         x = xc + sqrt(sqr_ra * sqr_rb - (y - yc) ** 2 * sqr_ra) / B
-        points.append(QPoint(x, y))
+        points.append(QPoint(round(x), y))
 
     points += reflect_by_x(xc, yc, points)
     points += reflect_by_y(xc, yc, points)

@@ -43,7 +43,7 @@ def cannonicalCircle(xc, yc, r):
 
     border = round(xc + r / sqrt(2))
 
-    for x in range(xc, border + 1):
+    for x in range(round(xc), border + 1):
         y = yc + sqrt(sqr_r - (x - xc) ** 2)
         pointsList.append(QPoint(x, round(y)))
 
