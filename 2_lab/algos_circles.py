@@ -24,18 +24,14 @@ def reflect_by_y(xc, yc, dots):
 def circle_symmetric_pixels(xc, yc, dots):
     symmetric = QPolygonF()
     for i in range(len(dots)):
-        symmetric.append(QPoint(dots[i].y() + yc + xc, dots[i].x() - xc + yc))
+        symmetric.append(QPoint(dots[i].y() - yc + xc, dots[i].x() - xc + yc))
         symmetric.append(QPoint(-dots[i].y() + yc + xc, dots[i].x() - xc + yc))
         symmetric.append(QPoint(dots[i].y() - yc + xc, -dots[i].x() + xc + yc))
         symmetric.append(QPoint(-dots[i].y() + yc + xc, -dots[i].x() + xc + yc))
 
-
         symmetric.append(QPoint(dots[i].x(), 2 * yc - dots[i].y()))
         symmetric.append(QPoint(2 * xc - dots[i].x(), dots[i].y()))
         symmetric.append(QPoint(2 * xc - dots[i].x(), 2 * yc - dots[i].y()))
-
-
-
 
     return symmetric
 
@@ -45,7 +41,7 @@ def cannonicalCircle(xc, yc, r):
 
     sqr_r = r ** 2
 
-    border = round(xc + r)
+    border = round(xc + r / sqrt(2))
 
     for x in range(xc, border + 1):
         y = yc + sqrt(sqr_r - (x - xc) ** 2)
@@ -64,7 +60,6 @@ def bresenhamCircle(xc, yc, r):
     pointsList.append(QPoint(x + xc, y + yc))
 
     delta_1 = 2 * (1 - r)
-
 
     while y >= 0:
         if delta_1 < 0:
@@ -118,7 +113,6 @@ def midpointCircle(xc, yc, r):
             delta = delta + 2 * (x - y) + 1
 
     pointsList += circle_symmetric_pixels(xc, yc, pointsList)
-
 
     return pointsList
 

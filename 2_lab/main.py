@@ -45,7 +45,7 @@ class UI(QtWidgets.QMainWindow):
         A_ellipse = self.ui.A_ellipse.value()
         B_ellipse = self.ui.B_ellipse.value()
         x0 = self.ui.Xc.value()
-        y0 = self.ui.Yc.value()
+        y0 = -self.ui.Yc.value()
         method = self.cur_method + "Ellipse"
         req = request([x0, y0], method, self.ui.canvas)
         req.setEllipseDim(A_ellipse, B_ellipse)
@@ -53,7 +53,7 @@ class UI(QtWidgets.QMainWindow):
 
     def processCircle(self):
         x0 = int(self.ui.Xc.value())
-        y0 = ceil(self.ui.Yc.value())
+        y0 = -ceil(self.ui.Yc.value())
         R = ceil(self.ui.Radius.value())
 
         method = self.cur_method + "Circle"
@@ -64,7 +64,7 @@ class UI(QtWidgets.QMainWindow):
 
     def processSpectreCircle(self):
         x0 = ceil(self.ui.Xc.value())
-        y0 = ceil(self.ui.Yc.value())
+        y0 = -ceil(self.ui.Yc.value())
         R = ceil(self.ui.Radius.value())
 
         spectre_step = self.ui.spectre_step.value()
@@ -79,7 +79,7 @@ class UI(QtWidgets.QMainWindow):
         A_ellipse = self.ui.A_ellipse.value()
         B_ellipse = self.ui.B_ellipse.value()
         x0 = self.ui.Xc.value()
-        y0 = self.ui.Yc.value()
+        y0 = -self.ui.Yc.value()
 
         spectre_step_A = self.ui.A_step.value()
         spectre_step_B = self.ui.B_step.value()
@@ -114,11 +114,14 @@ class UI(QtWidgets.QMainWindow):
                     Параметрическое уравнение X=Rcost, Y=Rsint
                     Алгоритм Брезенхема
                     Алгоритм средней точки
-                    Библиотечная функция\n\n'''\
+                    Библиотечная функция\n
+                    '''\
+            "И сравнить скорость построения фигур данными способами\n\n"\
                "Замечания по работе программы:\n" \
                "   1.Поле `Координаты центра фигуры` определеяет центр всех спектров для построения\n" \
                "   2.Параметр A задает размер горизонтальной полуоси эллипса,параметр B задает размеры вертикальной полуоси\n" \
-               "   3.Поля со словом шаг задают значения последовательного смещения фигур в спектре "
+               "   3.Поля со словом `шаг` задают значения последовательного смещения фигур в спектре "
+
 
 
         self.show_message(title, text)
