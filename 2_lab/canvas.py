@@ -3,6 +3,8 @@ import random
 import numpy
 import numpy as np
 
+from drawing_algos import *
+
 from PyQt5 import QtCore, QtWidgets, uic
 from PyQt5.QtCore import Qt
 import matplotlib
@@ -29,6 +31,15 @@ class Canvas(QtWidgets.QGraphicsView):
         self.saved_scene = QtWidgets.QGraphicsScene()
         self.curr_state_saved_len = -1
         self.save_request = []
+        self.flag_has_started = False
+        self.points = []
+        self.image = QtGui.QImage(self.width(), self.height(),QtGui.QImage.Format_ARGB32)
+        self.image.fill(Qt.white)
+        #temp_pixmap = QtGui.QPixmap.convertFromImage(self.image)
+        self.pixmap = QtGui.QPixmap()
+        self.pixmap.convertFromImage(self.image)
+        self.pixmap_on_canvas = self.scene.addPixmap(self.pixmap)
+        self.fitInView(self.scene.itemsBoundingRect())
 
     def fitInView(self, scale=True):
         rect = QtCore.QRectF(self.rect())
@@ -55,7 +66,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.scale(factor, factor)
         newPos = self.mapToScene(event.pos())
 
-    def mousePressEvent(self, event):
+    '''def mousePressEvent(self, event):
         oldPos = self.mapToScene(self.viewport().rect().center())
 
         self.setTransformationAnchor(QtWidgets.QGraphicsView.NoAnchor)
@@ -64,7 +75,29 @@ class Canvas(QtWidgets.QGraphicsView):
         delta = oldPos - newPos
         self.translate(delta.x(), delta.y())
 
-        # super().mousePressEvent(event)
+        # super().mousePressEvent(event)'''
+
+
+    def drawLine(self,fr,to):
+        points = bresenhamAlogorithmFloat(*fr,*to)
+        for point in points:
+            self.image.setPixelColor(point.x(),point.y(),self.pen.color())
+        self.updatePixmap()
+
+    def updatePixmap(self):
+        self.image = self.image.scaled(self.width(),self.height())
+        self.pixmap.convertFromImage(self.image)
+        self.pixmap_on_canvas.setPixmap(self.pixmap)
+    def mousePressEvent(self, event):
+
+        #if not self.flag_has_started:
+        if event.buttons() == QtCore.Qt.LeftButton:
+            pos = self.mapToScene(event.pos())
+            self.drawLine([pos.x(),pos.y()],[pos.x() + 100,pos.y() + 100])
+            self.updatePixmap()
+
+
+
 
     def CreateGraphicsScene(self):
         scene = QtWidgets.QGraphicsScene()
