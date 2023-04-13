@@ -2,7 +2,6 @@ import sys
 import random
 import numpy
 import numpy as np
-from algos_ellipses import *
 
 from PyQt5 import QtCore, QtWidgets, uic
 from PyQt5.QtCore import Qt
