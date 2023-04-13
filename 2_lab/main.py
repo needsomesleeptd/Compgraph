@@ -13,12 +13,20 @@ class UI(QtWidgets.QMainWindow):
         self.cur_method = "canonic"
         self.ui = layout.Ui_MainWindow()
         self.ui.setupUi(self)
-
+        self.ui.panning.clicked.connect(self.changetoPanMode)
+        self.ui.dots_placement.clicked.connect(self.changetoPlaceMode)
 
 
         self.show()
 
 
+
+    def changetoPanMode(self):
+        self.ui.canvas.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
+        self.ui.canvas.pan_mode = True
+    def changetoPlaceMode(self):
+        self.ui.canvas.setDragMode(QtWidgets.QGraphicsView.NoDrag)
+        self.ui.canvas.pan_mode = False
     def clear_calnvas(self):
         self.ui.canvas.clearCanvas()
 
