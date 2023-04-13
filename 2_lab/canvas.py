@@ -33,27 +33,14 @@ class Canvas(QtWidgets.QGraphicsView):
         self.save_request = []
         self.flag_has_started = False
         self.points = []
-        self.image = QtGui.QImage(self.width(), self.height(),QtGui.QImage.Format_ARGB32)
+        self.image = QtGui.QImage(self.width() * 2, self.height() * 2, QtGui.QImage.Format_ARGB32)
         self.image.fill(Qt.white)
-        #temp_pixmap = QtGui.QPixmap.convertFromImage(self.image)
+        # temp_pixmap = QtGui.QPixmap.convertFromImage(self.image)
         self.pixmap = QtGui.QPixmap()
         self.pixmap.convertFromImage(self.image)
         self.pixmap_on_canvas = self.scene.addPixmap(self.pixmap)
-        self.fitInView(self.scene.itemsBoundingRect())
-
-    def fitInView(self, scale=True):
-        rect = QtCore.QRectF(self.rect())
-
-        self.setSceneRect(rect)
-
-        unity = self.transform().mapRect(QtCore.QRectF(0, 0, 1, 1))
-        self.scale(1 / unity.width(), 1 / unity.height())
-        viewrect = self.viewport().rect()
-        scenerect = self.transform().mapRect(rect)
-        factor = min(viewrect.width() / scenerect.width(),
-                     viewrect.height() / scenerect.height())
-        self.scale(factor, factor)
-        self._zoom = 0
+        self.fitInView(self.pixmap_on_canvas)
+        self.cur_polygon = []
 
     def wheelEvent(self, event):
 
@@ -65,6 +52,9 @@ class Canvas(QtWidgets.QGraphicsView):
             self._zoom -= 1
         self.scale(factor, factor)
         newPos = self.mapToScene(event.pos())
+        # self.image = self.image.scaled(self.width(), self.height())
+        # self.updatePixmap()
+        # self.fitInView(self.pixmap_on_canvas)
 
     '''def mousePressEvent(self, event):
         oldPos = self.mapToScene(self.viewport().rect().center())
@@ -77,25 +67,35 @@ class Canvas(QtWidgets.QGraphicsView):
 
         # super().mousePressEvent(event)'''
 
-
-    def drawLine(self,fr,to):
-        points = bresenhamAlogorithmFloat(*fr,*to)
+    def drawLine(self, fr, to):
+        points = bresenhamAlogorithmFloat(*fr, *to)
         for point in points:
-            self.image.setPixelColor(point.x(),point.y(),self.pen.color())
+            self.image.setPixelColor(point.x(), point.y(), self.pen.color())
         self.updatePixmap()
 
     def updatePixmap(self):
-        self.image = self.image.scaled(self.width(),self.height())
+        # super().fitInView(self.pixmap_on_canvas)
+        self.image = self.image.scaled(self.width(), self.height())
         self.pixmap.convertFromImage(self.image)
         self.pixmap_on_canvas.setPixmap(self.pixmap)
+
     def mousePressEvent(self, event):
 
-        #if not self.flag_has_started:
+        # if not self.flag_has_started:
+        pos = self.mapToScene(event.pos())
         if event.buttons() == QtCore.Qt.LeftButton:
-            pos = self.mapToScene(event.pos())
-            self.drawLine([pos.x(),pos.y()],[pos.x() + 100,pos.y() + 100])
-            self.updatePixmap()
+            if (len(self.cur_polygon) == 0):
+                self.image.setPixelColor(pos.x(), pos.y(), self.pen.color())
+            else:
+                self.drawLine(self.cur_polygon[-1], [pos.x(), pos.y()])
 
+
+        if event.buttons() == QtCore.Qt.RightButton:
+            self.drawLine(self.cur_polygon[0],self.cur_polygon[-1])
+            self.cur_polygon = []
+
+        self.cur_polygon.append([pos.x(), pos.y()])
+        self.updatePixmap()
 
 
 
@@ -181,10 +181,8 @@ class Canvas(QtWidgets.QGraphicsView):
         return len_obj
 
     def changePenColor(self, color):
-        self.save_request = [self.pen.color(),"PenColor"]
+        self.save_request = [self.pen.color(), "PenColor"]
         self.pen.setColor(color)
-
-
 
     def changeCanvasBackGroundColor(self):
 
@@ -196,7 +194,7 @@ class Canvas(QtWidgets.QGraphicsView):
             self.setBackgroundBrush(brush)
 
     def clearCanvas(self):
-        self.save_request= []
+        self.save_request = []
         items = self.scene.items()
         self.saved_scene = QtWidgets.QGraphicsScene()
         if (len(items) > 0):
