@@ -40,6 +40,13 @@
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="fill_line_by_line">
+          <property name="text">
+           <string>Закрасить</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QLabel" name="label">
           <property name="text">
            <string>Выбор операции</string>

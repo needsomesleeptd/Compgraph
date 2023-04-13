@@ -72,8 +72,6 @@ def bresenhamAlogorithmFloat(xFr: float, yFr: float, xTo: float, yTo: float, ste
 
 
 def line_by_line_filling_algorithm_with_seed(canvas, border_colour, fill_colour, seed_point, delay=0):
-    def line_by_line_filling_algorithm_with_seed \
-                    (canvas, img, border_colour, fill_colour, seed_point, delay=False):
 
 
         stack = [seed_point]
@@ -92,8 +90,8 @@ def line_by_line_filling_algorithm_with_seed(canvas, border_colour, fill_colour,
 
             x += 1
 
-            while canvas.image.Pixel(x, y) != fill_colour and \
-                    canvas.image.Pixel(x, y) != border_colour and x < canvas.width():
+            while canvas.image.pixel(x, y) != fill_colour and \
+                    canvas.image.pixel(x, y) != border_colour and x < canvas.image.width():
                 canvas.image.setPixelColor(x, y, fill_colour)
                 x += 1
 
@@ -102,8 +100,8 @@ def line_by_line_filling_algorithm_with_seed(canvas, border_colour, fill_colour,
             # заполняем интервал слева от затравки
 
             x = tx - 1
-            while canvas.image.Pixel(x, y) != fill_colour and \
-                    canvas.image.Pixel(x, y) != border_colour and x > 0:
+            while canvas.image.pixel(x, y) != fill_colour and \
+                    canvas.image.pixel(x, y) != border_colour and x > 0:
                 canvas.image.setPixelColor(x, y, fill_colour)
                 x -= 1
 
@@ -118,16 +116,16 @@ def line_by_line_filling_algorithm_with_seed(canvas, border_colour, fill_colour,
                 while x <= xr:
                     flag = False
 
-                    while canvas.image.Pixel(x, y) != fill_colour and \
-                            canvas.image.Pixel(x, y) != border_colour and x <= xr:
+                    while canvas.image.pixel(x, y) != fill_colour and \
+                            canvas.image.pixel(x, y) != border_colour and x <= xr:
                         flag = True
                         x += 1
 
                     # Помещаем в стек крайний справа пиксель
 
                     if flag:
-                        if x == xr and canvas.image.Pixel(x, y) != fill_colour and \
-                                canvas.image.Pixel(x, y) != border_colour:
+                        if x == xr and canvas.image.pixel(x, y) != fill_colour and \
+                                canvas.image.pixel(x, y) != border_colour:
                             if y < canvas.image.height():
                                 stack.append([x, y])
                         else:
@@ -139,8 +137,8 @@ def line_by_line_filling_algorithm_with_seed(canvas, border_colour, fill_colour,
                     # Продолжаем проверку, если интервал был прерван
 
                     x_in = x
-                    while (canvas.image.Pixel(x, y) == fill_colour or
-                           canvas.image.Pixel(x, y) == border_colour) and x < xr:
+                    while (canvas.image.pixel(x, y) == fill_colour or
+                           canvas.image.pixel(x, y) == border_colour) and x < xr:
                         x = x + 1
 
                     if x == x_in:
@@ -154,8 +152,8 @@ def line_by_line_filling_algorithm_with_seed(canvas, border_colour, fill_colour,
             while x <= xr:
                 flag = False
 
-                while canvas.image.Pixel(x, y) != fill_colour and \
-                        canvas.image.Pixel(x, y) != border_colour and x <= xr:
+                while canvas.image.pixel(x, y) != fill_colour and \
+                        canvas.image.pixel(x, y) != border_colour and x <= xr:
                     flag = True
                     x += 1
 
@@ -163,8 +161,8 @@ def line_by_line_filling_algorithm_with_seed(canvas, border_colour, fill_colour,
 
                 if flag:
 
-                    if x == xr and canvas.image.Pixel(x, y) != fill_colour and \
-                            canvas.image.Pixel(x, y) != border_colour:
+                    if x == xr and canvas.image.pixel(x, y) != fill_colour and \
+                            canvas.image.pixel(x, y) != border_colour:
                         if y > 0:
                             stack.append([x, y])
                     else:
@@ -176,8 +174,8 @@ def line_by_line_filling_algorithm_with_seed(canvas, border_colour, fill_colour,
                 # Продолжаем проверку, если интервал был прерван
 
                 x_in = x
-                while (canvas.image.Pixel(x, y) == fill_colour or
-                       canvas.image.Pixel(x, y) == border_colour) and x < xr:
+                while (canvas.image.pixel(x, y) == fill_colour or
+                       canvas.image.pixel(x, y) == border_colour) and x < xr:
                     x = x + 1
 
                 if x == x_in:

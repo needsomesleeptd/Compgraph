@@ -15,6 +15,7 @@ class UI(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         self.ui.panning.clicked.connect(self.changetoPanMode)
         self.ui.dots_placement.clicked.connect(self.changetoPlaceMode)
+        self.ui.fill_line_by_line.clicked.connect(self.ui.canvas.fill_line_by_line)
 
 
         self.show()

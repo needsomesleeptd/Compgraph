@@ -93,15 +93,19 @@ class Canvas(QtWidgets.QGraphicsView):
                 self.cur_polygon.append([pos.x(), pos.y()])
 
             if event.buttons() == QtCore.Qt.RightButton:
-                self.drawLine(self.cur_polygon[0],self.cur_polygon[-1])
+                self.drawLine(self.cur_polygon[0], self.cur_polygon[-1])
                 self.cur_polygon = []
 
+            if event.buttons() == QtCore.Qt.MouseButton.MidButton:
+                print(self.filled_dot)
+                self.filled_dot = [event.x(), event.y()]
 
             self.updatePixmap()
 
+    def fill_line_by_line(self):
 
-
-
+        line_by_line_filling_algorithm_with_seed(self, self.pen.color(), QtGui.QColor(0, 0, 0),self.filled_dot)
+        self.updatePixmap()
 
     def CreateGraphicsScene(self):
         scene = QtWidgets.QGraphicsScene()

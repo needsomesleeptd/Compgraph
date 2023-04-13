@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file './main.ui'
+# Form implementation generated from reading ui file 'main.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -33,6 +33,9 @@ class Ui_MainWindow(object):
         self.table_points.setColumnCount(0)
         self.table_points.setRowCount(0)
         self.verticalLayout.addWidget(self.table_points)
+        self.fill_line_by_line = QtWidgets.QPushButton(self.centralwidget)
+        self.fill_line_by_line.setObjectName("fill_line_by_line")
+        self.verticalLayout.addWidget(self.fill_line_by_line)
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setObjectName("label")
         self.verticalLayout.addWidget(self.label)
@@ -80,6 +83,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.fill_line_by_line.setText(_translate("MainWindow", "Закрасить"))
         self.label.setText(_translate("MainWindow", "Выбор операции"))
         self.panning.setText(_translate("MainWindow", "Передвижение по холсту"))
         self.dots_placement.setText(_translate("MainWindow", "Расстановка точек"))
