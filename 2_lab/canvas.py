@@ -41,6 +41,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.pixmap_on_canvas = self.scene.addPixmap(self.pixmap)
         self.fitInView(self.pixmap_on_canvas)
         self.cur_polygon = []
+        self.filled_dot = []
         self.pan_mode = False
 
     def wheelEvent(self, event):
@@ -97,6 +98,8 @@ class Canvas(QtWidgets.QGraphicsView):
 
 
             self.updatePixmap()
+
+
 
 
 

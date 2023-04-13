@@ -1,9 +1,9 @@
-
 from PyQt5.QtCore import QPoint
 from PyQt5.QtGui import QPolygonF
 import numpy as np
 
 from math import *
+
 
 def sign(x):
     if (x > 0):
@@ -12,6 +12,8 @@ def sign(x):
         return 0
     else:
         return -1
+
+
 def bresenhamAlogorithmFloat(xFr: float, yFr: float, xTo: float, yTo: float, stepmode=False):
     pointsList = QPolygonF()
     xTo = ceil(xTo)
@@ -67,3 +69,119 @@ def bresenhamAlogorithmFloat(xFr: float, yFr: float, xTo: float, yTo: float, ste
     if stepmode:
         return steps
     return pointsList
+
+
+def line_by_line_filling_algorithm_with_seed(canvas, border_colour, fill_colour, seed_point, delay=0):
+    def line_by_line_filling_algorithm_with_seed \
+                    (canvas, img, border_colour, fill_colour, seed_point, delay=False):
+
+
+        stack = [seed_point]
+        while stack:
+
+            seed_pixel = stack.pop()
+            x = seed_pixel[0]
+            y = seed_pixel[1]
+
+
+            canvas.image.setPixelColor(x, y, fill_colour)
+            tx = x
+            ty = y
+
+            # заполняем интервал справа от затравки
+
+            x += 1
+
+            while canvas.image.Pixel(x, y) != fill_colour and \
+                    canvas.image.Pixel(x, y) != border_colour and x < canvas.width():
+                canvas.image.setPixelColor(x, y, fill_colour)
+                x += 1
+
+            xr = x - 1
+
+            # заполняем интервал слева от затравки
+
+            x = tx - 1
+            while canvas.image.Pixel(x, y) != fill_colour and \
+                    canvas.image.Pixel(x, y) != border_colour and x > 0:
+                canvas.image.setPixelColor(x, y, fill_colour)
+                x -= 1
+
+            xl = x + 1
+
+            # Проход по верхней строке
+
+            x = xl
+            if ty < canvas.image.height():
+                y = ty + 1
+
+                while x <= xr:
+                    flag = False
+
+                    while canvas.image.Pixel(x, y) != fill_colour and \
+                            canvas.image.Pixel(x, y) != border_colour and x <= xr:
+                        flag = True
+                        x += 1
+
+                    # Помещаем в стек крайний справа пиксель
+
+                    if flag:
+                        if x == xr and canvas.image.Pixel(x, y) != fill_colour and \
+                                canvas.image.Pixel(x, y) != border_colour:
+                            if y < canvas.image.height():
+                                stack.append([x, y])
+                        else:
+                            if y < canvas.image.height():
+                                stack.append([x - 1, y])
+
+                        flag = False
+
+                    # Продолжаем проверку, если интервал был прерван
+
+                    x_in = x
+                    while (canvas.image.Pixel(x, y) == fill_colour or
+                           canvas.image.Pixel(x, y) == border_colour) and x < xr:
+                        x = x + 1
+
+                    if x == x_in:
+                        x += 1
+
+            # Проход по нижней строке
+
+            x = xl
+            y = ty - 1
+
+            while x <= xr:
+                flag = False
+
+                while canvas.image.Pixel(x, y) != fill_colour and \
+                        canvas.image.Pixel(x, y) != border_colour and x <= xr:
+                    flag = True
+                    x += 1
+
+                # Помещаем в стек крайний справа пиксель
+
+                if flag:
+
+                    if x == xr and canvas.image.Pixel(x, y) != fill_colour and \
+                            canvas.image.Pixel(x, y) != border_colour:
+                        if y > 0:
+                            stack.append([x, y])
+                    else:
+                        if y > 0:
+                            stack.append([x - 1, y])
+
+                    flag = False
+
+                # Продолжаем проверку, если интервал был прерван
+
+                x_in = x
+                while (canvas.image.Pixel(x, y) == fill_colour or
+                       canvas.image.Pixel(x, y) == border_colour) and x < xr:
+                    x = x + 1
+
+                if x == x_in:
+                    x += 1
+
+            if delay:
+                canvas.update()
