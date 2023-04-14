@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'main.ui'
+# Form implementation generated from reading ui file '.\main.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -33,6 +33,18 @@ class Ui_MainWindow(object):
         self.table_points.setColumnCount(0)
         self.table_points.setRowCount(0)
         self.verticalLayout.addWidget(self.table_points)
+        self.label_2 = QtWidgets.QLabel(self.centralwidget)
+        self.label_2.setObjectName("label_2")
+        self.verticalLayout.addWidget(self.label_2)
+        self.delay = QtWidgets.QDoubleSpinBox(self.centralwidget)
+        self.delay.setObjectName("delay")
+        self.verticalLayout.addWidget(self.delay)
+        self.change_fill_color = QtWidgets.QPushButton(self.centralwidget)
+        self.change_fill_color.setObjectName("change_fill_color")
+        self.verticalLayout.addWidget(self.change_fill_color)
+        self.change_bound_color = QtWidgets.QPushButton(self.centralwidget)
+        self.change_bound_color.setObjectName("change_bound_color")
+        self.verticalLayout.addWidget(self.change_bound_color)
         self.fill_line_by_line = QtWidgets.QPushButton(self.centralwidget)
         self.fill_line_by_line.setObjectName("fill_line_by_line")
         self.verticalLayout.addWidget(self.fill_line_by_line)
@@ -83,6 +95,9 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.label_2.setText(_translate("MainWindow", "Задержка(сек):"))
+        self.change_fill_color.setText(_translate("MainWindow", "Сменить цвет закраски"))
+        self.change_bound_color.setText(_translate("MainWindow", "Сменить цвет прямых"))
         self.fill_line_by_line.setText(_translate("MainWindow", "Закрасить"))
         self.label.setText(_translate("MainWindow", "Выбор операции"))
         self.panning.setText(_translate("MainWindow", "Передвижение по холсту"))

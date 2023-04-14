@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1050</width>
-    <height>523</height>
+    <width>1028</width>
+    <height>554</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,6 +36,30 @@
             <width>200</width>
             <height>0</height>
            </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Задержка(миллисек):</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="delay"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="change_fill_color">
+          <property name="text">
+           <string>Сменить цвет закраски</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="change_bound_color">
+          <property name="text">
+           <string>Сменить цвет прямых</string>
           </property>
          </widget>
         </item>
@@ -81,7 +105,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1050</width>
+     <width>1028</width>
      <height>22</height>
     </rect>
    </property>

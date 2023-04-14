@@ -15,13 +15,25 @@ class UI(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         self.ui.panning.clicked.connect(self.changetoPanMode)
         self.ui.dots_placement.clicked.connect(self.changetoPlaceMode)
-        self.ui.fill_line_by_line.clicked.connect(self.ui.canvas.fill_line_by_line)
-
+        self.ui.fill_line_by_line.clicked.connect(self.fill_by_seed)
+        self.ui.change_fill_color.clicked.connect(self.changeColorFill)
+        self.ui.change_bound_color.clicked.connect(self.changeColorBound)
 
         self.show()
 
 
+    def fill_by_seed(self):
+        delay = self.ui.delay.value()
+        self.ui.canvas.fill_line_by_line(delay)
 
+    def changeColorBound(self):
+        button_color = QtWidgets.QColorDialog.getColor()
+        if (button_color.isValid()):
+            self.ui.canvas.changePenColor(button_color)
+    def changeColorFill(self):
+        fill_color = QtWidgets.QColorDialog.getColor()
+        if (fill_color.isValid()):
+            self.ui.canvas.changeFillColor(fill_color)
     def changetoPanMode(self):
         self.ui.canvas.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
         self.ui.canvas.pan_mode = True

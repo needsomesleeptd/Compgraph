@@ -1,6 +1,9 @@
+import time
+
 from PyQt5.QtCore import QPoint
 from PyQt5.QtGui import QPolygonF,QColor
 import numpy as np
+from PyQt5 import QtTest
 
 from math import *
 
@@ -95,7 +98,7 @@ def line_by_line_filling_algorithm_with_seed(canvas, border_colour, fill_colour,
                     get_pixel_color(canvas,x,y) != border_colour and x < canvas.image.width():
                 canvas.image.setPixelColor(x, y, fill_colour)
                 x += 1
-            print(get_pixel_color(canvas,x,y).Rgb ,fill_colour.Rgb)
+           # print(get_pixel_color(canvas,x,y).Rgb ,fill_colour.Rgb)
 
             xr = x - 1
 
@@ -183,5 +186,7 @@ def line_by_line_filling_algorithm_with_seed(canvas, border_colour, fill_colour,
                 if x == x_in:
                     x += 1
 
-            if delay:
-                canvas.update()
+            if delay != 0:
+                QtTest.QTest.qWait(delay)
+                canvas.updatePixmap()
+

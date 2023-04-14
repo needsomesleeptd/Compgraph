@@ -43,6 +43,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.cur_polygon = []
         self.filled_dot = []
         self.pan_mode = False
+        self.fill_color = QColor(0, 0, 0)
 
     def wheelEvent(self, event):
 
@@ -92,7 +93,7 @@ class Canvas(QtWidgets.QGraphicsView):
                     self.drawLine(self.cur_polygon[-1], [pos.x(), pos.y()])
                 self.cur_polygon.append([pos.x(), pos.y()])
 
-            if event.buttons() == QtCore.Qt.RightButton:
+            if event.buttons() == QtCore.Qt.RightButton and len(self.cur_polygon) > 0:
                 self.drawLine(self.cur_polygon[0], self.cur_polygon[-1])
                 self.cur_polygon = []
 
@@ -102,9 +103,9 @@ class Canvas(QtWidgets.QGraphicsView):
 
             self.updatePixmap()
 
-    def fill_line_by_line(self):
+    def fill_line_by_line(self,delay = 0):
         print(self.filled_dot)
-        line_by_line_filling_algorithm_with_seed(self, self.pen.color(), QtGui.QColor(0, 0, 0),self.filled_dot)
+        line_by_line_filling_algorithm_with_seed(self, self.pen.color(), self.fill_color, self.filled_dot,delay)
         self.updatePixmap()
 
     def CreateGraphicsScene(self):
@@ -191,6 +192,10 @@ class Canvas(QtWidgets.QGraphicsView):
     def changePenColor(self, color):
         self.save_request = [self.pen.color(), "PenColor"]
         self.pen.setColor(color)
+
+    def changeFillColor(self, color):
+        self.save_request = [self.pen.color(), "PenColor"]
+        self.fill_color = color
 
     def changeCanvasBackGroundColor(self):
 
