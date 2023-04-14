@@ -22,6 +22,9 @@ class Table(QtWidgets.QTableWidget):
             ["x", "y"]
         )
         self.adjustSize()
+        #self.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+        #self.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.str
+        self.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
 
 
