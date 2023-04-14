@@ -42,7 +42,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.pan_mode = False
         self.fill_color = QColor(0, 0, 0)
         self.seed_color = QColor(0, 0, 255)
-        self.fitInView(self.pixmap_on_canvas)
+        self.fitInView(self.pixmap_on_canvas, Qt.KeepAspectRatio)
 
     def wheelEvent(self, event):
 
@@ -58,16 +58,9 @@ class Canvas(QtWidgets.QGraphicsView):
         # self.updatePixmap()
         # self.fitInView(self.pixmap_on_canvas)
 
-    '''def mousePressEvent(self, event):
-        oldPos = self.mapToScene(self.viewport().rect().center())
-
-        self.setTransformationAnchor(QtWidgets.QGraphicsView.NoAnchor)
-        self.setResizeAnchor(QtWidgets.QGraphicsView.NoAnchor)
-        newPos = self.mapToScene(event.pos())
-        delta = oldPos - newPos
-        self.translate(delta.x(), delta.y())
-
-        # super().mousePressEvent(event)'''
+    def resizeEvent(self,event):
+       super().resizeEvent(event)
+       self.fitInView(self.pixmap_on_canvas,Qt.KeepAspectRatio)
 
     def drawLine(self, fr, to):
         points = bresenhamAlogorithmFloat(*fr, *to)
