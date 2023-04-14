@@ -13,8 +13,9 @@ from copy import deepcopy
 
 
 class Canvas(QtWidgets.QGraphicsView):
-    dotsPrintSignal = QtCore.pyqtSignal(float,float)
+    dotsPrintSignal = QtCore.pyqtSignal(float, float)
     clearSignal = QtCore.pyqtSignal()
+
     def __init__(self, parent):
         super().__init__(parent)
         self.scene = self.CreateGraphicsScene()
@@ -38,7 +39,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.fitInView(self.pixmap_on_canvas)
         self.cur_polygon = []
         self.polygons = []
-        self.filled_dot = []
+        self.seed_point = [0,0]
         self.pan_mode = False
         self.fill_color = QColor(0, 0, 0)
         self.seed_color = QColor(0, 0, 255)
@@ -58,9 +59,9 @@ class Canvas(QtWidgets.QGraphicsView):
         # self.updatePixmap()
         # self.fitInView(self.pixmap_on_canvas)
 
-    def resizeEvent(self,event):
-       super().resizeEvent(event)
-       self.fitInView(self.pixmap_on_canvas,Qt.KeepAspectRatio)
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        #self.fitInView(self.pixmap_on_canvas, Qt.KeepAspectRatio)
 
     def drawLine(self, fr, to):
         points = bresenhamAlogorithmFloat(*fr, *to)
@@ -94,13 +95,13 @@ class Canvas(QtWidgets.QGraphicsView):
             if event.buttons() == QtCore.Qt.MouseButton.MidButton:
                 # print(self.filled_dot)
 
-                self.filled_dot = [pos.x(), pos.y()]
+                self.seed_point = [pos.x(), pos.y()]
 
             self.updatePixmap()
 
     def fill_line_by_line(self, delay=0):
         # print(self.filled_dot)
-        line_by_line_filling_algorithm_with_seed(self, self.pen.color(), self.fill_color, self.filled_dot, delay)
+        line_by_line_filling_algorithm_with_seed(self, self.pen.color(), self.fill_color, self.seed_point, delay)
         self.updatePixmap()
 
     def CreateGraphicsScene(self):
@@ -108,81 +109,6 @@ class Canvas(QtWidgets.QGraphicsView):
         self.setScene(scene)
         # scene.setSceneRect(-self.width() / 2, -self.height() / 2,self.width(),self.height())
         return scene
-
-    def drawEllipseStandard(self, xc, yc, A, B):
-
-        self.scene.addEllipse(xc - A / 2, yc - B / 2, A, B, self.pen)
-        return 1  # one object
-
-    def drawEllipsesStandard(self, reqs):
-        overall_len = 0
-        for req in reqs:
-            overall_len += self.drawEllipseStandard(*req.dots, req.B_ellipse, req.A_ellipse)
-        return overall_len
-
-    def drawCircleStandard(self, xc, yc, r):
-        # print(xc,yc,r)
-        self.scene.addEllipse(xc - (r) / 2, yc - (r) / 2, r, r, self.pen)
-        return 1  # one object
-
-    def drawCirclesStadard(self, reqs):
-        overall_len = 0
-        for req in reqs:
-            overall_len += self.drawCircleStandard(*req.dots, req.R)
-        return overall_len
-
-    def drawLineByPoints(self, points):
-
-        for point in points:
-            x, y = point.x(), point.y()
-            self.scene.addRect(x, y, 1, 1, self.pen)
-        return len(points)
-
-    def drawLinesByPoints(self, lines):
-        overall_len = 0
-        for i in range(len(lines)):
-            points = lines[i]
-            overall_len += self.drawLineByPoints(points)
-        return overall_len
-
-    def drawLineIntensivityByPoints(self, coloredPoints):
-
-        default_drawing_color = self.pen.color()
-        drawing_pen = QtGui.QPen(default_drawing_color)
-        drawing_pen.setJoinStyle(Qt.MiterJoin)
-
-        for point in coloredPoints:
-            x, y = point[0], point[1]
-            if (len(point) >= 3):
-                intensivity = point[2]
-                new_red = default_drawing_color.red()
-                new_blue = default_drawing_color.blue()
-                new_green = default_drawing_color.green()
-                new_color = QtGui.QColor()
-                new_color.setRgb(new_red, new_blue, new_green)
-                new_color.setAlphaF(intensivity)
-                drawing_pen.setColor(new_color)
-
-                self.scene.addRect(x, y, 1, 1, drawing_pen)
-            else:
-                self.scene.addRect(x, y, 1, 1, drawing_pen)
-
-        return len(coloredPoints)
-
-    def drawSpectre(self, spectreLines, method, undo=False):
-
-        len_obj = 0
-        for line in spectreLines:
-            if (method == "brezSmoothSpectre" or method == "VuSpectre"):
-                len_obj += self.drawLineIntensivityByPoints(line)
-            elif (method == "defaultAlgoSpectre"):
-                len_obj += self.drawLine(*line[0], *line[1])
-
-            else:
-                len_obj += self.drawLineByPoints(line)
-
-        self.update()
-        return len_obj
 
     def changePenColor(self, color):
         self.save_request = [self.pen.color(), "PenColor"]
@@ -192,17 +118,8 @@ class Canvas(QtWidgets.QGraphicsView):
         self.save_request = [self.pen.color(), "PenColor"]
         self.fill_color = color
 
-    def changeCanvasBackGroundColor(self):
-
-        background_color = QtWidgets.QColorDialog.getColor()
-        if (background_color.isValid()):
-            self.save_request = [self.backgroundColor, "BackgroundColor"]
-            brush = QtGui.QBrush(background_color)
-            self.backgroundColor = background_color
-            self.setBackgroundBrush(brush)
-
     def clearCanvas(self):
-        self.image.fill(QColor(255,255,255)) # getting white color
+        self.image.fill(QColor(255, 255, 255))  # getting white color
         self.polygons = []
         self.cur_polygon = []
         self.clearSignal.emit()
@@ -233,3 +150,7 @@ class Canvas(QtWidgets.QGraphicsView):
                 self.saved_scene = QtWidgets.QGraphicsScene()
                 self.figure_items_count = []
             self.curr_state_saved_len = -1
+
+    def get_copied_params(self):
+        canvas_copy = Canvas(self)
+        return [canvas_copy, canvas_copy.pen.color(), canvas_copy.fill_color, canvas_copy.seed_point]
