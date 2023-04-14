@@ -59,6 +59,38 @@
          </widget>
         </item>
         <item>
+         <layout class="QFormLayout" name="formLayout">
+          <item row="0" column="0">
+           <widget class="QLabel" name="Label">
+            <property name="text">
+             <string>Цвет границ:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Цвет закраски</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="border_color_display">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="fill_color_display">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
          <widget class="QLabel" name="label_2">
           <property name="text">
            <string>Задержка(миллисек):</string>
@@ -67,6 +99,13 @@
         </item>
         <item>
          <widget class="QDoubleSpinBox" name="delay"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="clear_canvas_button">
+          <property name="text">
+           <string>Очистить канвас</string>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QPushButton" name="change_fill_color">

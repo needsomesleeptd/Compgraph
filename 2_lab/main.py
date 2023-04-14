@@ -6,6 +6,13 @@ from PyQt5.QtWidgets import QMessageBox
 
 
 
+def Qcolor_to_stylesheet(color):
+    return '* { background-color: ' + color.name() + ' }'
+
+def update_widget_by_Qcolor(widget, color):
+    widget.setStyleSheet(Qcolor_to_stylesheet(color))
+
+
 class UI(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -20,6 +27,12 @@ class UI(QtWidgets.QMainWindow):
         self.ui.change_bound_color.clicked.connect(self.changeColorBound)
 
         self.ui.canvas.dotsPrintSignal.connect(self.ui.table_points.push_node_back)
+        self.ui.canvas.clearSignal.connect(self.ui.table_points.clearContents)
+
+        self.ui.clear_canvas_button.clicked.connect(self.ui.canvas.clearCanvas)
+        update_widget_by_Qcolor(self.ui.border_color_display, self.ui.canvas.pen.color())
+        update_widget_by_Qcolor(self.ui.fill_color_display, self.ui.canvas.fill_color)
+
         self.show()
 
 
@@ -28,13 +41,16 @@ class UI(QtWidgets.QMainWindow):
         self.ui.canvas.fill_line_by_line(delay)
 
     def changeColorBound(self):
-        button_color = QtWidgets.QColorDialog.getColor()
-        if (button_color.isValid()):
-            self.ui.canvas.changePenColor(button_color)
+        border_color = QtWidgets.QColorDialog.getColor()
+        if (border_color.isValid()):
+            self.ui.canvas.changePenColor(border_color)
+            update_widget_by_Qcolor(self.ui.border_color_display, border_color)
     def changeColorFill(self):
         fill_color = QtWidgets.QColorDialog.getColor()
         if (fill_color.isValid()):
             self.ui.canvas.changeFillColor(fill_color)
+            update_widget_by_Qcolor(self.ui.fill_color_display, fill_color)
+
     def changetoPanMode(self):
         self.ui.canvas.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
         self.ui.canvas.pan_mode = True

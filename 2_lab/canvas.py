@@ -1,7 +1,4 @@
-import sys
-import random
-import numpy
-import numpy as np
+from main import Qcolor_to_stylesheet
 
 from drawing_algos import *
 
@@ -14,11 +11,10 @@ from PyQt5.QtGui import QMouseEvent
 
 from copy import deepcopy
 
-matplotlib.use('QT5Agg')
-
 
 class Canvas(QtWidgets.QGraphicsView):
     dotsPrintSignal = QtCore.pyqtSignal(float,float)
+    clearSignal = QtCore.pyqtSignal()
     def __init__(self, parent):
         super().__init__(parent)
         self.scene = self.CreateGraphicsScene()
@@ -46,6 +42,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.pan_mode = False
         self.fill_color = QColor(0, 0, 0)
         self.seed_color = QColor(0, 0, 255)
+        self.fitInView(self.pixmap_on_canvas)
 
     def wheelEvent(self, event):
 
@@ -212,15 +209,11 @@ class Canvas(QtWidgets.QGraphicsView):
             self.setBackgroundBrush(brush)
 
     def clearCanvas(self):
-        self.save_request = []
-        items = self.scene.items()
-        self.saved_scene = QtWidgets.QGraphicsScene()
-        if (len(items) > 0):
-            for i in range(len(items) - 1, 0, -1):
-                self.saved_scene.addItem(items[i])
-            self.curr_state_saved_len = len(self.figure_items_count)
-        self.scene.clear()
-        self.scene.update()
+        self.image.fill(QColor(255,255,255)) # getting white color
+        self.polygons = []
+        self.cur_polygon = []
+        self.clearSignal.emit()
+        self.updatePixmap()
 
     def undo_action(self):
         if (len(self.save_request) > 0):
