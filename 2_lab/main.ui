@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1028</width>
-    <height>554</height>
+    <width>1126</width>
+    <height>615</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,6 +37,25 @@
             <height>0</height>
            </size>
           </property>
+          <property name="lineWidth">
+           <number>2</number>
+          </property>
+          <property name="midLineWidth">
+           <number>2</number>
+          </property>
+          <attribute name="horizontalHeaderVisible">
+           <bool>true</bool>
+          </attribute>
+          <column>
+           <property name="text">
+            <string>x</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>y</string>
+           </property>
+          </column>
          </widget>
         </item>
         <item>
@@ -105,7 +124,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1028</width>
+     <width>1126</width>
      <height>22</height>
     </rect>
    </property>

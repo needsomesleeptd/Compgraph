@@ -1,43 +1,88 @@
+
 import sys
-import random
-import numpy
 import numpy as np
 
-from PyQt5 import QtCore, QtWidgets, uic
+from PyQt5 import QtGui, QtWidgets, uic
 from PyQt5.QtCore import Qt
 import matplotlib
 from matplotlib.artist import Artist
-from PyQt5 import QtGui
-from PyQt5.QtGui import QMouseEvent
 
-from copy import deepcopy
 
-matplotlib.use('QT5Agg')
 
 
 class Table(QtWidgets.QTableWidget):
-
-    def __init__(self, parent):
+    def __init__(self,parent):
         super().__init__(parent)
+        self.adjust_table()
 
-        self.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        self.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
-        self.setColumnCount(5)
-        self.setRowCount(5)
-        self.setVerticalHeaderLabels(
+
+    def adjust_table(self):
+        self.setColumnCount(2)
+        self.setHorizontalHeaderLabels(
             ["x", "y"]
         )
         self.adjustSize()
 
-    def add_dot(self, x, y):
-        rowPos = self.rowCount()
-        self.insertRow(rowPos)
-        self.setItem(rowPos, 0, QtWidgets.QTableWidgetItem(str(round(x, 3))))
-        self.setItem(rowPos, 1, QtWidgets.QTableWidgetItem(str(round(y, 3))))
-        self.update()
 
-    def update_to_canvas(self, polygons):
+
+    def push_node_back(self,xdata,ydata):
+        ix, iy = xdata, ydata
+        rowPos = self.rowCount()
+        colCount =self.columnCount()
+        self.insertRow(rowPos)
+        print(ix,iy)
+        self.setItem(rowPos, 0, QtWidgets.QTableWidgetItem(str(round(ix,3))))
+        self.setItem(rowPos, 1, QtWidgets.QTableWidgetItem(str(round(iy,3))))
+
+
+    def update_to_canvas(self,graphs:list,colors:list):
+        rowPos = self.rowCount()
+        dots_count = 0
+        for graph in graphs:
+            dots_count += len(graph)
+
+        while (rowPos < dots_count):
+            self.insertRow(rowPos)
+            rowPos += 1
+
+
+        while (rowPos > dots_count):
+            self.removeRow(rowPos - 1)
+            rowPos -= 1
+        node_index = 0
+        for i in range(len(graphs)):
+            for j in range(len(graphs[i])):
+                for col_index in range(self.columnCount()):
+                    self.setItem(node_index, col_index, QtWidgets.QTableWidgetItem(str(round(graphs[i][j][col_index],3))))
+                    color_table = QtGui.QColor()
+                    color_table.setRgbF(*colors[i])
+                    self.item(node_index, col_index).setBackground(color_table)
+                node_index += 1
+
+    def highlight_rows(self,rows_indexes:list):
+        for row_index in rows_indexes:
+            for col_index in range(self.columnCount()):
+                self.item(row_index,col_index).setSelected(True)
+
+
+    def create_from_canvas(self,graphs:list,colors:list):
         self.clear()
-        for polygon in polygons:
-            for dot in polygon:
-                self.add_dot(*dot)
+        self.setRowCount(0)
+        self.update_to_canvas(graphs,colors)
+        self.adjust_table()
+
+
+
+
+
+
+
+
+
+    def pop_node_from_table(self,index):
+        self.model.removeRow(index)
+
+
+    def add_graph_to_table(self, graph:list,color):
+        for node in graph:
+            self.push_node_back(node[0],node[1],color)
