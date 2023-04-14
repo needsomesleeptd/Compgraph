@@ -18,7 +18,7 @@ matplotlib.use('QT5Agg')
 
 
 class Canvas(QtWidgets.QGraphicsView):
-
+    dotsPrintSignal = QtCore.pyqtSignal(float,float)
     def __init__(self, parent):
         super().__init__(parent)
         self.scene = self.CreateGraphicsScene()
@@ -41,9 +41,11 @@ class Canvas(QtWidgets.QGraphicsView):
         self.pixmap_on_canvas = self.scene.addPixmap(self.pixmap)
         self.fitInView(self.pixmap_on_canvas)
         self.cur_polygon = []
+        self.polygons = []
         self.filled_dot = []
         self.pan_mode = False
         self.fill_color = QColor(0, 0, 0)
+        self.seed_color = QColor(0, 0, 255)
 
     def wheelEvent(self, event):
 
@@ -92,20 +94,23 @@ class Canvas(QtWidgets.QGraphicsView):
                 else:
                     self.drawLine(self.cur_polygon[-1], [pos.x(), pos.y()])
                 self.cur_polygon.append([pos.x(), pos.y()])
+                self.dotsPrintSignal.emit(pos.x(), pos.y())
 
             if event.buttons() == QtCore.Qt.RightButton and len(self.cur_polygon) > 0:
                 self.drawLine(self.cur_polygon[0], self.cur_polygon[-1])
+                self.polygons.append(self.cur_polygon)
                 self.cur_polygon = []
 
             if event.buttons() == QtCore.Qt.MouseButton.MidButton:
-                print(self.filled_dot)
+                # print(self.filled_dot)
+
                 self.filled_dot = [pos.x(), pos.y()]
 
             self.updatePixmap()
 
-    def fill_line_by_line(self,delay = 0):
-        print(self.filled_dot)
-        line_by_line_filling_algorithm_with_seed(self, self.pen.color(), self.fill_color, self.filled_dot,delay)
+    def fill_line_by_line(self, delay=0):
+        # print(self.filled_dot)
+        line_by_line_filling_algorithm_with_seed(self, self.pen.color(), self.fill_color, self.filled_dot, delay)
         self.updatePixmap()
 
     def CreateGraphicsScene(self):

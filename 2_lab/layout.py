@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1050, 523)
+        MainWindow.resize(1028, 554)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -62,7 +62,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addLayout(self.Main_Horixontal_layout)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1050, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1028, 22))
         self.menubar.setObjectName("menubar")
         self.menu = QtWidgets.QMenu(self.menubar)
         self.menu.setObjectName("menu")
@@ -95,7 +95,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.label_2.setText(_translate("MainWindow", "Задержка(сек):"))
+        self.label_2.setText(_translate("MainWindow", "Задержка(миллисек):"))
         self.change_fill_color.setText(_translate("MainWindow", "Сменить цвет закраски"))
         self.change_bound_color.setText(_translate("MainWindow", "Сменить цвет прямых"))
         self.fill_line_by_line.setText(_translate("MainWindow", "Закрасить"))

@@ -10,7 +10,7 @@ class UI(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.cur_method = "canonic"
+
         self.ui = layout.Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.panning.clicked.connect(self.changetoPanMode)
@@ -19,6 +19,7 @@ class UI(QtWidgets.QMainWindow):
         self.ui.change_fill_color.clicked.connect(self.changeColorFill)
         self.ui.change_bound_color.clicked.connect(self.changeColorBound)
 
+        self.ui.canvas.dotsPrintSignal.connect(self.ui.table_points.add_dot)
         self.show()
 
 
