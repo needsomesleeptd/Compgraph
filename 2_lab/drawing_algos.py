@@ -1,5 +1,5 @@
 from PyQt5.QtCore import QPoint
-from PyQt5.QtGui import QPolygonF
+from PyQt5.QtGui import QPolygonF,QColor
 import numpy as np
 
 from math import *
@@ -70,7 +70,8 @@ def bresenhamAlogorithmFloat(xFr: float, yFr: float, xTo: float, yTo: float, ste
         return steps
     return pointsList
 
-
+def get_pixel_color(canvas,x,y):
+    return QColor(canvas.image.pixel(x,y))
 def line_by_line_filling_algorithm_with_seed(canvas, border_colour, fill_colour, seed_point, delay=0):
 
 
@@ -90,18 +91,19 @@ def line_by_line_filling_algorithm_with_seed(canvas, border_colour, fill_colour,
 
             x += 1
 
-            while canvas.image.pixel(x, y) != fill_colour and \
-                    canvas.image.pixel(x, y) != border_colour and x < canvas.image.width():
+            while get_pixel_color(canvas,x,y) != fill_colour and \
+                    get_pixel_color(canvas,x,y) != border_colour and x < canvas.image.width():
                 canvas.image.setPixelColor(x, y, fill_colour)
                 x += 1
+            print(get_pixel_color(canvas,x,y).Rgb ,fill_colour.Rgb)
 
             xr = x - 1
 
             # заполняем интервал слева от затравки
 
             x = tx - 1
-            while canvas.image.pixel(x, y) != fill_colour and \
-                    canvas.image.pixel(x, y) != border_colour and x > 0:
+            while get_pixel_color(canvas,x,y) != fill_colour and \
+                    get_pixel_color(canvas,x,y) != border_colour and x > 0:
                 canvas.image.setPixelColor(x, y, fill_colour)
                 x -= 1
 
@@ -116,16 +118,16 @@ def line_by_line_filling_algorithm_with_seed(canvas, border_colour, fill_colour,
                 while x <= xr:
                     flag = False
 
-                    while canvas.image.pixel(x, y) != fill_colour and \
-                            canvas.image.pixel(x, y) != border_colour and x <= xr:
+                    while get_pixel_color(canvas,x,y) != fill_colour and \
+                            get_pixel_color(canvas,x,y) != border_colour and x <= xr:
                         flag = True
                         x += 1
 
                     # Помещаем в стек крайний справа пиксель
 
                     if flag:
-                        if x == xr and canvas.image.pixel(x, y) != fill_colour and \
-                                canvas.image.pixel(x, y) != border_colour:
+                        if x == xr and get_pixel_color(canvas,x,y) != fill_colour and \
+                                get_pixel_color(canvas,x,y) != border_colour:
                             if y < canvas.image.height():
                                 stack.append([x, y])
                         else:
@@ -137,8 +139,8 @@ def line_by_line_filling_algorithm_with_seed(canvas, border_colour, fill_colour,
                     # Продолжаем проверку, если интервал был прерван
 
                     x_in = x
-                    while (canvas.image.pixel(x, y) == fill_colour or
-                           canvas.image.pixel(x, y) == border_colour) and x < xr:
+                    while (get_pixel_color(canvas,x,y) == fill_colour or
+                           get_pixel_color(canvas,x,y) == border_colour) and x < xr:
                         x = x + 1
 
                     if x == x_in:
@@ -152,8 +154,8 @@ def line_by_line_filling_algorithm_with_seed(canvas, border_colour, fill_colour,
             while x <= xr:
                 flag = False
 
-                while canvas.image.pixel(x, y) != fill_colour and \
-                        canvas.image.pixel(x, y) != border_colour and x <= xr:
+                while get_pixel_color(canvas,x,y) != fill_colour and \
+                        get_pixel_color(canvas,x,y) != border_colour and x <= xr:
                     flag = True
                     x += 1
 
@@ -161,8 +163,8 @@ def line_by_line_filling_algorithm_with_seed(canvas, border_colour, fill_colour,
 
                 if flag:
 
-                    if x == xr and canvas.image.pixel(x, y) != fill_colour and \
-                            canvas.image.pixel(x, y) != border_colour:
+                    if x == xr and get_pixel_color(canvas,x,y) != fill_colour and \
+                            get_pixel_color(canvas,x,y) != border_colour:
                         if y > 0:
                             stack.append([x, y])
                     else:
@@ -174,8 +176,8 @@ def line_by_line_filling_algorithm_with_seed(canvas, border_colour, fill_colour,
                 # Продолжаем проверку, если интервал был прерван
 
                 x_in = x
-                while (canvas.image.pixel(x, y) == fill_colour or
-                       canvas.image.pixel(x, y) == border_colour) and x < xr:
+                while (get_pixel_color(canvas,x,y) == fill_colour or
+                       get_pixel_color(canvas,x,y) == border_colour) and x < xr:
                     x = x + 1
 
                 if x == x_in:

@@ -98,12 +98,12 @@ class Canvas(QtWidgets.QGraphicsView):
 
             if event.buttons() == QtCore.Qt.MouseButton.MidButton:
                 print(self.filled_dot)
-                self.filled_dot = [event.x(), event.y()]
+                self.filled_dot = [pos.x(), pos.y()]
 
             self.updatePixmap()
 
     def fill_line_by_line(self):
-
+        print(self.filled_dot)
         line_by_line_filling_algorithm_with_seed(self, self.pen.color(), QtGui.QColor(0, 0, 0),self.filled_dot)
         self.updatePixmap()
 
