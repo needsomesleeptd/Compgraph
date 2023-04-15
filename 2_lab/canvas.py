@@ -30,7 +30,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.save_request = []
         self.flag_has_started = False
         self.points = []
-        self.image = QtGui.QImage(self.width() * 2, self.height() * 2, QtGui.QImage.Format_ARGB32)
+        self.image = QtGui.QImage(self.width() * 5, self.height() * 5, QtGui.QImage.Format_ARGB32)
         self.image.fill(Qt.white)
         # temp_pixmap = QtGui.QPixmap.convertFromImage(self.image)
         self.pixmap = QtGui.QPixmap()
@@ -101,7 +101,9 @@ class Canvas(QtWidgets.QGraphicsView):
 
     def fill_line_by_line(self, delay=0):
         # print(self.filled_dot)
-        line_by_line_filling_algorithm_with_seed(self, self.pen.color(), self.fill_color, self.seed_point, delay)
+        #line_by_line_filling_algorithm_with_seed(self, self.pen.color(), self.fill_color, self.seed_point, delay)
+        background_color = QColor(255,255,255)
+        rastr_algo_separated(self,self.fill_color,background_color,self.polygons)
         self.updatePixmap()
 
     def CreateGraphicsScene(self):
