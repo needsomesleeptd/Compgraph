@@ -34,10 +34,19 @@ class UI(QtWidgets.QMainWindow):
 
         self.ui.clear_canvas_button.clicked.connect(self.ui.canvas.clearCanvas)
 
+        self.ui.place_dot.clicked.connect(self.place_dot_by_value)
+
         update_widget_by_Qcolor(self.ui.border_color_display, self.ui.canvas.pen.color())
         update_widget_by_Qcolor(self.ui.fill_color_display, self.ui.canvas.fill_color)
 
         self.show()
+
+
+    def place_dot_by_value(self):
+        x = self.ui.place_dot_x.value()
+        y = self.ui.place_dot_y.value()
+        self.ui.canvas.add_dot(QtCore.QPointF(x,y))
+
 
     def fill_by_seed(self):
         delay = self.ui.delay.value()

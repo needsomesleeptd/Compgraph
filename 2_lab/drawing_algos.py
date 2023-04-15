@@ -17,58 +17,43 @@ def sign(x):
         return -1
 
 
-def bresenhamAlogorithmFloat(xFr: float, yFr: float, xTo: float, yTo: float, stepmode=False):
+def CDA(x1: float, y1: float, x2: float, y2: float, stepmode=False):
+    x2 = ceil(x2)
+    y2 = ceil(y2)
+    x1 = floor(x1)
+    y1 = floor(y1)
     pointsList = QPolygonF()
-    xTo = ceil(xTo)
-    yTo = ceil(yTo)
-    xFr = floor(xFr)
-    yFr = floor(yFr)
     steps = 0
-    if isclose(xFr, xTo) and isclose(yFr, yTo):
-        pointsList.append(QPoint(xFr, yFr))
+
+    if x1 == x2 and y1 == y2:
+        pointsList.append(QPoint(round(x1), round(y1)))
     else:
+        dx = abs(x2 - x1)
+        dy = abs(y2 - y1)
 
-        dx = xTo - xFr
-        dy = yTo - yFr
-        exchange = 0
-        if (abs(dy) > abs(dx)):
-            xFr, yFr = yFr, xFr
-            xTo, yTo = yTo, xTo
-            dx, dy = dy, dx
-            exchange = 1
+        # steep - max growth
+        if dx >= dy:
+            length = dx
+        else:
+            length = dy
+        dx = (x2 - x1) / length  # step of x
+        dy = (y2 - y1) / length  # step of y
 
-        steps = 1
-        sx = sign(dx)
-        sy = sign(dy)
+        # set line to start
+        x = x1
+        y = y1
 
-        dy = abs(dy)
-        dx = abs(dx)
+        # i <= lenght i = 0
+        # while abs(x - x2) > 1 or abs(y - y2) > 1:
+        for i in range(0, round(length) + 1):
 
-        tg = dy / dx
-        e = tg
-        x = xFr
-        y = yFr
+            if not stepmode:
+                pointsList.append((QPoint(round(x), round(y))))
+            elif round(x + dx) != round(x) and round(y + dy) != round(y):
+                steps += 1
 
-        xb = x
-        yb = y
-
-        for x in range(xFr, xTo + sx, sx):
-            if exchange:
-                pointsList.append(QPoint(y, x))
-            else:
-                pointsList.append(QPoint(x, y))
-
-            if (e > 0.5):
-                y += sy
-                e = e - 1
-            e += tg
-
-            if stepmode:
-                if xb != x and yb != y:
-                    steps += 1
-                xb = x
-                yb = y
-
+            x += dx
+            y += dy
     if stepmode:
         return steps
     return pointsList
@@ -247,6 +232,8 @@ def get_intersections(edges):
 
     return intersections
 
+
+# Алгоритм для закрашивания с перегородкой
 '''def rastr_algo_separated(canvas, fill_color, background_color, polygons):
     x_splitter = int(x_mass(polygons))
     min_y = int(apply(polygons, min))

@@ -45,6 +45,9 @@ class Canvas(QtWidgets.QGraphicsView):
         self.seed_color = QColor(0, 0, 255)
         self.fitInView(self.pixmap_on_canvas, Qt.KeepAspectRatio)
 
+
+
+
     def wheelEvent(self, event):
 
         if event.angleDelta().y() > 0:
@@ -64,7 +67,7 @@ class Canvas(QtWidgets.QGraphicsView):
         #self.fitInView(self.pixmap_on_canvas, Qt.KeepAspectRatio)
 
     def drawLine(self, fr, to):
-        points = bresenhamAlogorithmFloat(*fr, *to)
+        points = CDA(*fr, *to)
         for point in points:
             self.image.setPixelColor(point.x(), point.y(), self.pen.color())
         self.updatePixmap()
@@ -75,17 +78,27 @@ class Canvas(QtWidgets.QGraphicsView):
         self.pixmap.convertFromImage(self.image)
         self.pixmap_on_canvas.setPixmap(self.pixmap)
 
+
+    def add_dot(self,pos):
+        if (len(self.cur_polygon) == 0):
+            self.image.setPixelColor(pos.x(), pos.y(), self.pen.color())
+        else:
+            self.drawLine(self.cur_polygon[-1], [pos.x(), pos.y()])
+        self.cur_polygon.append([pos.x(), pos.y()])
+        self.dotsPrintSignal.emit(pos.x(), pos.y())
+
+    def update_seed_point(self, x, y):
+        #self.image.setPixelColor(*self.seed_point, self.fill_color)
+        self.seed_point = [x,y]
+        self.image.setPixelColor(*self.seed_point,self.fill_color)
+        self.updatePixmap()
+
     def mousePressEvent(self, event):
         super().mousePressEvent(event)
         if not self.pan_mode:
             pos = self.mapToScene(event.pos())
             if event.buttons() == QtCore.Qt.LeftButton:
-                if (len(self.cur_polygon) == 0):
-                    self.image.setPixelColor(pos.x(), pos.y(), self.pen.color())
-                else:
-                    self.drawLine(self.cur_polygon[-1], [pos.x(), pos.y()])
-                self.cur_polygon.append([pos.x(), pos.y()])
-                self.dotsPrintSignal.emit(pos.x(), pos.y())
+                self.add_dot(pos)
 
             if event.buttons() == QtCore.Qt.RightButton and len(self.cur_polygon) > 0:
                 self.drawLine(self.cur_polygon[0], self.cur_polygon[-1])
@@ -95,7 +108,7 @@ class Canvas(QtWidgets.QGraphicsView):
             if event.buttons() == QtCore.Qt.MouseButton.MidButton:
                 # print(self.filled_dot)
 
-                self.seed_point = [pos.x(), pos.y()]
+                self.update_seed_point(pos.x(), pos.y())
 
             self.updatePixmap()
 
