@@ -51,7 +51,7 @@ class UI(QtWidgets.QMainWindow):
 
     def fill_by_seed(self):
         delay = self.ui.delay.value()
-        self.ui.canvas.fill_line_by_line(delay)
+        self.ui.canvas.fill_seed(delay)
 
     def changeColorBound(self):
         border_color = QtWidgets.QColorDialog.getColor()
