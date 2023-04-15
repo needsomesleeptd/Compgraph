@@ -101,9 +101,9 @@ class Canvas(QtWidgets.QGraphicsView):
 
     def fill_line_by_line(self, delay=0):
         # print(self.filled_dot)
-        #line_by_line_filling_algorithm_with_seed(self, self.pen.color(), self.fill_color, self.seed_point, delay)
+        line_by_line_filling_algorithm_with_seed(self, self.pen.color(), self.fill_color, self.seed_point, delay)
         background_color = QColor(255,255,255)
-        rastr_algo_separated(self,self.fill_color,background_color,self.polygons)
+        #rastr_algo_flag(self,self.fill_color,background_color,self.polygons)
         self.updatePixmap()
 
     def CreateGraphicsScene(self):
@@ -153,6 +153,6 @@ class Canvas(QtWidgets.QGraphicsView):
                 self.figure_items_count = []
             self.curr_state_saved_len = -1
 
-    def get_copied_params(self):
-        canvas_copy = Canvas(self)
-        return [canvas_copy, canvas_copy.pen.color(), canvas_copy.fill_color, canvas_copy.seed_point]
+    def get_params(self):
+        #canvas_copy = self.image.copy()
+        return [self, self.pen.color(), self.fill_color, self.seed_point,self.polygons]

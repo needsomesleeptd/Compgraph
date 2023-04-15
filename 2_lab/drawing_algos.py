@@ -210,11 +210,13 @@ def pixel_is_active(canvas, x, y, background_color):
         return 1
 
 
-def apply(polygons, func):
+def apply_to_dots(polygons, func):
+    if (len(polygons) == 0):
+        return None
     target = polygons[0][0][1]
     for polygon in polygons:
         for dot in polygon:
-            target = func(target, dot[1])
+            target = func(target, dot)
     return target
 
 
@@ -245,7 +247,7 @@ def get_intersections(edges):
 
     return intersections
 
-def rastr_algo_separated(canvas, fill_color, background_color, polygons):
+'''def rastr_algo_separated(canvas, fill_color, background_color, polygons):
     x_splitter = int(x_mass(polygons))
     min_y = int(apply(polygons, min))
     max_y = ceil(apply(polygons, max))
@@ -261,15 +263,33 @@ def rastr_algo_separated(canvas, fill_color, background_color, polygons):
         else:
             for k in range(x_splitter, x_inter + 1):
                 canvas.image.setPixelColor(k, y_inter, fill_color)
+'''
 
-        # for i in range(x_inter, x_)
-    # left_side
-    '''for j in range(min_y, max_y):
-        for i in range(canvas.image.width()):
-            if (pixel_is_active(canvas, i, j, background_color)):
-                if (j < x_splitter):
-                    for k in range(j + 1,x_splitter):
-                        canvas.image.setPixelColor(i, k, fill_color)
-                else:
-                    for k in range(x_splitter,j + 1):
-                        canvas.image.setPixelColor(i, k, fill_color)'''
+def rastr_algo_flag(canvas,fill_color, background_color, polygons):
+    if (len(polygons) == 0):
+        min_y = 0
+        min_x = 0
+        max_x = canvas.image.width()
+        max_y = canvas.image.height()
+    else:
+        min_y = int(apply_to_dots(polygons, lambda tar,dots:min(tar,dots[1])))
+        max_y = ceil(apply_to_dots(polygons, lambda tar,dots:max(tar,dots[1])))
+
+        min_x = int(apply_to_dots(polygons, lambda tar, dots: min(tar, dots[0])))
+        max_x = ceil(apply_to_dots(polygons, lambda tar, dots: max(tar, dots[0])))
+
+
+    for y in range(min_y, max_y):
+        flag = False
+
+        for x in range(min_x, max_x + 2):
+
+            if (get_pixel_color(canvas,x, y) == canvas.pen.color()):
+                flag = not flag
+
+            if flag:
+                canvas.image.setPixelColor(x,y,fill_color)
+            else:
+                canvas.image.setPixelColor(x, y, background_color)
+
+

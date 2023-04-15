@@ -72,8 +72,8 @@ class UI(QtWidgets.QMainWindow):
             self.ui.canvas.changePenColor(button_color)
 
     def show_timings(self, count=10):
-        copied_params = self.ui.canvas.get_copied_params()
-        plot_bars_timing(*copied_params, delay=0, count=10)
+        copied_params = self.ui.canvas.get_params()
+        plot_bars_timing(*copied_params)
 
     def about_author_message(self):
         title = "Об авторе"
