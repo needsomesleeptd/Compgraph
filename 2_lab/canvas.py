@@ -44,6 +44,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.fill_color = QColor(0, 0, 0)
         self.seed_color = QColor(0, 0, 255)
         self.fitInView(self.pixmap_on_canvas, Qt.KeepAspectRatio)
+        self.save_color = QColor(255,255,255)
 
 
 
@@ -88,8 +89,9 @@ class Canvas(QtWidgets.QGraphicsView):
         self.dotsPrintSignal.emit(pos.x(), pos.y())
 
     def update_seed_point(self, x, y):
-        #self.image.setPixelColor(*self.seed_point, self.fill_color)
+        self.image.setPixelColor(*self.seed_point, self.save_color)
         self.seed_point = [x,y]
+        self.save_color = get_pixel_color(self,*self.seed_point)
         self.image.setPixelColor(*self.seed_point,self.fill_color)
         self.updatePixmap()
 
