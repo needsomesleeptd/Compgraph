@@ -28,7 +28,7 @@ def timingRastrAlgo(canvas, fill_color, background_color, polygons, count=10):
         canvas.image = save_q_image.copy()
         time_start = timeit.default_timer()
         rastr_algo_flag(canvas, fill_color, background_color,
-                        polygons)  # Todo::insert rastr algo here
+                        polygons)
         time_end = timeit.default_timer()
         overall_time += time_end - time_start
     canvas.image =   save_q_image.copy()

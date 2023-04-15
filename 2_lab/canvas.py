@@ -45,6 +45,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.seed_color = QColor(0, 0, 255)
         self.fitInView(self.pixmap_on_canvas, Qt.KeepAspectRatio)
         self.save_color = QColor(255,255,255)
+        self.saved_state = [self.image.copy(),self.polygons.copy(),self.cur_polygon.copy(),self.seed_point.copy()]
 
 
 
@@ -73,7 +74,10 @@ class Canvas(QtWidgets.QGraphicsView):
             self.image.setPixelColor(point.x(), point.y(), self.pen.color())
         self.updatePixmap()
 
-    def updatePixmap(self):
+    def updatePixmap(self,is_reverting=False):
+        #print(self.saved_state)
+        #if (not is_reverting):
+        #    self.saved_state[0] = self.pixmap.toImage().copy()
         # super().fitInView(self.pixmap_on_canvas)
         self.image = self.image.scaled(self.width(), self.height())
         self.pixmap.convertFromImage(self.image)
@@ -81,14 +85,18 @@ class Canvas(QtWidgets.QGraphicsView):
 
 
     def add_dot(self,pos):
+        self.saved_state[0] = self.pixmap.toImage().copy()
         if (len(self.cur_polygon) == 0):
             self.image.setPixelColor(pos.x(), pos.y(), self.pen.color())
         else:
             self.drawLine(self.cur_polygon[-1], [pos.x(), pos.y()])
+        self.saved_state[2] = self.cur_polygon.copy()
         self.cur_polygon.append([pos.x(), pos.y()])
         self.dotsPrintSignal.emit(pos.x(), pos.y())
 
+
     def update_seed_point(self, x, y):
+        self.saved_state[3] = self.seed_point.copy()
         self.image.setPixelColor(*self.seed_point, self.save_color)
         self.seed_point = [x,y]
         self.save_color = get_pixel_color(self,*self.seed_point)
@@ -98,6 +106,7 @@ class Canvas(QtWidgets.QGraphicsView):
     def mousePressEvent(self, event):
         super().mousePressEvent(event)
         if not self.pan_mode:
+            self.save_state()
             pos = self.mapToScene(event.pos())
             if event.buttons() == QtCore.Qt.LeftButton:
                 self.add_dot(pos)
@@ -108,8 +117,6 @@ class Canvas(QtWidgets.QGraphicsView):
                 self.cur_polygon = []
 
             if event.buttons() == QtCore.Qt.MouseButton.MidButton:
-                # print(self.filled_dot)
-
                 self.update_seed_point(pos.x(), pos.y())
 
             self.updatePixmap()
@@ -117,7 +124,8 @@ class Canvas(QtWidgets.QGraphicsView):
     def fill_line_by_line(self, delay=0):
         # print(self.filled_dot)
         line_by_line_filling_algorithm_with_seed(self, self.pen.color(), self.fill_color, self.seed_point, delay)
-        background_color = QColor(255,255,255)
+        #tested rastr_algo too
+        #background_color = QColor(255,255,255)
         #rastr_algo_flag(self,self.fill_color,background_color,self.polygons)
         self.updatePixmap()
 
@@ -136,6 +144,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.fill_color = color
 
     def clearCanvas(self):
+        self.save_state()
         self.image.fill(QColor(255, 255, 255))  # getting white color
         self.polygons = []
         self.cur_polygon = []
@@ -171,3 +180,5 @@ class Canvas(QtWidgets.QGraphicsView):
     def get_params(self):
         #canvas_copy = self.image.copy()
         return [self, self.pen.color(), self.fill_color, self.seed_point,self.polygons]
+    def save_state(self):
+        self.saved_state = [self.image.copy(), self.polygons.copy(), self.cur_polygon.copy(), self.seed_point.copy()]

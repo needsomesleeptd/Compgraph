@@ -16,6 +16,7 @@ def update_widget_by_Qcolor(widget, color):
 
 
 class UI(QtWidgets.QMainWindow):
+
     def __init__(self):
         super().__init__()
 
@@ -36,17 +37,17 @@ class UI(QtWidgets.QMainWindow):
 
         self.ui.place_dot.clicked.connect(self.place_dot_by_value)
 
+        self.ui.revert.clicked.connect(self.revert_state)
+
         update_widget_by_Qcolor(self.ui.border_color_display, self.ui.canvas.pen.color())
         update_widget_by_Qcolor(self.ui.fill_color_display, self.ui.canvas.fill_color)
 
         self.show()
 
-
     def place_dot_by_value(self):
         x = self.ui.place_dot_x.value()
         y = self.ui.place_dot_y.value()
-        self.ui.canvas.add_dot(QtCore.QPointF(x,y))
-
+        self.ui.canvas.add_dot(QtCore.QPointF(x, y))
 
     def fill_by_seed(self):
         delay = self.ui.delay.value()
@@ -89,6 +90,18 @@ class UI(QtWidgets.QMainWindow):
         text = "Данная работа была выполнена студентом Разиным Андреем группы ИУ7-44Б\n\n" \
                "Если бы он знал о command pattern его жизнь была бы проще"
         self.show_message(title, text)
+
+    def revert_state(self):
+        if (self.ui.canvas.saved_state[0] != None):
+            self.ui.canvas.image = self.ui.canvas.saved_state[0].copy()
+            self.ui.canvas.polygons =  self.ui.canvas.saved_state[1].copy()
+            self.ui.canvas.cur_polygon = self.ui.canvas.saved_state[2].copy()
+            self.ui.canvas.seed_point = self.ui.canvas.saved_state[3].copy()
+            self.ui.canvas.saved_state[0] = None
+            self.ui.canvas.updatePixmap(is_reverting=True)
+            self.ui.table_points.create_from_canvas(self.ui.canvas.polygons + [self.ui.canvas.cur_polygon])
+
+
 
     def about_program_message(self):
         title = "О программе"

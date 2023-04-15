@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\main.ui'
+# Form implementation generated from reading ui file 'main.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -57,6 +57,9 @@ class Ui_MainWindow(object):
         self.fill_color_display.setObjectName("fill_color_display")
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.fill_color_display)
         self.verticalLayout.addLayout(self.formLayout)
+        self.revert = QtWidgets.QPushButton(self.centralwidget)
+        self.revert.setObjectName("revert")
+        self.verticalLayout.addWidget(self.revert)
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.label_4 = QtWidgets.QLabel(self.centralwidget)
@@ -148,6 +151,7 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "y"))
         self.Label.setText(_translate("MainWindow", "Цвет границ:"))
         self.label_3.setText(_translate("MainWindow", "Цвет закраски"))
+        self.revert.setText(_translate("MainWindow", "Вернуть на одно состояние назад"))
         self.label_4.setText(_translate("MainWindow", "Координаты точки для установки"))
         self.place_dot.setText(_translate("MainWindow", "Поставить точку"))
         self.label_2.setText(_translate("MainWindow", "Задержка(миллисек):"))

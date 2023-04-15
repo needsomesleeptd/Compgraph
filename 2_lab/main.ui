@@ -91,6 +91,13 @@
          </layout>
         </item>
         <item>
+         <widget class="QPushButton" name="revert">
+          <property name="text">
+           <string>Вернуть на одно состояние назад</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
            <widget class="QLabel" name="label_4">
