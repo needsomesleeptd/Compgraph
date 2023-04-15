@@ -208,15 +208,15 @@ def apply_to_dots(polygons, func):
     return target
 
 
-def get_intersections(edges):
+def get_intersections(polygons):
     intersections = []
 
-    for i in range(len(edges)):
-        for j in range(len(edges[i])):
-            x1 = edges[i][j][0]
-            y1 = edges[i][j][1]
-            x2 = edges[i][(j + 1) % len(edges[i])][0]
-            y2 = edges[i][(j + 1) % len(edges[i])][1]
+    for i in range(len(polygons)):
+        for j in range(len(polygons[i])):
+            x1 = polygons[i][j][0]
+            y1 = polygons[i][j][1]
+            x2 = polygons[i][(j + 1) % len(polygons[i])][0]
+            y2 = polygons[i][(j + 1) % len(polygons[i])][1]
 
             len_x = abs(int(x2) - int(x1))
             len_y = abs(int(y2) - int(y1))
@@ -273,7 +273,7 @@ def rastr_algo_flag_preproc(canvas, border_color, polygons):
         x = intersection[0]
         y = intersection[1]
         if (get_pixel_color(canvas, round(x + 1 / 2), round(y)) == extremum_color):
-            canvas.image.setPixelColor(round(x + 1 / 2), round(y), extremum_color)
+            canvas.image.setPixelColor(round(x + 1 / 2) - 1, round(y), extremum_color)
         else:
             canvas.image.setPixelColor(round(x + 1 / 2), round(y), extremum_color)
 
