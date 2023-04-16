@@ -59,41 +59,6 @@ def CDA(x1: float, y1: float, x2: float, y2: float, stepmode=False):
     return pointsList
 
 
-def intersactions(x1: float, y1: float, x2: float, y2: float):
-    x2 = ceil(x2)
-    y2 = ceil(y2)
-    x1 = floor(x1)
-    y1 = floor(y1)
-    pointsList = QPolygonF()
-    steps = 0
-
-    if x1 == x2 and y1 == y2:
-        pointsList.append(QPoint(round(x1), round(y1)))
-    else:
-        dx = abs(x2 - x1)
-        dy = abs(y2 - y1)
-
-        # steep - max growth
-        if dx >= dy:
-            length = dx
-        else:
-            length = dy
-        dx = (x2 - x1) / length  # step of x
-        dy = (y2 - y1) / length  # step of y
-
-        # set line to start
-        x = x1
-        y = y1
-
-        # i <= lenght i = 0
-        # while abs(x - x2) > 1 or abs(y - y2) > 1:
-        while (y < y2):
-            QPolygonF.append(QPointF(x, y))
-            x += dx
-            y += dy
-    return QPolygonF
-
-
 def get_pixel_color(canvas, x, y):
     return QColor(canvas.image.pixel(x, y))
 
@@ -236,27 +201,45 @@ def get_intersections(polygons):
     return intersections
 
 
+def revert_color(start_color, end_color, cur_color):
+    if (cur_color != start_color):
+        return start_color
+    else:
+        return end_color
+
+
 # Алгоритм для закрашивания с перегородкой
-'''def rastr_algo_separated(canvas, fill_color, background_color, polygons):
+'''def rastr_algo_splitter(canvas, fill_color, background_color, polygons):
     x_splitter = int(x_mass(polygons))
-    min_y = int(apply(polygons, min))
-    max_y = ceil(apply(polygons, max))
-    intersactions = get_intersections(polygons)
-    #print([[intersaction[0], intersaction[1]] for intersaction in intersactions])
-    #print(x_splitter)
-    for intersaction in intersactions:
+    # min_y = int(apply_to_dots(polygons, lambda tar, dots: min(tar, dots[1])))
+    # max_y = ceil(apply_to_dots(polygons, lambda tar, dots: max(tar, dots[1])))
+    # intersactions = get_intersections(polygons)
+    # print([[intersaction[0], intersaction[1]] for intersaction in intersactions])
+    # print(x_splitter)
+    check_color = rastr_algo_flag_preproc(canvas, canvas.pen.color(), polygons)
+    intersections = get_intersections(polygons)
+    cur_fill_color = fill_color
+    for intersaction in intersections:
         x_inter = int(intersaction[0])
-        y_inter = int(intersaction[1])
+        y_inter = round(intersaction[1] + 1 / 2)
+
         if (x_inter <= x_splitter):
-            for k in range(x_inter, x_splitter):
-                canvas.image.setPixelColor(k, y_inter, fill_color)
+
+            for k in range(x_inter + 1, x_splitter):
+                cur_color = get_pixel_color(canvas, x_inter, y_inter)
+                cur_fill_color = revert_color(fill_color, background_color, cur_color)
+
+                canvas.image.setPixelColor(k, y_inter, cur_fill_color)
         else:
-            for k in range(x_splitter, x_inter + 1):
-                canvas.image.setPixelColor(k, y_inter, fill_color)
+            for k in range(x_splitter, x_inter):
+                cur_color = get_pixel_color(canvas, x_inter, y_inter)
+
+                cur_fill_color = revert_color(fill_color, background_color, cur_color)
+
+                canvas.image.setPixelColor(k, y_inter, cur_fill_color)
+
 '''
-
-
-def get_color_extremum(border_color):
+def get_color_flags(border_color):
     r = border_color.red()
     g = border_color.blue()
     b = border_color.green()
@@ -266,19 +249,20 @@ def get_color_extremum(border_color):
     return QColor(r_new, g_new, b_new)
 
 
+# def restore_polygons(canvas):
+
 def rastr_algo_flag_preproc(canvas, border_color, polygons):
-    extremum_color = get_color_extremum(border_color)
+    color_change = get_color_flags(border_color)
     intersections = get_intersections(polygons)
     for intersection in intersections:
         x = intersection[0]
         y = intersection[1]
-        if (get_pixel_color(canvas, round(x + 1 / 2), round(y)) == extremum_color):
-            canvas.image.setPixelColor(round(x + 1 / 2) - 1, round(y), extremum_color)
+        if (get_pixel_color(canvas, round(x + 1 / 2), round(y)) == color_change):
+            canvas.image.setPixelColor(round(x + 1 / 2) - 1, round(y), color_change)
         else:
-            canvas.image.setPixelColor(round(x + 1 / 2), round(y), extremum_color)
+            canvas.image.setPixelColor(round(x + 1 / 2), round(y), color_change)
 
-    return extremum_color
-
+    return color_change
 
 
 def rastr_algo_flag(canvas, fill_color, background_color, polygons):
@@ -295,9 +279,9 @@ def rastr_algo_flag(canvas, fill_color, background_color, polygons):
         max_x = ceil(apply_to_dots(polygons, lambda tar, dots: max(tar, dots[0])))
 
     check_color = rastr_algo_flag_preproc(canvas, canvas.pen.color(), polygons)
-    for y in range(min_y, max_y):
+    for y in range(min_y + 1, max_y):
         flag = False
-        x = min_x
+        x = min_x + 1
         while x < max_x:
 
             if (get_pixel_color(canvas, x, y) == check_color):
@@ -310,3 +294,5 @@ def rastr_algo_flag(canvas, fill_color, background_color, polygons):
             else:
                 canvas.image.setPixelColor(x, y, background_color)
             x += 1
+
+

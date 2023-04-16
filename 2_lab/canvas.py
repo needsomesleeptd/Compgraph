@@ -129,11 +129,14 @@ class Canvas(QtWidgets.QGraphicsView):
 
     def fill_seed(self, delay=0):
         # print(self.filled_dot)
-        #line_by_line_filling_algorithm_with_seed(self, self.pen.color(), self.fill_color, self.seed_point, delay)
+        self.save_state()
+        line_by_line_filling_algorithm_with_seed(self, self.pen.color(), self.fill_color, self.seed_point, delay)
         # tested rastr_algo too
-        background_color = QColor(255, 255, 255)
-        rastr_algo_flag(self, self.fill_color, background_color, self.polygons)
+
+        #background_color = QColor(255, 255, 255)
+        #rastr_algo_flag(self, self.fill_color, background_color, self.polygons)
         self.updatePixmap()
+
 
     def CreateGraphicsScene(self):
         scene = QtWidgets.QGraphicsScene()

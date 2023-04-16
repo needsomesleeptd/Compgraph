@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'main.ui'
+# Form implementation generated from reading ui file '.\main.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -28,7 +28,13 @@ class Ui_MainWindow(object):
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
         self.table_points = Table(self.centralwidget)
-        self.table_points.setMinimumSize(QtCore.QSize(200, 0))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(20)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.table_points.sizePolicy().hasHeightForWidth())
+        self.table_points.setSizePolicy(sizePolicy)
+        self.table_points.setMinimumSize(QtCore.QSize(200, 100))
+        self.table_points.setSizeIncrement(QtCore.QSize(20, 0))
         self.table_points.setLineWidth(2)
         self.table_points.setMidLineWidth(2)
         self.table_points.setObjectName("table_points")
@@ -108,6 +114,20 @@ class Ui_MainWindow(object):
         self.dots_placement.setChecked(True)
         self.dots_placement.setObjectName("dots_placement")
         self.verticalLayout.addWidget(self.dots_placement)
+        self.verticalLayout.setStretch(0, 10)
+        self.verticalLayout.setStretch(1, 1)
+        self.verticalLayout.setStretch(2, 1)
+        self.verticalLayout.setStretch(3, 1)
+        self.verticalLayout.setStretch(4, 1)
+        self.verticalLayout.setStretch(5, 1)
+        self.verticalLayout.setStretch(6, 1)
+        self.verticalLayout.setStretch(7, 1)
+        self.verticalLayout.setStretch(8, 1)
+        self.verticalLayout.setStretch(9, 1)
+        self.verticalLayout.setStretch(10, 1)
+        self.verticalLayout.setStretch(11, 1)
+        self.verticalLayout.setStretch(12, 1)
+        self.verticalLayout.setStretch(13, 1)
         self.Main_Horixontal_layout.addLayout(self.verticalLayout)
         self.verticalLayout_2.addLayout(self.Main_Horixontal_layout)
         MainWindow.setCentralWidget(self.centralwidget)

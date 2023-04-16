@@ -39,6 +39,9 @@ class UI(QtWidgets.QMainWindow):
 
         self.ui.revert.clicked.connect(self.revert_state)
 
+        self.ui.about_creator.triggered.connect(self.about_author_message)
+        self.ui.about_programm.triggered.connect(self.about_program_message)
+
         update_widget_by_Qcolor(self.ui.border_color_display, self.ui.canvas.pen.color())
         update_widget_by_Qcolor(self.ui.fill_color_display, self.ui.canvas.fill_color)
 
@@ -50,6 +53,9 @@ class UI(QtWidgets.QMainWindow):
         self.ui.canvas.add_dot(QtCore.QPointF(x, y))
 
     def fill_by_seed(self):
+        if (len(self.ui.canvas.cur_polygon) != 0):
+            self.show_message("Многоугольник не завершен","В случае если многоугольник не будет замкнутым, возможно неверное закрашивание фигуры")
+            return
         delay = self.ui.delay.value()
         self.ui.canvas.fill_seed(delay)
 
@@ -105,19 +111,13 @@ class UI(QtWidgets.QMainWindow):
 
     def about_program_message(self):
         title = "О программе"
-        text = 'Данная программа позволяет нарисовать спектры окружностей и эллипсов различными алгоритмами:\n' \
-               ''' 
-                   Каноническое уравнение X^2+Y^2=R^2
-                   Параметрическое уравнение X=Rcost, Y=Rsint
-                   Алгоритм Брезенхема
-                   Алгоритм средней точки
-                   Библиотечная функция\n
-                   ''' \
-               "И сравнить скорость построения фигур данными способами\n\n" \
+        text = 'Данная программа позволяет заполнить многоугольники с помощью алгоритма закраски с затравкой' \
+               ''' , а также сравнить скорость данного заполнения с растровым алгоритмом закраски с флагом
+                   \n\n''' \
                "Замечания по работе программы:\n" \
-               "   1.Поле `Координаты центра фигуры` определеяет центр всех спектров для построения\n" \
-               "   2.Параметр A задает размер горизонтальной полуоси эллипса,параметр B задает размеры вертикальной полуоси\n" \
-               "   3.Поля со словом `шаг` задают значения последовательного смещения фигур в спектре "
+               "   1. На колесико мыши ставится затравочная точка\n" \
+               "   2. На левую кнопку мыши происходит построение самого многоугольника, замыкание происходит на правую кнопку мыши\n" \
+               "   3. на колесико мыши есть возможность зума для детального рассмотра изображения"
 
         self.show_message(title, text)
 
