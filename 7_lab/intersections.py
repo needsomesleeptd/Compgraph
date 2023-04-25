@@ -86,7 +86,7 @@ def get_visible_coords(flag,  P1, P2, rect, is_first):
         P = P2
 
     if (P1.x() != P2.x()):
-        m = (P2.y() - P1.y()) / (P1.x() - P2.x())
+        m = (P2.y() - P1.y()) / (P2.x() - P1.x())
         #left_check
         if rect[0].x() >= P.x():
             y = m * (rect[0].x() - P.x()) + P.y()

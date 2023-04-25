@@ -172,8 +172,10 @@ class Canvas(QtWidgets.QGraphicsView):
                 self.drawLine(*self.lines[i],self.cut_off_color)
             if flag == 1:
                 self.drawLine(*inter_line, self.line_color)
+                print(inter_line,self.lines[i])
                 self.drawLine(inter_line[0],self.lines[i][0], self.cut_off_color)
                 self.drawLine(inter_line[1],self.lines[i][1], self.cut_off_color)
+        self.updatePixmap()
 
 
 
