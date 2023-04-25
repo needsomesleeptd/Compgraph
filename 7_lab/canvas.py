@@ -83,7 +83,7 @@ class Canvas(QtWidgets.QGraphicsView):
         #points = CDA(*fr, *to)
         #for point in points:
             #self.image.setPixelColor(point.x(), point.y(), color)
-        self.scene.addLine(*fr,*to,color)
+        return self.scene.addLine(*fr,*to,color)
         #self.updatePixmap()
 
     def drawRect(self, left_point, right_point, color):
@@ -117,12 +117,13 @@ class Canvas(QtWidgets.QGraphicsView):
 
 
         if (len(self.cur_rect) == 0):
-            self.drawLine([pos.x(), pos.y()],[pos.x(), pos.y()],self.pen.color())
+            self.temp = self.drawLine([pos.x(), pos.y()],[pos.x(), pos.y()],self.pen.color())
         else:
+            self.scene.removeItem(self.temp)
             self.drawRect(self.cur_rect[0], [pos.x(), pos.y()],self.pen.color())
         self.cur_rect.append([pos.x(), pos.y()])
         self.dotsPrintSignal.emit(pos.x(), pos.y())
-
+        self.update()
     def add_dot_line(self, pos):
         if (len(self.cur_line) == 0):
             self.cur_line.append([pos.x(), pos.y()])
