@@ -92,8 +92,8 @@ def get_visible_coords(flag,  P1, P2, rect, is_first):
             y = m * (rect[0].x() - P.x()) + P.y()
             if y <= rect[1].y() and y >= rect[0].y():
                 return [QPointF(rect[0].x(), y),flag]
-        #up_check
-        if rect[0].x() <= P.x():
+        #right_check
+        if rect[1].x() <= P.x():
             y = m * (rect[1].x() - P.x()) + P.y()
             if y <= rect[1].y() and y >= rect[0].y():
                 return [QPointF(rect[1].x(), y),flag]
@@ -103,13 +103,13 @@ def get_visible_coords(flag,  P1, P2, rect, is_first):
         return [P,flag]
 
     #lower_bound_check
-    if rect[1].y() >= P.y():
+    if rect[1].y() <= P.y():
         x = (1 / m) * (rect[1].y() - P.y()) + P.x()
         if (x >= rect[0].x() and x <= rect[1].x()):
             return [QPointF(x, rect[1].y()),flag]
 
     #up_bound_check
-    if rect[0].y() <= P.y():
+    if rect[0].y() >= P.y():
         x = (1 / m) * (rect[0].y() - P.y()) + P.x()
         if (x >= rect[0].x() and x <= rect[1].x()):
             return [QPointF(x, rect[0].y()),flag]
