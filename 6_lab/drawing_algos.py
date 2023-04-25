@@ -81,7 +81,7 @@ def check_line(canvas, stack, cur_pixel, xr, fill_colour, border_colour, dy):
         if flag:  # Нашли правый незакрашенный пиксель
             if x == xr and get_pixel_color(canvas, x, y) != fill_colour and \
                     get_pixel_color(canvas, x, y) != border_colour:
-                if y < canvas.image.height():  # Если и есть наш пиксель (самый правый то берем его)
+                if y < canvas.image.height():  # Если и есть наш пиксель (если самый правый(xr) то берем его)
                     stack.append([x, y])
             else:
                 if y < canvas.image.height():
