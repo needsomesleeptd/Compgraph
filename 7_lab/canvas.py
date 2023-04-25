@@ -53,6 +53,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.lines = []
         self.cur_line = []
         self.pan_mode = False
+        self.rect = None
         self.cut_off_color = QColor(0, 0, 0)
         self.line_color = QColor(12, 123, 56)
         self.background_color = QColor(255,255,255)
@@ -79,16 +80,20 @@ class Canvas(QtWidgets.QGraphicsView):
         # self.fitInView(self.pixmap_on_canvas, Qt.KeepAspectRatio)
 
     def drawLine(self, fr, to, color):
-        points = CDA(*fr, *to)
-        for point in points:
-            self.image.setPixelColor(point.x(), point.y(), color)
-        self.updatePixmap()
+        #points = CDA(*fr, *to)
+        #for point in points:
+            #self.image.setPixelColor(point.x(), point.y(), color)
+        self.scene.addLine(*fr,*to,color)
+        #self.updatePixmap()
 
     def drawRect(self, left_point, right_point, color):
-        points = get_rect_points(*left_point,
-                                 *right_point)  # RectPoints возвращает точки в порядке обхода по часовой стрелке
-        for i in range(len(points)):
-            self.drawLine(points[i], points[(i + 1) % len(points)], color)
+       # points = get_rect_points(*left_point,
+       #                          *right_point)  # RectPoints возвращает точки в порядке обхода по часовой стрелке
+        #for i in range(len(points)):
+        #    self.drawLine(points[i], points[(i + 1) % len(points)], color)
+       w = right_point[0] - left_point[0]
+       h = right_point[1] - left_point[1]
+       self.rect = self.scene.addRect(*left_point,w,h,color)
 
     def updatePixmap(self, is_reverting=False):
         # print(self.saved_state)
@@ -100,7 +105,9 @@ class Canvas(QtWidgets.QGraphicsView):
         self.pixmap_on_canvas.setPixmap(self.pixmap)
 
     def clear_cur_rect(self):
-        self.drawRect(*self.cur_rect,self.background_color)
+        #self.drawRect(*self.cur_rect,self.background_color)
+        self.scene.removeItem(self.rect)
+        self.rect = None
         self.cur_rect = []
 
     def add_dot_rect(self, pos):
@@ -110,7 +117,7 @@ class Canvas(QtWidgets.QGraphicsView):
 
 
         if (len(self.cur_rect) == 0):
-            self.image.setPixelColor(pos.x(), pos.y(), self.pen.color())
+            self.drawLine([pos.x(), pos.y()],[pos.x(), pos.y()],self.pen.color())
         else:
             self.drawRect(self.cur_rect[0], [pos.x(), pos.y()],self.pen.color())
         self.cur_rect.append([pos.x(), pos.y()])
@@ -142,13 +149,13 @@ class Canvas(QtWidgets.QGraphicsView):
         if not self.pan_mode:
 
             pos = self.mapToScene(event.pos())
-            if pos.x() <= 0 or pos.x() >= self.width():
+            '''if pos.x() <= 0 or pos.x() >= self.width():
                 self.show_message(title_str, warning_str)
                 return
 
             if pos.y() <= 0 or pos.y() >= self.height():
                 self.show_message(title_str, warning_str)
-                return
+                return'''
             self.save_state()
             if event.buttons() == QtCore.Qt.LeftButton:
                 self.add_dot_rect(pos)
@@ -168,13 +175,15 @@ class Canvas(QtWidgets.QGraphicsView):
         intersected_lines = find_intersections(lines_with_points,rect_with_points)
         for i,results in enumerate(intersected_lines):
             flag,inter_line = results[0],QLine_to_line(results[1])
-            if flag == 0: #invisibles
+            if flag == 0: #invisible
                 self.drawLine(*self.lines[i],self.cut_off_color)
-            if flag == 1:
+            if flag == 1: #visible
                 self.drawLine(*inter_line, self.line_color)
-                print(inter_line,self.lines[i])
-                self.drawLine(inter_line[0],self.lines[i][0], self.cut_off_color)
-                self.drawLine(inter_line[1],self.lines[i][1], self.cut_off_color)
+                #print(inter_line,self.lines[i])
+                if (inter_line != self.lines[i]):
+                    self.drawLine(inter_line[0],self.lines[i][0], self.cut_off_color)
+                    self.drawLine(inter_line[1],self.lines[i][1], self.cut_off_color)
+                #self.scene.addLine(*inter_line[0],*self.lines[i][0],self.pen)
         self.updatePixmap()
 
 

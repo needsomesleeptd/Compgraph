@@ -89,12 +89,12 @@ def get_visible_coords(flag,  P1, P2, rect, is_first):
         m = (P2.y() - P1.y()) / (P2.x() - P1.x())
         #left_check
         if rect[0].x() >= P.x():
-            y = m * (rect[0].x() - P.x()) + P.y()
+            y = (m * (rect[0].x() - P.x()) + P.y())
             if y <= rect[1].y() and y >= rect[0].y():
                 return [QPointF(rect[0].x(), y),flag]
         #right_check
         if rect[1].x() <= P.x():
-            y = m * (rect[1].x() - P.x()) + P.y()
+            y = (m * (rect[1].x() - P.x()) + P.y())
             if y <= rect[1].y() and y >= rect[0].y():
                 return [QPointF(rect[1].x(), y),flag]
 
@@ -104,13 +104,13 @@ def get_visible_coords(flag,  P1, P2, rect, is_first):
 
     #lower_bound_check
     if rect[1].y() <= P.y():
-        x = (1 / m) * (rect[1].y() - P.y()) + P.x()
+        x = ((1 / m) * (rect[1].y() - P.y()) + P.x())
         if (x >= rect[0].x() and x <= rect[1].x()):
             return [QPointF(x, rect[1].y()),flag]
 
     #up_bound_check
     if rect[0].y() >= P.y():
-        x = (1 / m) * (rect[0].y() - P.y()) + P.x()
+        x = ((1 / m) * (rect[0].y() - P.y()) + P.x())
         if (x >= rect[0].x() and x <= rect[1].x()):
             return [QPointF(x, rect[0].y()),flag]
     flag = 0
