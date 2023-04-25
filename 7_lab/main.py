@@ -53,11 +53,11 @@ class UI(QtWidgets.QMainWindow):
         self.ui.canvas.add_dot_rect(QtCore.QPointF(x, y))
 
     def fill_by_seed(self):
-        if (len(self.ui.canvas.cur_rect) != 0):
-            self.show_message("Многоугольник не завершен","В случае если многоугольник не будет замкнутым, возможно неверное закрашивание фигуры")
-            return
-        delay = self.ui.delay.value()
-        self.ui.canvas.fill_seed(delay)
+       # if (len(self.ui.canvas.cur_rect) != 0):
+            #self.show_message("Многоугольник не завершен","В случае если многоугольник не будет замкнутым, возможно неверное закрашивание фигуры")
+            #return
+        #delay = self.ui.delay.value()
+        self.ui.canvas.DisplayIntersections()
 
     def changeColorBound(self):
         border_color = QtWidgets.QColorDialog.getColor()

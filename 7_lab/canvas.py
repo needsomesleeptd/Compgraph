@@ -1,5 +1,6 @@
 from main import Qcolor_to_stylesheet
 
+from intersections import *
 from drawing_algos import *
 
 from PyQt5 import QtCore, QtWidgets, uic
@@ -12,6 +13,16 @@ from PyQt5.QtGui import QMouseEvent
 from copy import deepcopy
 from PyQt5.QtWidgets import QMessageBox
 
+def QLine_to_line(Qline: [QPointF,QPointF]):
+    return [[Qline[0].x(),Qline[0].y()],[Qline[1].x(),Qline[1].y()]]
+
+def QLines_to_line(Qlines):
+    lines = []
+    for Qline in Qlines:
+        lines.append(QLine_to_line(Qline))
+    return lines
+def QPoint_to_point(Qpoint : QPointF):
+    return [Qpoint.x(),Qpoint.y()]
 
 class Canvas(QtWidgets.QGraphicsView):
     dotsPrintSignal = QtCore.pyqtSignal(float, float)
@@ -111,6 +122,7 @@ class Canvas(QtWidgets.QGraphicsView):
         else:
             self.cur_line.append([pos.x(), pos.y()])
             self.drawLine(*self.cur_line,self.line_color)
+            self.cur_line.sort(key=lambda x: x[0])
             self.lines.append(self.cur_line)
             self.cur_line = []
         self.updatePixmap()
@@ -145,6 +157,30 @@ class Canvas(QtWidgets.QGraphicsView):
                 self.add_dot_line(pos)
 
             self.updatePixmap()
+
+
+    def DisplayIntersections(self):
+        if (len(self.cur_line) != 0):
+            self.show_message("Линия не была проведена", "Вторая точка прямой не была определена")
+            return
+        lines_with_points = [[QPointF(*line[0]),QPointF(*line[1])] for line in self.lines]
+        rect_with_points = [QPointF(*self.cur_rect[0]),QPointF(*self.cur_rect[1])]
+        intersected_lines = find_intersections(lines_with_points,rect_with_points)
+        for i,results in enumerate(intersected_lines):
+            flag,inter_line = results[0],QLine_to_line(results[1])
+            if flag == 0: #invisibles
+                self.drawLine(*self.lines[i],self.cut_off_color)
+            if flag == 1:
+                self.drawLine(*inter_line, self.line_color)
+                self.drawLine(inter_line[0],self.lines[i][0], self.cut_off_color)
+                self.drawLine(inter_line[1],self.lines[i][1], self.cut_off_color)
+
+
+
+
+
+
+
 
 
 

@@ -47,17 +47,18 @@ def get_bin_visibility(point, rect_point_left, rect_point_right):
 
 
 
-def find_intersection(line, rect):
+def find_intersection(line, rect): # flag shows whether it is visible or not
     T1 = get_bin_visibility(line[0], rect[0], rect[1])
     T2 = get_bin_visibility(line[1], rect[0], rect[1])
     sum1 = sum(T1)
     sum2 = sum(T2)
-    if sum1 + sum2 == 0:
-        flag = 1
-    if sum1 ^ sum2 != 0:
-        flag = -1
     P1 = line[0]
     P2 = line[1]
+    if sum1 == 0 and  sum2 == 0:
+        return [1,[P1,P2]]
+    if sum1 ^ sum2 != 0:
+        return [0, [P1, P2]]
+
     R1 = P1
     R2 = P2
     flag = 1
@@ -67,7 +68,7 @@ def find_intersection(line, rect):
     if (sum2 != 0):
         R2, flag = get_visible_coords(flag, P1, P2, rect, is_first=False)
 
-    return [flag,R1,R2]
+    return [flag,[R1,R2]]
 
 
 
@@ -82,7 +83,7 @@ def get_visible_coords(flag,  P1, P2, rect, is_first):
     if (is_first):
         P = P1
     else:
-        p = P2
+        P = P2
 
     if (P1.x() != P2.x()):
         m = (P2.y() - P1.y()) / (P1.x() - P2.x())
@@ -90,12 +91,12 @@ def get_visible_coords(flag,  P1, P2, rect, is_first):
         if rect[0].x() >= P.x():
             y = m * (rect[0].x() - P.x()) + P.y()
             if y <= rect[1].y() and y >= rect[0].y():
-                return [QPointF(rect[0].x, y),flag]
+                return [QPointF(rect[0].x(), y),flag]
         #up_check
         if rect[0].x() <= P.x():
             y = m * (rect[1].x() - P.x()) + P.y()
             if y <= rect[1].y() and y >= rect[0].y():
-                return [QPointF(rect[1].x, y),flag]
+                return [QPointF(rect[1].x(), y),flag]
 
     if (abs(m) <= EPS):
         flag = 0
@@ -105,15 +106,23 @@ def get_visible_coords(flag,  P1, P2, rect, is_first):
     if rect[1].y() >= P.y():
         x = (1 / m) * (rect[1].y() - P.y()) + P.x()
         if (x >= rect[0].x() and x <= rect[1].x()):
-            return [QPointF(x, rect[1].y),flag]
+            return [QPointF(x, rect[1].y()),flag]
 
     #up_bound_check
     if rect[0].y() <= P.y():
         x = (1 / m) * (rect[0].y() - P.y()) + P.x()
         if (x >= rect[0].x() and x <= rect[1].x()):
-            return [QPointF(x, rect[0].y),flag]
+            return [QPointF(x, rect[0].y()),flag]
     flag = 0
     return [P,flag]
+
+
+def find_intersections(lines,rect):
+    intersections = []
+    for line in lines:
+        intersections.append(find_intersection(line,rect))
+    return intersections
+
 
 
 
