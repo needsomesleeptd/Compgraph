@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1105</width>
-    <height>615</height>
+    <width>1193</width>
+    <height>1000</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1000</width>
+    <height>1000</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -28,7 +34,7 @@
        </widget>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout" stretch="10,1,1,1,1,1,1,1,1,1,1,1,1,1">
+       <layout class="QVBoxLayout" name="verticalLayout" stretch="10,1,1,0,0,1,1,1,1,1">
         <item>
          <widget class="Table" name="table_points">
           <property name="sizePolicy">
@@ -74,13 +80,19 @@
          <layout class="QFormLayout" name="formLayout">
           <item row="0" column="0">
            <widget class="QLabel" name="Label">
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
             <property name="text">
-             <string>Цвет границ:</string>
+             <string>Цвет прямоугольника:</string>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QPushButton" name="border_color_display">
+           <widget class="QPushButton" name="change_rect_color">
             <property name="text">
              <string/>
             </property>
@@ -88,13 +100,33 @@
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_3">
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
             <property name="text">
-             <string>Цвет закраски</string>
+             <string>Цвет прямых:</string>
             </property>
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QPushButton" name="fill_color_display">
+           <widget class="QPushButton" name="change_lines_color">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="Label_2">
+            <property name="text">
+             <string>Цвет отсекаемых прямых</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QPushButton" name="change_intersected_lines_color">
             <property name="text">
              <string/>
             </property>
@@ -104,6 +136,12 @@
         </item>
         <item>
          <widget class="QPushButton" name="revert">
+          <property name="font">
+           <font>
+            <family>Times New Roman</family>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Вернуть на одно состояние назад</string>
           </property>
@@ -112,79 +150,286 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
-           <widget class="QLabel" name="label_4">
+           <widget class="QLabel" name="label_2">
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <pointsize>10</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <property name="text">
-             <string>Координаты точки для установки</string>
+             <string>Коордиты прямоугольника для построения:</string>
             </property>
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
-            <item>
-             <widget class="QDoubleSpinBox" name="place_dot_x">
-              <property name="maximum">
-               <double>300.000000000000000</double>
+           <layout class="QFormLayout" name="formLayout_3">
+            <item row="0" column="0">
+             <widget class="QLabel" name="xLLabel">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+                <pointsize>9</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Xleft:</string>
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QDoubleSpinBox" name="place_dot_y">
-              <property name="maximum">
-               <double>300.000000000000000</double>
+            <item row="0" column="1">
+             <widget class="QDoubleSpinBox" name="XLeftRect">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+                <pointsize>9</pointsize>
+               </font>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="yupLabel">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+                <pointsize>9</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Yup:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QDoubleSpinBox" name="YUpRect">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+                <pointsize>9</pointsize>
+               </font>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="xrightLabel">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+                <pointsize>9</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Xright:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QDoubleSpinBox" name="XRightRect">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+                <pointsize>9</pointsize>
+               </font>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="xDownLabel">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+                <pointsize>9</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>YDown:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QDoubleSpinBox" name="YDownRect">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+                <pointsize>9</pointsize>
+               </font>
               </property>
              </widget>
             </item>
            </layout>
           </item>
+          <item>
+           <widget class="QPushButton" name="pushButton">
+            <property name="text">
+             <string>Построить прямоугольник</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <pointsize>10</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Координаты прямой для построения:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QFormLayout" name="formLayout_2">
+            <item row="0" column="0">
+             <widget class="QLabel" name="x1Label">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+                <pointsize>9</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>X1:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QDoubleSpinBox" name="X1Line">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+                <pointsize>9</pointsize>
+               </font>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="x2Label">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+                <pointsize>9</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Y1:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QDoubleSpinBox" name="Y1Line">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+                <pointsize>9</pointsize>
+               </font>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="x2Label_2">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+                <pointsize>9</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>X2:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QDoubleSpinBox" name="X2Line">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+                <pointsize>9</pointsize>
+               </font>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="y2Label">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+                <pointsize>9</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Y2:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QDoubleSpinBox" name="Y2Line">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+                <pointsize>9</pointsize>
+               </font>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3"/>
+          </item>
          </layout>
         </item>
         <item>
-         <widget class="QPushButton" name="place_dot">
+         <widget class="QPushButton" name="create_line">
+          <property name="font">
+           <font>
+            <family>Times New Roman</family>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
           <property name="text">
-           <string>Поставить точку</string>
+           <string>Построить прямую</string>
           </property>
          </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Задержка(миллисек):</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QDoubleSpinBox" name="delay"/>
         </item>
         <item>
          <widget class="QPushButton" name="clear_canvas_button">
+          <property name="font">
+           <font>
+            <family>Times New Roman</family>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Очистить канвас</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="change_fill_color">
-          <property name="text">
-           <string>Сменить цвет закраски</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="change_bound_color">
-          <property name="text">
-           <string>Сменить цвет прямых</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QPushButton" name="fill_line_by_line">
+          <property name="font">
+           <font>
+            <family>Times New Roman</family>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
           <property name="text">
-           <string>Закрасить</string>
+           <string>Отсечь</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QLabel" name="label">
+          <property name="font">
+           <font>
+            <family>Times New Roman</family>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Выбор операции</string>
           </property>
@@ -192,6 +437,12 @@
         </item>
         <item>
          <widget class="QRadioButton" name="panning">
+          <property name="font">
+           <font>
+            <family>Times New Roman</family>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Передвижение по холсту</string>
           </property>
@@ -199,6 +450,12 @@
         </item>
         <item>
          <widget class="QRadioButton" name="dots_placement">
+          <property name="font">
+           <font>
+            <family>Times New Roman</family>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Расстановка точек</string>
           </property>
@@ -218,8 +475,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1105</width>
-     <height>22</height>
+     <width>1193</width>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

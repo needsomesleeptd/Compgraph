@@ -168,20 +168,16 @@ class Canvas(QtWidgets.QGraphicsView):
         return scene
 
     def changePenColor(self, color):
-        self.save_request = [self.pen.color(), "PenColor"]
         self.pen.setColor(color)
 
-    def changeFillColor(self, color):
-        self.save_request = [self.pen.color(), "PenColor"]
-        self.fill_color = color
+    def changeCutOffColor(self, color):
+        self.cut_off_color = color
+    def changeLineColor(self, color):
+        self.line_color = color
 
     def clearCanvas(self):
-        self.save_state()
-        self.image.fill(QColor(255, 255, 255))  # getting white color
-        self.polygons = []
-        self.cur_rect = []
-        self.clearSignal.emit()
-        self.updatePixmap()
+        self.scene.clear()
+        self.update()
 
     def get_params(self):
         # canvas_copy = self.image.copy()

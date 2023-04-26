@@ -6,6 +6,8 @@ from PyQt5.QtWidgets import QMessageBox
 
 from algo_time_comparation import plot_bars_timing
 
+from PyQt5.QtCore import QPoint, QPointF
+
 
 def Qcolor_to_stylesheet(color):
     return '* { background-color: ' + color.name() + ' }'
@@ -24,9 +26,11 @@ class UI(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         self.ui.panning.clicked.connect(self.changetoPanMode)
         self.ui.dots_placement.clicked.connect(self.changetoPlaceMode)
-        self.ui.fill_line_by_line.clicked.connect(self.fill_by_seed)
-        self.ui.change_fill_color.clicked.connect(self.changeColorFill)
-        self.ui.change_bound_color.clicked.connect(self.changeColorBound)
+        self.ui.fill_line_by_line.clicked.connect(self.DisplayIntersections)
+
+        self.ui.change_rect_color.clicked.connect(self.changeRectLineColor)
+        self.ui.change_lines_color.clicked.connect(self.changeLineColor)
+        self.ui.change_intersected_lines_color.clicked.connect(self.changeCutOffColor)
 
         self.ui.measurements_time.triggered.connect(self.show_timings)
 
@@ -35,28 +39,33 @@ class UI(QtWidgets.QMainWindow):
 
         self.ui.clear_canvas_button.clicked.connect(self.ui.canvas.clearCanvas)
 
-        self.ui.place_dot.clicked.connect(self.place_dot_by_value)
+        self.ui.create_line.clicked.connect(self.createLineByValue)
 
         self.ui.revert.clicked.connect(self.revert_state)
 
         self.ui.about_creator.triggered.connect(self.about_author_message)
         self.ui.about_programm.triggered.connect(self.about_program_message)
 
-        #update_widget_by_Qcolor(self.ui.border_color_display, self.ui.canvas.pen.color())
-        #update_widget_by_Qcolor(self.ui.fill_color_display, self.ui.canvas.fill_color)
+        update_widget_by_Qcolor(self.ui.change_rect_color, self.ui.canvas.pen.color())
+        update_widget_by_Qcolor(self.ui.change_lines_color, self.ui.canvas.line_color)
+        update_widget_by_Qcolor(self.ui.change_intersected_lines_color, self.ui.canvas.cut_off_color)
 
         self.show()
 
-    def place_dot_by_value(self):
-        x = self.ui.place_dot_x.value()
-        y = self.ui.place_dot_y.value()
-        self.ui.canvas.add_dot_rect(QtCore.QPointF(x, y))
+    def createLineByValue(self):
+        x1 = self.ui.X1Line.value()
+        x2 = self.ui.X2Line.value()
+        y1 = self.ui.Y1Line.value()
+        y2 = self.ui.Y2Line.value()
+        temp = None
+        if (len(self.ui.canvas.cur_line) != 0):
+            temp = self.ui.canvas.cur_line[0]
+        self.ui.canvas.add_dot_line(QPointF(x1, y1))
+        self.ui.canvas.add_dot_line(QPointF(x2, y2))
+        if (temp != None):
+            self.ui.canvas.cur_line = [temp]
 
-    def fill_by_seed(self):
-       # if (len(self.ui.canvas.cur_rect) != 0):
-            #self.show_message("Многоугольник не завершен","В случае если многоугольник не будет замкнутым, возможно неверное закрашивание фигуры")
-            #return
-        #delay = self.ui.delay.value()
+    def DisplayIntersections(self):
         self.ui.canvas.DisplayIntersections()
 
     def changeColorBound(self):
@@ -82,10 +91,23 @@ class UI(QtWidgets.QMainWindow):
     def clear_calnvas(self):
         self.ui.canvas.clearCanvas()
 
-    def changeCanvasLineColor(self):
+    def changeRectLineColor(self):
         button_color = QtWidgets.QColorDialog.getColor()
         if (button_color.isValid()):
             self.ui.canvas.changePenColor(button_color)
+            update_widget_by_Qcolor(self.ui.change_rect_color, self.ui.canvas.pen.color())
+
+    def changeLineColor(self):
+        button_color = QtWidgets.QColorDialog.getColor()
+        if (button_color.isValid()):
+            self.ui.canvas.changeLineColor(button_color)
+            update_widget_by_Qcolor(self.ui.change_lines_color, self.ui.canvas.line_color)
+
+    def changeCutOffColor(self):
+        button_color = QtWidgets.QColorDialog.getColor()
+        if (button_color.isValid()):
+            self.ui.canvas.changeCutOffColor(button_color)
+            update_widget_by_Qcolor(self.ui.change_intersected_lines_color, self.ui.canvas.cut_off_color)
 
     def show_timings(self, count=10):
         copied_params = self.ui.canvas.get_params()
@@ -100,14 +122,12 @@ class UI(QtWidgets.QMainWindow):
     def revert_state(self):
         if (self.ui.canvas.saved_state[0] != None):
             self.ui.canvas.image = self.ui.canvas.saved_state[0].copy()
-            self.ui.canvas.polygons =  self.ui.canvas.saved_state[1].copy()
+            self.ui.canvas.polygons = self.ui.canvas.saved_state[1].copy()
             self.ui.canvas.cur_rect = self.ui.canvas.saved_state[2].copy()
             self.ui.canvas.seed_point = self.ui.canvas.saved_state[3].copy()
             self.ui.canvas.saved_state[0] = None
             self.ui.canvas.updatePixmap(is_reverting=True)
             self.ui.table_points.create_from_canvas(self.ui.canvas.polygons + [self.ui.canvas.cur_rect])
-
-
 
     def about_program_message(self):
         title = "О программе"
