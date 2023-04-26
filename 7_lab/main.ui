@@ -187,6 +187,15 @@
                 <pointsize>9</pointsize>
                </font>
               </property>
+              <property name="minimum">
+               <double>-1000.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>1000.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>10.000000000000000</double>
+              </property>
              </widget>
             </item>
             <item row="1" column="0">
@@ -209,6 +218,15 @@
                 <family>Times New Roman</family>
                 <pointsize>9</pointsize>
                </font>
+              </property>
+              <property name="minimum">
+               <double>-1000.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>1000.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>10.000000000000000</double>
               </property>
              </widget>
             </item>
@@ -233,6 +251,15 @@
                 <pointsize>9</pointsize>
                </font>
               </property>
+              <property name="minimum">
+               <double>-1000.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>1000.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>10.000000000000000</double>
+              </property>
              </widget>
             </item>
             <item row="3" column="0">
@@ -256,12 +283,21 @@
                 <pointsize>9</pointsize>
                </font>
               </property>
+              <property name="minimum">
+               <double>-1000.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>1000.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>10.000000000000000</double>
+              </property>
              </widget>
             </item>
            </layout>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="create_rect">
             <property name="text">
              <string>Построить прямоугольник</string>
             </property>
@@ -305,6 +341,15 @@
                 <pointsize>9</pointsize>
                </font>
               </property>
+              <property name="minimum">
+               <double>-1000.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>1000.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>10.000000000000000</double>
+              </property>
              </widget>
             </item>
             <item row="1" column="0">
@@ -327,6 +372,15 @@
                 <family>Times New Roman</family>
                 <pointsize>9</pointsize>
                </font>
+              </property>
+              <property name="minimum">
+               <double>-1000.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>1000.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>10.000000000000000</double>
               </property>
              </widget>
             </item>
@@ -351,6 +405,15 @@
                 <pointsize>9</pointsize>
                </font>
               </property>
+              <property name="minimum">
+               <double>-1000.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>1000.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>10.000000000000000</double>
+              </property>
              </widget>
             </item>
             <item row="3" column="0">
@@ -373,6 +436,15 @@
                 <family>Times New Roman</family>
                 <pointsize>9</pointsize>
                </font>
+              </property>
+              <property name="minimum">
+               <double>-1000.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>1000.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>10.000000000000000</double>
               </property>
              </widget>
             </item>

@@ -13,16 +13,21 @@ from PyQt5.QtGui import QMouseEvent
 from copy import deepcopy
 from PyQt5.QtWidgets import QMessageBox
 
-def QLine_to_line(Qline: [QPointF,QPointF]):
-    return [[Qline[0].x(),Qline[0].y()],[Qline[1].x(),Qline[1].y()]]
+
+def QLine_to_line(Qline: [QPointF, QPointF]):
+    return [[Qline[0].x(), Qline[0].y()], [Qline[1].x(), Qline[1].y()]]
+
 
 def QLines_to_line(Qlines):
     lines = []
     for Qline in Qlines:
         lines.append(QLine_to_line(Qline))
     return lines
-def QPoint_to_point(Qpoint : QPointF):
-    return [Qpoint.x(),Qpoint.y()]
+
+
+def QPoint_to_point(Qpoint: QPointF):
+    return [Qpoint.x(), Qpoint.y()]
+
 
 class Canvas(QtWidgets.QGraphicsView):
     dotsPrintSignal = QtCore.pyqtSignal(float, float)
@@ -49,7 +54,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.rect = None
         self.cut_off_color = QColor(0, 0, 0)
         self.line_color = QColor(12, 123, 56)
-        self.background_color = QColor(255,255,255)
+        self.background_color = QColor(255, 255, 255)
         self.save_color = QColor(255, 255, 255)
         self.saved_state = [self.cur_line.copy(), self.lines.copy(), self.cur_rect.copy()]
 
@@ -70,16 +75,14 @@ class Canvas(QtWidgets.QGraphicsView):
     def resizeEvent(self, event):
         super().resizeEvent(event)
 
-
     def drawLine(self, fr, to, color):
-        return self.scene.addLine(*fr,*to,color)
+        return self.scene.addLine(*fr, *to, color)
 
     def drawRect(self, left_point, right_point, color):
 
-       w = right_point[0] - left_point[0]
-       h = right_point[1] - left_point[1]
-       self.rect = self.scene.addRect(*left_point,w,h,color)
-
+        w = right_point[0] - left_point[0]
+        h = right_point[1] - left_point[1]
+        self.rect = self.scene.addRect(*left_point, w, h, color)
 
     def clear_cur_rect(self):
         self.scene.removeItem(self.rect)
@@ -91,30 +94,30 @@ class Canvas(QtWidgets.QGraphicsView):
         if (len(self.cur_rect) >= 2):
             self.clear_cur_rect()
 
-
         if (len(self.cur_rect) == 0):
-            self.temp = self.drawLine([pos.x(), pos.y()],[pos.x(), pos.y()],self.pen.color())
+            self.temp = self.drawLine([pos.x(), pos.y()], [pos.x(), pos.y()], self.pen.color())
             self.cur_rect.append([pos.x(), pos.y()])
         else:
             self.scene.removeItem(self.temp)
-            left_up_point = [min(pos.x(),self.cur_rect[0][0]),min(pos.y(),self.cur_rect[0][1])]
-            right_down_point = [max(pos.x(),self.cur_rect[0][0]),max(pos.y(),self.cur_rect[0][1])]
-            self.cur_rect = [left_up_point,right_down_point]
-            self.drawRect(*self.cur_rect,self.pen.color())
+            left_up_point = [min(pos.x(), self.cur_rect[0][0]), min(pos.y(), self.cur_rect[0][1])]
+            right_down_point = [max(pos.x(), self.cur_rect[0][0]), max(pos.y(), self.cur_rect[0][1])]
+            self.cur_rect = [left_up_point, right_down_point]
+            self.drawRect(*self.cur_rect, self.pen.color())
 
-        self.dotsPrintSignal.emit(pos.x(), pos.y())
         self.update()
+
     def add_dot_line(self, pos):
         if (len(self.cur_line) == 0):
             self.cur_line.append([pos.x(), pos.y()])
         else:
             self.cur_line.append([pos.x(), pos.y()])
-            self.drawLine(*self.cur_line,self.line_color)
+            self.drawLine(*self.cur_line, self.line_color)
             self.cur_line.sort(key=lambda x: x[0])
             self.lines.append(self.cur_line)
             self.cur_line = []
-        self.update()
 
+        self.dotsPrintSignal.emit(pos.x(), pos.y())
+        self.update()
 
     def mousePressEvent(self, event):
         super().mousePressEvent(event)
@@ -130,36 +133,26 @@ class Canvas(QtWidgets.QGraphicsView):
 
             self.update()
 
-
     def DisplayIntersections(self):
         if (len(self.cur_line) != 0):
             self.show_message("Линия не была проведена", "Вторая точка прямой не была определена")
             return
-        lines_with_points = [[QPointF(*line[0]),QPointF(*line[1])] for line in self.lines]
-        rect_with_points = [QPointF(*self.cur_rect[0]),QPointF(*self.cur_rect[1])]
-        intersected_lines = find_intersections(lines_with_points,rect_with_points)
-        for i,results in enumerate(intersected_lines):
-            flag,inter_line = results[0],QLine_to_line(results[1])
-            if flag == 0: #invisible
-                self.drawLine(*self.lines[i],self.cut_off_color)
-            if flag == 1: #visible
+        lines_with_points = [[QPointF(*line[0]), QPointF(*line[1])] for line in self.lines]
+        rect_with_points = [QPointF(*self.cur_rect[0]), QPointF(*self.cur_rect[1])]
+        intersected_lines = find_intersections(lines_with_points, rect_with_points)
+        for i, results in enumerate(intersected_lines):
+            flag, inter_line = results[0], QLine_to_line(results[1])
+            if flag == 0:  # invisible
+                self.drawLine(*self.lines[i], self.cut_off_color)
+            if flag == 1:  # visible
                 self.drawLine(*inter_line, self.line_color)
-                #print(inter_line,self.lines[i])
+                # print(inter_line,self.lines[i])
                 if (inter_line[0] != self.lines[i][0]):
-                    self.drawLine(inter_line[0],self.lines[i][0], self.cut_off_color)
+                    self.drawLine(inter_line[0], self.lines[i][0], self.cut_off_color)
                 if (inter_line[1] != self.lines[i][1]):
-                    self.drawLine(inter_line[1],self.lines[i][1], self.cut_off_color)
-                #self.scene.addLine(*inter_line[0],*self.lines[i][0],self.pen)
+                    self.drawLine(inter_line[1], self.lines[i][1], self.cut_off_color)
+
         self.update()
-
-
-
-
-
-
-
-
-
 
     def CreateGraphicsScene(self):
         scene = QtWidgets.QGraphicsScene()
@@ -172,6 +165,7 @@ class Canvas(QtWidgets.QGraphicsView):
 
     def changeCutOffColor(self, color):
         self.cut_off_color = color
+
     def changeLineColor(self, color):
         self.line_color = color
 

@@ -40,6 +40,7 @@ class UI(QtWidgets.QMainWindow):
         self.ui.clear_canvas_button.clicked.connect(self.ui.canvas.clearCanvas)
 
         self.ui.create_line.clicked.connect(self.createLineByValue)
+        self.ui.create_rect.clicked.connect(self.createRectByValue)
 
         self.ui.revert.clicked.connect(self.revert_state)
 
@@ -60,10 +61,22 @@ class UI(QtWidgets.QMainWindow):
         temp = None
         if (len(self.ui.canvas.cur_line) != 0):
             temp = self.ui.canvas.cur_line[0]
+            self.ui.canvas.cur_line = []
         self.ui.canvas.add_dot_line(QPointF(x1, y1))
         self.ui.canvas.add_dot_line(QPointF(x2, y2))
         if (temp != None):
             self.ui.canvas.cur_line = [temp]
+
+    def createRectByValue(self):
+        xl = self.ui.XLeftRect.value()
+        xr = self.ui.XRightRect.value()
+        yd = self.ui.YDownRect.value()
+        yu = self.ui.YUpRect.value()
+        temp = None
+        if len(self.ui.canvas.cur_rect) != 0:
+            self.ui.canvas.clear_cur_rect()
+        self.ui.canvas.add_dot_rect(QPointF(xl, yu))
+        self.ui.canvas.add_dot_rect(QPointF(xr, yd))
 
     def DisplayIntersections(self):
         self.ui.canvas.DisplayIntersections()
