@@ -181,8 +181,9 @@ class Canvas(QtWidgets.QGraphicsView):
             if flag == 1: #visible
                 self.drawLine(*inter_line, self.line_color)
                 #print(inter_line,self.lines[i])
-                if (inter_line != self.lines[i]):
+                if (inter_line[0] != self.lines[i][0]):
                     self.drawLine(inter_line[0],self.lines[i][0], self.cut_off_color)
+                if (inter_line[1] != self.lines[i][1]):
                     self.drawLine(inter_line[1],self.lines[i][1], self.cut_off_color)
                 #self.scene.addLine(*inter_line[0],*self.lines[i][0],self.pen)
         self.updatePixmap()

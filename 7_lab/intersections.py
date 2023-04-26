@@ -35,11 +35,11 @@ def get_bin_visibility(point, rect_point_left, rect_point_right):
     if point.x() < rect_point_left.x():
         bin_visibility[3] = 1
     if point.x() > rect_point_right.x():
-        bin_visibility[2] = 1
+        bin_visibility[2] = 2
     if point.y() > rect_point_right.y():
-        bin_visibility[1] = 1
+        bin_visibility[1] = 4
     if point.y() < rect_point_left.y():
-        bin_visibility[0] = 1
+        bin_visibility[0] = 8
     return bin_visibility
 
 
@@ -57,7 +57,7 @@ def find_intersection(line, rect):  # flag shows whether it is visible or not
     P2 = line[1]
     if sum1 == 0 and sum2 == 0:
         return [1, [P1, P2]]
-    if sum1 ^ sum2 != 0 and sum1 != 0 and sum2 != 0:
+    if sum1 & sum2 != 0:
         return [0, [P1, P2]]
 
     R1 = P1
