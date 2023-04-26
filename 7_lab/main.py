@@ -33,6 +33,7 @@ class UI(QtWidgets.QMainWindow):
         self.ui.change_intersected_lines_color.clicked.connect(self.changeCutOffColor)
 
         self.ui.measurements_time.triggered.connect(self.show_timings)
+        self.ui.canvas.displayRectCoordsSignal.connect(self.updateRectCoords)
 
         self.ui.canvas.dotsPrintSignal.connect(self.ui.table_points.push_node_back)
         self.ui.canvas.clearSignal.connect(self.ui.table_points.clearContents)
@@ -53,6 +54,14 @@ class UI(QtWidgets.QMainWindow):
 
         self.show()
 
+    def updateRectCoords(self,xl,yu,xr,yd):
+        self.ui.XRightRect.setValue(xr)
+        self.ui.XLeftRect.setValue(xl)
+        self.ui.YUpRect.setValue(yu)
+        self.ui.YDownRect.setValue(yd)
+
+
+
     def createLineByValue(self):
         x1 = self.ui.X1Line.value()
         x2 = self.ui.X2Line.value()
@@ -72,7 +81,6 @@ class UI(QtWidgets.QMainWindow):
         xr = self.ui.XRightRect.value()
         yd = self.ui.YDownRect.value()
         yu = self.ui.YUpRect.value()
-        temp = None
         if len(self.ui.canvas.cur_rect) != 0:
             self.ui.canvas.clear_cur_rect()
         self.ui.canvas.add_dot_rect(QPointF(xl, yu))

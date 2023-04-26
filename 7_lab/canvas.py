@@ -32,6 +32,7 @@ def QPoint_to_point(Qpoint: QPointF):
 class Canvas(QtWidgets.QGraphicsView):
     dotsPrintSignal = QtCore.pyqtSignal(float, float)
     clearSignal = QtCore.pyqtSignal()
+    displayRectCoordsSignal = QtCore.pyqtSignal(float, float, float, float)
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -67,10 +68,6 @@ class Canvas(QtWidgets.QGraphicsView):
             factor = 0.8
             self._zoom -= 1
         self.scale(factor, factor)
-        # newPos = self.mapToScene(event.pos())
-        # self.image = self.image.scaled(self.width(), self.height())
-        # self.updatePixmap()
-        # self.fitInView(self.pixmap_on_canvas)
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -82,27 +79,28 @@ class Canvas(QtWidgets.QGraphicsView):
 
         w = right_point[0] - left_point[0]
         h = right_point[1] - left_point[1]
-        self.rect = self.scene.addRect(*left_point, w, h, color)
+        return self.scene.addRect(*left_point, w, h, color)
 
     def clear_cur_rect(self):
         self.scene.removeItem(self.rect)
         self.rect = None
-        self.cur_rect = []
 
     def add_dot_rect(self, pos):
         self.save_state()
-        if (len(self.cur_rect) >= 2):
+        if (len(self.cur_rect) >= 1):
             self.clear_cur_rect()
+        if (len(self.cur_rect) >= 2):
+            self.cur_rect = []
 
-        if (len(self.cur_rect) == 0):
-            self.temp = self.drawLine([pos.x(), pos.y()], [pos.x(), pos.y()], self.pen.color())
+        if len(self.cur_rect) == 0:
+            self.rect = self.drawLine([pos.x(), pos.y()], [pos.x(), pos.y()], self.pen.color())
             self.cur_rect.append([pos.x(), pos.y()])
         else:
-            self.scene.removeItem(self.temp)
             left_up_point = [min(pos.x(), self.cur_rect[0][0]), min(pos.y(), self.cur_rect[0][1])]
             right_down_point = [max(pos.x(), self.cur_rect[0][0]), max(pos.y(), self.cur_rect[0][1])]
             self.cur_rect = [left_up_point, right_down_point]
-            self.drawRect(*self.cur_rect, self.pen.color())
+            self.rect = self.drawRect(*self.cur_rect, self.pen.color())
+            self.displayRectCoordsSignal.emit(*self.cur_rect[0], *self.cur_rect[1])
 
         self.update()
 
