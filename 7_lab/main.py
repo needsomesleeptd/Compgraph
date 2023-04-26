@@ -142,13 +142,14 @@ class UI(QtWidgets.QMainWindow):
 
     def revert_state(self):
         if (self.ui.canvas.saved_state[0] != None):
-            self.ui.canvas.image = self.ui.canvas.saved_state[0].copy()
-            self.ui.canvas.polygons = self.ui.canvas.saved_state[1].copy()
+            #[self.cur_line.copy(), self.lines.copy(), self.cur_rect.copy()]
+            self.ui.canvas.cur_line = self.ui.canvas.saved_state[0]
+            self.ui.canvas.lines= self.ui.canvas.saved_state[1].copy()
             self.ui.canvas.cur_rect = self.ui.canvas.saved_state[2].copy()
-            self.ui.canvas.seed_point = self.ui.canvas.saved_state[3].copy()
-            self.ui.canvas.saved_state[0] = None
-            self.ui.canvas.updatePixmap(is_reverting=True)
-            self.ui.table_points.create_from_canvas(self.ui.canvas.polygons + [self.ui.canvas.cur_rect])
+            self.ui.table_points.create_from_canvas(self.ui.canvas.lines + [self.ui.canvas.cur_line])
+
+            self.ui.canvas.drawLines(self.lines)
+
 
     def about_program_message(self):
         title = "О программе"

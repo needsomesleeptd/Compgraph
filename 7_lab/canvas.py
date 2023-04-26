@@ -57,7 +57,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.line_color = QColor(12, 123, 56)
         self.background_color = QColor(255, 255, 255)
         self.save_color = QColor(255, 255, 255)
-        self.saved_state = [self.cur_line.copy(), self.lines.copy(), self.cur_rect.copy()]
+        self.saved_state = [self.cur_line.copy(), self.lines.copy(), self.cur_rect.copy(),False] # last == Is_intersected
 
     def wheelEvent(self, event):
 
@@ -74,6 +74,12 @@ class Canvas(QtWidgets.QGraphicsView):
 
     def drawLine(self, fr, to, color):
         return self.scene.addLine(*fr, *to, color)
+
+    def drawLines(self,lines,color):
+        lines_drawings = []
+        for line in lines:
+            lines_drawings.append(self.scene.addLine(*line,color))
+        return lines_drawings
 
     def drawRect(self, left_point, right_point, color):
 
@@ -135,6 +141,7 @@ class Canvas(QtWidgets.QGraphicsView):
         if (len(self.cur_line) != 0):
             self.show_message("Линия не была проведена", "Вторая точка прямой не была определена")
             return
+        self.save_state(is_itersected=True)
         lines_with_points = [[QPointF(*line[0]), QPointF(*line[1])] for line in self.lines]
         rect_with_points = [QPointF(*self.cur_rect[0]), QPointF(*self.cur_rect[1])]
         intersected_lines = find_intersections(lines_with_points, rect_with_points)
@@ -169,14 +176,15 @@ class Canvas(QtWidgets.QGraphicsView):
 
     def clearCanvas(self):
         self.scene.clear()
+        self.clearSignal.emit()
         self.update()
 
     def get_params(self):
         # canvas_copy = self.image.copy()
         return [self, self.pen.color(), self.fill_color, self.seed_point, self.polygons]
 
-    def save_state(self):
-        self.saved_state = [self.cur_line.copy(), self.lines.copy(), self.cur_rect.copy()]
+    def save_state(self,is_itersected = False):
+        self.saved_state = [self.cur_line.copy(), self.lines.copy(), self.cur_rect.copy(),is_itersected]
 
     def show_message(self, title, message):
         msg = QMessageBox()
