@@ -42,13 +42,6 @@ class Canvas(QtWidgets.QGraphicsView):
         self.save_request = []
         self.flag_has_started = False
         self.points = []
-        self.image = QtGui.QImage(self.width() * 5, self.height() * 5, QtGui.QImage.Format_ARGB32)
-        self.image.fill(Qt.white)
-        # temp_pixmap = QtGui.QPixmap.convertFromImage(self.image)
-        self.pixmap = QtGui.QPixmap()
-        self.pixmap.convertFromImage(self.image)
-        self.pixmap_on_canvas = self.scene.addPixmap(self.pixmap)
-        self.fitInView(self.pixmap_on_canvas)
         self.cur_rect = []
         self.lines = []
         self.cur_line = []
@@ -57,9 +50,8 @@ class Canvas(QtWidgets.QGraphicsView):
         self.cut_off_color = QColor(0, 0, 0)
         self.line_color = QColor(12, 123, 56)
         self.background_color = QColor(255,255,255)
-        self.fitInView(self.pixmap_on_canvas, Qt.KeepAspectRatio)
         self.save_color = QColor(255, 255, 255)
-        self.saved_state = [self.image.copy(), self.lines.copy(), self.cur_rect.copy()]
+        self.saved_state = [self.cur_line.copy(), self.lines.copy(), self.cur_rect.copy()]
 
     def wheelEvent(self, event):
 
@@ -77,35 +69,19 @@ class Canvas(QtWidgets.QGraphicsView):
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
-        # self.fitInView(self.pixmap_on_canvas, Qt.KeepAspectRatio)
+
 
     def drawLine(self, fr, to, color):
-        #points = CDA(*fr, *to)
-        #for point in points:
-            #self.image.setPixelColor(point.x(), point.y(), color)
         return self.scene.addLine(*fr,*to,color)
-        #self.updatePixmap()
 
     def drawRect(self, left_point, right_point, color):
-       # points = get_rect_points(*left_point,
-       #                          *right_point)  # RectPoints возвращает точки в порядке обхода по часовой стрелке
-        #for i in range(len(points)):
-        #    self.drawLine(points[i], points[(i + 1) % len(points)], color)
+
        w = right_point[0] - left_point[0]
        h = right_point[1] - left_point[1]
        self.rect = self.scene.addRect(*left_point,w,h,color)
 
-    def updatePixmap(self, is_reverting=False):
-        # print(self.saved_state)
-        # if (not is_reverting):
-        #    self.saved_state[0] = self.pixmap.toImage().copy()
-        # super().fitInView(self.pixmap_on_canvas)
-        self.image = self.image.scaled(self.width(), self.height())
-        self.pixmap.convertFromImage(self.image)
-        self.pixmap_on_canvas.setPixmap(self.pixmap)
 
     def clear_cur_rect(self):
-        #self.drawRect(*self.cur_rect,self.background_color)
         self.scene.removeItem(self.rect)
         self.rect = None
         self.cur_rect = []
@@ -118,10 +94,14 @@ class Canvas(QtWidgets.QGraphicsView):
 
         if (len(self.cur_rect) == 0):
             self.temp = self.drawLine([pos.x(), pos.y()],[pos.x(), pos.y()],self.pen.color())
+            self.cur_rect.append([pos.x(), pos.y()])
         else:
             self.scene.removeItem(self.temp)
-            self.drawRect(self.cur_rect[0], [pos.x(), pos.y()],self.pen.color())
-        self.cur_rect.append([pos.x(), pos.y()])
+            left_up_point = [min(pos.x(),self.cur_rect[0][0]),min(pos.y(),self.cur_rect[0][1])]
+            right_down_point = [max(pos.x(),self.cur_rect[0][0]),max(pos.y(),self.cur_rect[0][1])]
+            self.cur_rect = [left_up_point,right_down_point]
+            self.drawRect(*self.cur_rect,self.pen.color())
+
         self.dotsPrintSignal.emit(pos.x(), pos.y())
         self.update()
     def add_dot_line(self, pos):
@@ -133,30 +113,14 @@ class Canvas(QtWidgets.QGraphicsView):
             self.cur_line.sort(key=lambda x: x[0])
             self.lines.append(self.cur_line)
             self.cur_line = []
-        self.updatePixmap()
+        self.update()
 
-    def update_seed_point(self, x, y):
-        self.saved_state[3] = self.seed_point.copy()
-        self.image.setPixelColor(*self.seed_point, self.save_color)
-        self.seed_point = [x, y]
-        self.save_color = get_pixel_color(self, *self.seed_point)
-        self.image.setPixelColor(*self.seed_point, self.seed_color)
-        self.updatePixmap()
 
     def mousePressEvent(self, event):
-        title_str = "Ошибка"
-        warning_str = "Попытка поставить точку вне  рабочей поверхности"
         super().mousePressEvent(event)
         if not self.pan_mode:
 
             pos = self.mapToScene(event.pos())
-            '''if pos.x() <= 0 or pos.x() >= self.width():
-                self.show_message(title_str, warning_str)
-                return
-
-            if pos.y() <= 0 or pos.y() >= self.height():
-                self.show_message(title_str, warning_str)
-                return'''
             self.save_state()
             if event.buttons() == QtCore.Qt.LeftButton:
                 self.add_dot_rect(pos)
@@ -164,7 +128,7 @@ class Canvas(QtWidgets.QGraphicsView):
             if event.buttons() == QtCore.Qt.RightButton:
                 self.add_dot_line(pos)
 
-            self.updatePixmap()
+            self.update()
 
 
     def DisplayIntersections(self):
@@ -186,7 +150,7 @@ class Canvas(QtWidgets.QGraphicsView):
                 if (inter_line[1] != self.lines[i][1]):
                     self.drawLine(inter_line[1],self.lines[i][1], self.cut_off_color)
                 #self.scene.addLine(*inter_line[0],*self.lines[i][0],self.pen)
-        self.updatePixmap()
+        self.update()
 
 
 
@@ -224,7 +188,7 @@ class Canvas(QtWidgets.QGraphicsView):
         return [self, self.pen.color(), self.fill_color, self.seed_point, self.polygons]
 
     def save_state(self):
-        self.saved_state = [self.image.copy(), self.lines.copy(), self.cur_rect.copy()]
+        self.saved_state = [self.cur_line.copy(), self.lines.copy(), self.cur_rect.copy()]
 
     def show_message(self, title, message):
         msg = QMessageBox()
