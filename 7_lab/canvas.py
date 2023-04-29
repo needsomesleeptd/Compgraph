@@ -78,7 +78,7 @@ class Canvas(QtWidgets.QGraphicsView):
     def drawLines(self,lines,color):
         lines_drawings = []
         for line in lines:
-            lines_drawings.append(self.scene.addLine(*line,color))
+            lines_drawings.append(self.drawLine(*line,color))
         return lines_drawings
 
     def drawRect(self, left_point, right_point, color):
@@ -88,7 +88,8 @@ class Canvas(QtWidgets.QGraphicsView):
         return self.scene.addRect(*left_point, w, h, color)
 
     def clear_cur_rect(self):
-        self.scene.removeItem(self.rect)
+        if (self.rect != None):
+            self.scene.removeItem(self.rect)
         self.rect = None
 
     def add_dot_rect(self, pos):
@@ -141,6 +142,10 @@ class Canvas(QtWidgets.QGraphicsView):
         if (len(self.cur_line) != 0):
             self.show_message("Линия не была проведена", "Вторая точка прямой не была определена")
             return
+        if (len(self.cur_rect) != 2):
+            self.show_message("Отсекатель не был определен", "Полученный отсекатель не был определен")
+            return
+
         self.save_state(is_itersected=True)
         lines_with_points = [[QPointF(*line[0]), QPointF(*line[1])] for line in self.lines]
         rect_with_points = [QPointF(*self.cur_rect[0]), QPointF(*self.cur_rect[1])]
@@ -174,10 +179,32 @@ class Canvas(QtWidgets.QGraphicsView):
     def changeLineColor(self, color):
         self.line_color = color
 
-    def clearCanvas(self):
+    def reset_values(self):
+        self.lines = []
+        self.cur_rect = []
+        self.cur_line = []
+        self.rect = None
+
+
+    def display_reverted_figures(self):
         self.scene.clear()
+        if (len(self.cur_line) == 1):
+            self.drawLine(*self.cur_line,*self.cur_line,color = self.line_color)
+        self.drawLines(self.lines,color=self.line_color)
+        if (len(self.cur_rect) == 2):
+            self.rect = self.drawRect(*self.cur_rect,color = self.pen.color())
+        elif (len(self.cur_line) == 1):
+            self.rect = self.scene.addLine(*self.cur_rect,*self.cur_rect)
+        else:
+            self.rect = None
+        self.update()
+
+    def clearCanvasAndData(self):
+        self.scene.clear()
+        self.reset_values()
         self.clearSignal.emit()
         self.update()
+
 
     def get_params(self):
         # canvas_copy = self.image.copy()

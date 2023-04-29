@@ -38,7 +38,7 @@ class UI(QtWidgets.QMainWindow):
         self.ui.canvas.dotsPrintSignal.connect(self.ui.table_points.push_node_back)
         self.ui.canvas.clearSignal.connect(self.ui.table_points.clearContents)
 
-        self.ui.clear_canvas_button.clicked.connect(self.ui.canvas.clearCanvas)
+        self.ui.clear_canvas_button.clicked.connect(self.ui.canvas.clearCanvasAndData)
 
         self.ui.create_line.clicked.connect(self.createLineByValue)
         self.ui.create_rect.clicked.connect(self.createRectByValue)
@@ -110,7 +110,7 @@ class UI(QtWidgets.QMainWindow):
         self.ui.canvas.pan_mode = False
 
     def clear_calnvas(self):
-        self.ui.canvas.clearCanvas()
+        self.ui.canvas.clearCanvasAndData()
 
     def changeRectLineColor(self):
         button_color = QtWidgets.QColorDialog.getColor()
@@ -147,8 +147,9 @@ class UI(QtWidgets.QMainWindow):
             self.ui.canvas.lines= self.ui.canvas.saved_state[1].copy()
             self.ui.canvas.cur_rect = self.ui.canvas.saved_state[2].copy()
             self.ui.table_points.create_from_canvas(self.ui.canvas.lines + [self.ui.canvas.cur_line])
+            is_intersected = self.ui.canvas.saved_state[3]
+            self.ui.canvas.display_reverted_figures()
 
-            self.ui.canvas.drawLines(self.lines)
 
 
     def about_program_message(self):
