@@ -84,7 +84,7 @@ class UI(QtWidgets.QMainWindow):
         if len(self.ui.canvas.cur_rect) != 0:
             self.ui.canvas.clear_cur_rect()
         self.ui.canvas.add_dot_rect(QPointF(xl, yu))
-        self.ui.canvas.add_dot_rect(QPointF(xr, yd))
+        self.ui.canvas.add_dot_rect(QPointF(xr, yd),skip_state=True)
 
     def DisplayIntersections(self):
         self.ui.canvas.DisplayIntersections()

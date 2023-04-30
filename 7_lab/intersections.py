@@ -5,6 +5,9 @@ from drawing_algos import get_rect_points
 
 EPS = 1e-9
 
+from math import isclose
+
+
 
 def is_fully_visible(line_point_left, line_point_right, rect_point_left, rect_point_right):  # [0] -x, [1] - y
     if (line_point_left[0] < rect_point_left[0] or line_point_left[0] > rect_point_right[0]):
@@ -32,13 +35,13 @@ def is_fully_invisible(line_point_left, line_point_right, rect_point_left, rect_
 
 def get_bin_visibility(point, rect_point_left, rect_point_right):
     bin_visibility = [0, 0, 0, 0]
-    if point.x() < rect_point_left.x():
+    if point.x() <= rect_point_left.x():
         bin_visibility[3] = 1
-    if point.x() > rect_point_right.x():
+    if point.x() >= rect_point_right.x():
         bin_visibility[2] = 2
-    if point.y() > rect_point_right.y():
+    if point.y() >= rect_point_right.y():
         bin_visibility[1] = 4
-    if point.y() < rect_point_left.y():
+    if point.y() <= rect_point_left.y():
         bin_visibility[0] = 8
     return bin_visibility
 
@@ -46,69 +49,74 @@ def get_bin_visibility(point, rect_point_left, rect_point_right):
 #def check_rect_equality(line,rect):
     #rect_points = get_rect_points(*rect[0], *rect[1])
     #for point in rect_points:
+def line_eq_rect(line,rect):
+    for i in range(len(line)):
+        for j in range(len(rect)):
+            if (line[i] == rect[i]):
+                return True
+    return False
 
-
-def find_intersection(line, rect):  # flag shows whether it is visible or not
-    T1 = get_bin_visibility(line[0], rect[0], rect[1])
+def find_intersection(line, rect):  # флаг сигнализирует о видимости/невидимости отрезка
+    T1 = get_bin_visibility(line[0], rect[0], rect[1]) # Расчет двоичных кодов видимости/невидимости отрезка
     T2 = get_bin_visibility(line[1], rect[0], rect[1])
     sum1 = sum(T1)
     sum2 = sum(T2)
     P1 = line[0]
     P2 = line[1]
-    if sum1 == 0 and sum2 == 0:
-        return [1, [P1, P2]]
+    if sum1 == 0 and sum2 == 0: # В случае если обе точки внутри - полная видимость
+        return [1, [P1, P2]] # В случае если точки в одной области снаружи - полная невидимость
     if sum1 & sum2 != 0:
         return [0, [P1, P2]]
 
     R1 = P1
     R2 = P2
     flag = 1
-    if (sum1 != 0):
+    if (sum1 != 0): #Если первая точка не точно видимая то находим ее пересечения на продолжении отрезка с отсекателем
         R1, flag = get_visible_coords(flag, P1, P2, rect, is_first=True)
 
-    if (sum2 != 0):
+    if (sum2 != 0):  #Если вторая точка не точно видимая то находим ее пересечения на продолжении отрезка с отсекателем
         R2, flag = get_visible_coords(flag, P1, P2, rect, is_first=False)
 
     return [flag, [R1, R2]]
 
 
 def get_visible_coords(flag, P1, P2, rect, is_first):
-    m = 1e30
+    m = 1e30 # Ставим в тангенс бесконечно болшое число
     P = None
-    if (is_first):
+    if (is_first): # Выбираем точку для анализа
         P = P1
     else:
         P = P2
 
-    if (P1.x() != P2.x()):
-        m = (P2.y() - P1.y()) / (P2.x() - P1.x())
-        # left_check
+    if (P1.x() != P2.x()): # Анализ пересечения с горизонтальными прямыми
+        m = (P2.y() - P1.y()) / (P2.x() - P1.x()) # Получаем тангенс прямой
+        # проверка пересечения с левой гранью
         if rect[0].x() >= P.x():
-            y = (m * (rect[0].x() - P.x()) + P.y())
-            if y <= rect[1].y() and y >= rect[0].y():
-                return [QPointF(rect[0].x(), y), flag]
-        # right_check
+            y = (m * (rect[0].x() - P.x()) + P.y()) # Подставляем в уравнение прямой
+            if y <= rect[1].y() and y >= rect[0].y(): # Вторая полученная координата внутри отсекателя
+                return [QPointF(rect[0].x(), y), flag] # то она и является пересечением
+        # проверка пересечения с правой гранью
         if rect[1].x() <= P.x():
             y = (m * (rect[1].x() - P.x()) + P.y())
             if y <= rect[1].y() and y >= rect[0].y():
                 return [QPointF(rect[1].x(), y), flag]
 
-    if (abs(m) <= EPS):
+    if (abs(m) <= EPS): #Если горизонтальная и нет пересечения то точно невидима
         flag = 0
         return [P, flag]
 
-    # lower_bound_check
+    # проверка пересечения с нижней гранью
     if rect[1].y() <= P.y():
         x = ((1 / m) * (rect[1].y() - P.y()) + P.x())
         if (x >= rect[0].x() and x <= rect[1].x()):
             return [QPointF(x, rect[1].y()), flag]
 
-    # up_bound_check
+    # проверка пересечения с верхней гранью
     if rect[0].y() >= P.y():
         x = ((1 / m) * (rect[0].y() - P.y()) + P.x())
         if (x >= rect[0].x() and x <= rect[1].x()):
             return [QPointF(x, rect[0].y()), flag]
-    flag = 0
+    flag = 0 # Если пересечений нет, то точка невидима
     return [P, flag]
 
 

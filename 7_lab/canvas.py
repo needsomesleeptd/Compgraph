@@ -92,8 +92,9 @@ class Canvas(QtWidgets.QGraphicsView):
             self.scene.removeItem(self.rect)
         self.rect = None
 
-    def add_dot_rect(self, pos):
-        self.save_state()
+    def add_dot_rect(self, pos,skip_state = False):
+        if (skip_state == False):
+            self.save_state()
         if (len(self.cur_rect) >= 1):
             self.clear_cur_rect()
         if (len(self.cur_rect) >= 2):
