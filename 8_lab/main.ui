@@ -234,7 +234,7 @@
           <item>
            <widget class="QPushButton" name="create_rect">
             <property name="text">
-             <string>Построить прямоугольник</string>
+             <string>Поставить точку</string>
             </property>
            </widget>
           </item>

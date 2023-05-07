@@ -318,7 +318,7 @@ class Ui_MainWindow(object):
         self.label_2.setText(_translate("MainWindow", "Координаты новой точки многоугольника:"))
         self.xLLabel.setText(_translate("MainWindow", "X:"))
         self.yupLabel.setText(_translate("MainWindow", "Y:"))
-        self.create_rect.setText(_translate("MainWindow", "Построить прямоугольник"))
+        self.create_rect.setText(_translate("MainWindow", "Поставить точку"))
         self.label_4.setText(_translate("MainWindow", "Координаты прямой для построения:"))
         self.x1Label.setText(_translate("MainWindow", "X1:"))
         self.x2Label.setText(_translate("MainWindow", "Y1:"))
