@@ -58,7 +58,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.background_color = QColor(255, 255, 255)
         self.save_color = QColor(255, 255, 255)
         self.saved_state = [self.cur_line.copy(), self.lines.copy(), self.cur_polygon.copy(),
-                            False]  # last == Is_intersected
+                            False,self.is_polygon_closed]  # last == Is_intersected
 
     def wheelEvent(self, event):
 
@@ -96,22 +96,25 @@ class Canvas(QtWidgets.QGraphicsView):
             self.scene.removeItem(self.rect)
         self.rect = None
 
-    def add_dot_polygon(self, pos, skip_state=False):
+    def add_dot_polygon(self, pos,add_to_table =True,append_dot =True, skip_state=False):
         if (skip_state == False):
             self.save_state()
 
         if len(self.cur_polygon) == 0:
             self.drawPoint([pos.x(), pos.y()], self.pen.color())
-            self.cur_polygon.append([pos.x(), pos.y()])
+
         else:
             self.drawLine([pos.x(), pos.y()], self.cur_polygon[-1], self.pen.color())
             self.drawPoint([pos.x(), pos.y()], self.pen.color())
+        if append_dot:
             self.cur_polygon.append([pos.x(), pos.y()])
-        self.dotsPrintSignal.emit(pos.x(), pos.y(), self.pen.color())
+        if add_to_table:
+            self.dotsPrintSignal.emit(pos.x(), pos.y(), self.pen.color())
         self.update()
 
-    def close_polygon(self):
-        self.save_state()
+    def close_polygon(self,skip_state=False):
+        if not skip_state:
+            self.save_state()
         if (len(self.cur_polygon) > 2):
             self.drawLine(self.cur_polygon[-1], self.cur_polygon[0], color=self.pen.color())
             self.is_polygon_closed = True
@@ -200,17 +203,21 @@ class Canvas(QtWidgets.QGraphicsView):
         self.cur_line = []
         self.is_polygon_closed = False
 
+
+    def drawPolygon(self):
+        temp_polygon = self.cur_polygon.copy()
+        self.cur_polygon = []
+        for dot in temp_polygon:
+            self.add_dot_polygon(QPointF(*dot),add_to_table=False,skip_state=True)
+        self.cur_polygon = temp_polygon
+
     def display_reverted_figures(self):
         self.scene.clear()
+        self.drawPolygon()
         if (len(self.cur_line) == 1):
             self.drawLine(*self.cur_line, *self.cur_line, color=self.line_color)
         self.drawLines(self.lines, color=self.line_color)
-        if (len(self.cur_polygon) == 2):
-            self.rect = self.drawRect(*self.cur_polygon, color=self.pen.color())
-        elif (len(self.cur_line) == 1):
-            self.rect = self.scene.addLine(*self.cur_polygon, *self.cur_polygon)
-        else:
-            self.rect = None
+
         self.update()
 
     def clearCanvasAndData(self):
@@ -224,7 +231,7 @@ class Canvas(QtWidgets.QGraphicsView):
         return [self, self.pen.color(), self.fill_color, self.seed_point, self.polygons]
 
     def save_state(self, is_itersected=False):
-        self.saved_state = [self.cur_line.copy(), self.lines.copy(), self.cur_polygon.copy(), is_itersected]
+        self.saved_state = [self.cur_line.copy(), self.lines.copy(), self.cur_polygon.copy(), is_itersected,self.is_polygon_closed]
 
     def show_message(self, title, message):
         msg = QMessageBox()

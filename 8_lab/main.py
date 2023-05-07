@@ -132,11 +132,14 @@ class UI(QtWidgets.QMainWindow):
             self.ui.canvas.cur_line = self.ui.canvas.saved_state[0]
             self.ui.canvas.lines= self.ui.canvas.saved_state[1].copy()
             self.ui.canvas.cur_polygon = self.ui.canvas.saved_state[2].copy()
+            self.ui.canvas.is_polygon_closed = self.ui.canvas.saved_state[-1]
             self.ui.table_points.clearContents()
-            self.ui.table_points.add_to_table(self.ui.canvas.cur_polygon,color = self.ui.canvas.pen.color())
+            self.ui.table_points.add_to_table([self.ui.canvas.cur_polygon],color = self.ui.canvas.pen.color())
             self.ui.table_points.add_to_table(self.ui.canvas.lines + [self.ui.canvas.cur_line],color = self.ui.canvas.line_color)
-            is_intersected = self.ui.canvas.saved_state[3]
             self.ui.canvas.display_reverted_figures()
+            if self.ui.canvas.saved_state[-1]:#is_closed
+                self.ui.canvas.close_polygon()
+
 
 
 
