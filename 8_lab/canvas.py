@@ -30,9 +30,8 @@ def QPoint_to_point(Qpoint: QPointF):
 
 
 class Canvas(QtWidgets.QGraphicsView):
-    dotsPrintSignal = QtCore.pyqtSignal(float, float)
+    dotsPrintSignal = QtCore.pyqtSignal(float, float,QColor)
     clearSignal = QtCore.pyqtSignal()
-    displayRectCoordsSignal = QtCore.pyqtSignal(float, float, float, float)
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -108,6 +107,7 @@ class Canvas(QtWidgets.QGraphicsView):
             self.drawLine([pos.x(), pos.y()], self.cur_polygon[-1], self.pen.color())
             self.drawPoint([pos.x(), pos.y()], self.pen.color())
             self.cur_polygon.append([pos.x(), pos.y()])
+        self.dotsPrintSignal.emit(pos.x(), pos.y(), self.pen.color())
         self.update()
 
     def close_polygon(self):
@@ -127,7 +127,7 @@ class Canvas(QtWidgets.QGraphicsView):
             self.lines.append(self.cur_line)
             self.cur_line = []
 
-        self.dotsPrintSignal.emit(pos.x(), pos.y())
+        self.dotsPrintSignal.emit(pos.x(), pos.y(),self.line_color)
         self.update()
 
     def mousePressEvent(self, event):

@@ -20,18 +20,22 @@ class Table(QtWidgets.QTableWidget):
         )
         self.adjustSize()
 
-    def push_node_back(self, xdata, ydata, precision=3):
+    def push_node_back(self, xdata, ydata, color, precision=3):
         ix, iy = xdata, ydata
         rowPos = self.rowCount()
         colCount = self.columnCount()
         self.insertRow(rowPos)
         self.setItem(rowPos, 0, QtWidgets.QTableWidgetItem(str(round(ix, precision))))
         self.setItem(rowPos, 1, QtWidgets.QTableWidgetItem(str(round(iy, precision))))
+        self.item(rowPos, 0).setBackground(color)
+        self.item(rowPos, 1).setBackground(color)
 
-    def update_to_canvas(self, graphs: list):
+
+    def update_to_canvas(self, graphs: list, color):
         for graph in graphs:
             for dot in graph:
-                self.push_node_back(*dot)
+                self.push_node_back(*dot,color)
+
     def highlight_rows(self, rows_indexes: list):
         for row_index in rows_indexes:
             for col_index in range(self.columnCount()):
@@ -41,9 +45,8 @@ class Table(QtWidgets.QTableWidget):
         super().clearContents()
         self.setRowCount(0)
 
-    def create_from_canvas(self, graphs: list):
-        self.clearContents()
-        self.update_to_canvas(graphs)
+    def add_to_table(self, graphs: list, color):
+        self.update_to_canvas(graphs, color)
 
     def pop_node_from_table(self, index):
         self.model.removeRow(index)
