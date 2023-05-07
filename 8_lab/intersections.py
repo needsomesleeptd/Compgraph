@@ -62,9 +62,9 @@ def get_perpendicular(dot_1, dot_2, pos):
     return normal
 
 
-def cyrus_beck_algo(polygon, line):
-    t_beg = 0
-    t_end = 1
+def cyrus_beck_algo(polygon, line):  # Флаг показывает видимость отрезка
+    t_down = 0
+    t_up = 1
 
     dot1 = line[0]
     dot2 = line[1]
@@ -74,7 +74,7 @@ def cyrus_beck_algo(polygon, line):
     for i in range(-2, len(polygon) - 2):
         normal = get_perpendicular(polygon[i], polygon[i + 1], polygon[i + 2])
 
-        w =dot1 - polygon[i]
+        w = dot1 - polygon[i]
 
         d_scalar = get_vect_scalar_dot(d, normal)
         w_scalar = get_vect_scalar_dot(w, normal)
@@ -89,22 +89,22 @@ def cyrus_beck_algo(polygon, line):
 
         if d_scalar > 0:
             if t <= 1:
-                t_beg = max(t_beg, t)
+                t_down = max(t_down, t)
             else:
                 return [False, line]
 
         elif d_scalar < 0:
             if t >= 0:
-                t_end = min(t_end, t)
+                t_up = min(t_up, t)
             else:
                 return [False, line]
 
-        if t_beg > t_end:
+        if t_down > t_up:
             break
 
-    if t_beg <= t_end:
-        dot1_res = dot1 + d * t_beg
-        dot2_res = dot1 + d * t_end
+    if t_down <= t_up:
+        dot1_res = dot1 + d * t_down
+        dot2_res = dot1 + d * t_up
         return [True, [dot1_res, dot2_res]]
     return [False, line]
 
