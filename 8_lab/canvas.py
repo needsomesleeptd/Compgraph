@@ -57,8 +57,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.line_color = QColor(12, 123, 56)
         self.background_color = QColor(255, 255, 255)
         self.save_color = QColor(255, 255, 255)
-        self.saved_state = [self.cur_line.copy(), self.lines.copy(), self.cur_polygon.copy(),
-                            False,self.is_polygon_closed]  # last == Is_intersected
+        self.saved_state = []
 
     def wheelEvent(self, event):
 
@@ -121,6 +120,7 @@ class Canvas(QtWidgets.QGraphicsView):
             self.update()
 
     def add_dot_line(self, pos):
+        self.save_state()
         if (len(self.cur_line) == 0):
             self.cur_line.append([pos.x(), pos.y()])
         else:
@@ -231,7 +231,7 @@ class Canvas(QtWidgets.QGraphicsView):
         return [self, self.pen.color(), self.fill_color, self.seed_point, self.polygons]
 
     def save_state(self, is_itersected=False):
-        self.saved_state = [self.cur_line.copy(), self.lines.copy(), self.cur_polygon.copy(), is_itersected,self.is_polygon_closed]
+        self.saved_state.append([self.cur_line.copy(), self.lines.copy(), self.cur_polygon.copy(), is_itersected,self.is_polygon_closed])
 
     def show_message(self, title, message):
         msg = QMessageBox()

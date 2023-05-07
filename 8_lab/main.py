@@ -127,17 +127,18 @@ class UI(QtWidgets.QMainWindow):
         self.show_message(title, text)
 
     def revert_state(self):
-        if (self.ui.canvas.saved_state[0] != None):
+        if (len(self.ui.canvas.saved_state) > 0):
+            popped_state = self.ui.canvas.saved_state.pop()
             #[self.cur_line.copy(), self.lines.copy(), self.cur_rect.copy()]
-            self.ui.canvas.cur_line = self.ui.canvas.saved_state[0]
-            self.ui.canvas.lines= self.ui.canvas.saved_state[1].copy()
-            self.ui.canvas.cur_polygon = self.ui.canvas.saved_state[2].copy()
-            self.ui.canvas.is_polygon_closed = self.ui.canvas.saved_state[-1]
+            self.ui.canvas.cur_line = popped_state[0]
+            self.ui.canvas.lines= popped_state[1].copy()
+            self.ui.canvas.cur_polygon = popped_state[2].copy()
+            self.ui.canvas.is_polygon_closed = popped_state[-1]
             self.ui.table_points.clearContents()
             self.ui.table_points.add_to_table([self.ui.canvas.cur_polygon],color = self.ui.canvas.pen.color())
             self.ui.table_points.add_to_table(self.ui.canvas.lines + [self.ui.canvas.cur_line],color = self.ui.canvas.line_color)
             self.ui.canvas.display_reverted_figures()
-            if self.ui.canvas.saved_state[-1]:#is_closed
+            if popped_state[-1]:#is_closed
                 self.ui.canvas.close_polygon()
 
 
