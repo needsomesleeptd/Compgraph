@@ -13,44 +13,49 @@ def get_vect(dot_1, dot_2):
 
 
 def get_vect_scalar_dot(vect_1, vect_2):
-    return (vect_2.x() * vect_1.x()) + (vect_1.y() + vect_2.y())
+    return (vect_1.x() * vect_2.x()) + (vect_1.y() * vect_2.y())
+
+
+def get_vect_mul(fvector, svector):
+    return fvector.x() * svector.y() - fvector.y() * svector.x()
 
 
 def is_polygon_valid(polygon):  # polygon lines
-    if (len(polygon) < 3):
+    if len(polygon) < 3:
         return False
-    first_dot = polygon[0]
-    second_dot = polygon[1]
-    third_dot = polygon[2]
-    vect_1 = get_vect(first_dot, second_dot)
-    vect_2 = get_vect(second_dot, third_dot)
-    scalar_dot = get_vect_scalar_dot(vect_1, vect_2)
-    turn_sign = 1
 
-    if (scalar_dot < 0):
-        turn_sign -= 1
+    vect1 = get_vect(polygon[0], polygon[1])
+    vect2 = get_vect(polygon[1], polygon[2])
+
+    sign = None
+    if get_vect_mul(vect1, vect2) > 0:
+        sign = 1
+    else:
+        sign = -1
 
     for i in range(len(polygon)):
-        first_dot = polygon[i]
-        second_dot = polygon[i - 1]
-        third_dot = polygon[i - 2]
-        vect_1 = get_vect(first_dot, second_dot)
-        vect_2 = get_vect(second_dot, third_dot)
-        scalar_dot = get_vect_scalar_dot(vect_1, vect_2)
-        if scalar_dot * turn_sign < 0:  # Многоугольник не выпуклый
+        vecti = get_vect(polygon[i - 2], polygon[i - 1])
+        vectj = get_vect(polygon[i - 1], polygon[i])
+
+        if sign * get_vect_mul(vecti, vectj) < 0:
             return False
+
+    if sign < 0:
+        polygon.reverse()
+
     return True
 
 
-def get_perpendicular(line, dot_outside):
-    vect = get_vect(*line)
+def get_perpendicular(dot_1, dot_2, pos):
+    vect = get_vect(dot_1, dot_2)
+    pos_vect = get_vect(dot_2, pos)
 
     if vect.y() != 0:
         normal = QPointF(1, - vect.x() / vect.y())
     else:
         normal = QPointF(0, 1)
 
-    if get_vect_scalar_dot(get_vect(line[1], dot_outside), normal) < 0:
+    if get_vect_scalar_dot(pos_vect, normal) < 0:
         normal.setX(-normal.x())
         normal.setY(-normal.y())
 
@@ -58,41 +63,50 @@ def get_perpendicular(line, dot_outside):
 
 
 def cyrus_beck_algo(polygon, line):
-    t_down = 0
-    t_up = 1
-    D = line[1] - line[0]
-    for i in range(-2, len(polygon) - 2):
-        perpendicular = get_perpendicular([polygon[i], polygon[i + 1]], polygon[i + 2])
-        w = line[0] - polygon[i]
-        d_scalar_dot = get_vect_scalar_dot(D, perpendicular)
-        w_scalar_dot = get_vect_scalar_dot(w, perpendicular)
+    t_beg = 0
+    t_end = 1
 
-        if d_scalar_dot == 0:
-            if w_scalar_dot < 0:
-                return [False, [line[0], line[1]]]
+    dot1 = line[0]
+    dot2 = line[1]
+
+    d = dot2 - dot1  #
+
+    for i in range(-2, len(polygon) - 2):
+        normal = get_perpendicular(polygon[i], polygon[i + 1], polygon[i + 2])
+
+        w =dot1 - polygon[i]
+
+        d_scalar = get_vect_scalar_dot(d, normal)
+        w_scalar = get_vect_scalar_dot(w, normal)
+
+        if d_scalar == 0:
+            if w_scalar < 0:
+                return [False, line]
             else:
                 continue
 
-        t = -w_scalar_dot / d_scalar_dot
+        t = - w_scalar / d_scalar
 
-        if (d_scalar_dot > 0):
-            if (t <= 1):
-                t_down = max(t_down, t)
+        if d_scalar > 0:
+            if t <= 1:
+                t_beg = max(t_beg, t)
             else:
-                return [False, [line[0], line[1]]]
+                return [False, line]
 
-        elif (d_scalar_dot < 0):
-            if (t >= 0):
-                t_up = min(t_up, t)
+        elif d_scalar < 0:
+            if t >= 0:
+                t_end = min(t_end, t)
             else:
-                return [False, [line[0], line[1]]]
-        R1 = None
-        R2 = None
-        if t_down <= t_up:
-            R1 = line[0] + D * t_down
-            R2 = line[0] + D * t_up
-            return [True, [R1, R2]]
-        return [False, [line[0], line[1]]]
+                return [False, line]
+
+        if t_beg > t_end:
+            break
+
+    if t_beg <= t_end:
+        dot1_res = dot1 + d * t_beg
+        dot2_res = dot1 + d * t_end
+        return [True, [dot1_res, dot2_res]]
+    return [False, line]
 
 
 def find_intersections(polygon, lines):

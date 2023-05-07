@@ -4,7 +4,6 @@ from PyQt5.QtCore import Qt
 import layout
 from PyQt5.QtWidgets import QMessageBox
 
-from algo_time_comparation import plot_bars_timing
 
 from PyQt5.QtCore import QPoint, QPointF
 
@@ -32,7 +31,7 @@ class UI(QtWidgets.QMainWindow):
         self.ui.change_lines_color.clicked.connect(self.changeLineColor)
         self.ui.change_intersected_lines_color.clicked.connect(self.changeCutOffColor)
 
-        self.ui.measurements_time.triggered.connect(self.show_timings)
+
         self.ui.canvas.displayRectCoordsSignal.connect(self.updateRectCoords)
 
         self.ui.canvas.dotsPrintSignal.connect(self.ui.table_points.push_node_back)
@@ -130,9 +129,6 @@ class UI(QtWidgets.QMainWindow):
             self.ui.canvas.changeCutOffColor(button_color)
             update_widget_by_Qcolor(self.ui.change_intersected_lines_color, self.ui.canvas.cut_off_color)
 
-    def show_timings(self, count=10):
-        copied_params = self.ui.canvas.get_params()
-        plot_bars_timing(*copied_params)
 
     def about_author_message(self):
         title = "Об авторе"

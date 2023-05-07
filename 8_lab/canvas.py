@@ -152,25 +152,30 @@ class Canvas(QtWidgets.QGraphicsView):
         if (len(self.cur_line) != 0):
             self.show_message("Линия не была проведена", "Вторая точка прямой не была определена")
             return
-        if (len(self.cur_polygon) <= 2):
-            self.show_message("Отсекатель не был определен", "Полученный отсекатель не был определен")
+
+        lines_with_points = [[QPointF(*line[0]), QPointF(*line[1])] for line in self.lines]
+        polygon_with_points = [QPointF(*dot) for dot in self.cur_polygon]
+        if not is_polygon_valid(polygon_with_points):
+            self.show_message("Введенный отсекатель не валиден", "Введенный отсекатель  не является выпуклым многоугольником")
             return
 
         self.save_state(is_itersected=True)
-        lines_with_points = [[QPointF(*line[0]), QPointF(*line[1])] for line in self.lines]
-        polygon_with_points = [QPointF(*dot) for dot in self.cur_polygon]
+
+
+
         intersected_lines = find_intersections(polygon_with_points, lines_with_points)
         for i, results in enumerate(intersected_lines):
             flag, inter_line = results[0], QLine_to_line(results[1])
-            if flag == 0:  # invisible
+            if flag == False:  # invisible
                 self.drawLine(*self.lines[i], self.cut_off_color)
-            if flag == 1:  # visible
+            if flag == True:  # visible
                 self.drawLine(*inter_line, self.line_color)
                 # print(inter_line,self.lines[i])
                 if (inter_line[0] != self.lines[i][0]):
                     self.drawLine(inter_line[0], self.lines[i][0], self.cut_off_color)
                 if (inter_line[1] != self.lines[i][1]):
                     self.drawLine(inter_line[1], self.lines[i][1], self.cut_off_color)
+
 
         self.update()
 
