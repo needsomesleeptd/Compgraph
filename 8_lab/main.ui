@@ -155,12 +155,11 @@
              <font>
               <family>Times New Roman</family>
               <pointsize>10</pointsize>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
             <property name="text">
-             <string>Коордиты прямоугольника для построения:</string>
+             <string>Координаты новой точки многоугольника:</string>
             </property>
            </widget>
           </item>
@@ -175,12 +174,12 @@
                </font>
               </property>
               <property name="text">
-               <string>Xleft:</string>
+               <string>X:</string>
               </property>
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QDoubleSpinBox" name="XLeftRect">
+             <widget class="QDoubleSpinBox" name="Xdot">
               <property name="font">
                <font>
                 <family>Times New Roman</family>
@@ -207,76 +206,12 @@
                </font>
               </property>
               <property name="text">
-               <string>Yup:</string>
+               <string>Y:</string>
               </property>
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QDoubleSpinBox" name="YUpRect">
-              <property name="font">
-               <font>
-                <family>Times New Roman</family>
-                <pointsize>9</pointsize>
-               </font>
-              </property>
-              <property name="minimum">
-               <double>-1000.000000000000000</double>
-              </property>
-              <property name="maximum">
-               <double>1000.000000000000000</double>
-              </property>
-              <property name="singleStep">
-               <double>10.000000000000000</double>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="xrightLabel">
-              <property name="font">
-               <font>
-                <family>Times New Roman</family>
-                <pointsize>9</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Xright:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QDoubleSpinBox" name="XRightRect">
-              <property name="font">
-               <font>
-                <family>Times New Roman</family>
-                <pointsize>9</pointsize>
-               </font>
-              </property>
-              <property name="minimum">
-               <double>-1000.000000000000000</double>
-              </property>
-              <property name="maximum">
-               <double>1000.000000000000000</double>
-              </property>
-              <property name="singleStep">
-               <double>10.000000000000000</double>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="xDownLabel">
-              <property name="font">
-               <font>
-                <family>Times New Roman</family>
-                <pointsize>9</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>YDown:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QDoubleSpinBox" name="YDownRect">
+             <widget class="QDoubleSpinBox" name="Ydot">
               <property name="font">
                <font>
                 <family>Times New Roman</family>
@@ -309,7 +244,6 @@
              <font>
               <family>Times New Roman</family>
               <pointsize>10</pointsize>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -548,7 +482,7 @@
      <x>0</x>
      <y>0</y>
      <width>1193</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

@@ -165,7 +165,7 @@ class Canvas(QtWidgets.QGraphicsView):
 
         intersected_lines = find_intersections(polygon_with_points, lines_with_points)
         for i, results in enumerate(intersected_lines):
-            flag, inter_line = results[0], QLine_to_line(results[1])
+            flag, inter_line = results[0], QLine_to_line(results[1]) #flag symbols visiability
             if flag == False:  # invisible
                 self.drawLine(*self.lines[i], self.cut_off_color)
             if flag == True:  # visible
@@ -198,7 +198,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.lines = []
         self.cur_polygon = []
         self.cur_line = []
-        self.rect = None
+        self.is_polygon_closed = False
 
     def display_reverted_figures(self):
         self.scene.clear()

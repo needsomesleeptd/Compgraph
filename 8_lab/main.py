@@ -32,7 +32,6 @@ class UI(QtWidgets.QMainWindow):
         self.ui.change_intersected_lines_color.clicked.connect(self.changeCutOffColor)
 
 
-        self.ui.canvas.displayRectCoordsSignal.connect(self.updateRectCoords)
 
         self.ui.canvas.dotsPrintSignal.connect(self.ui.table_points.push_node_back)
         self.ui.canvas.clearSignal.connect(self.ui.table_points.clearContents)
@@ -40,7 +39,7 @@ class UI(QtWidgets.QMainWindow):
         self.ui.clear_canvas_button.clicked.connect(self.ui.canvas.clearCanvasAndData)
 
         self.ui.create_line.clicked.connect(self.createLineByValue)
-        self.ui.create_rect.clicked.connect(self.createRectByValue)
+        self.ui.create_rect.clicked.connect(self.createPolygonDotByValue)
 
         self.ui.revert.clicked.connect(self.revert_state)
 
@@ -53,11 +52,7 @@ class UI(QtWidgets.QMainWindow):
 
         self.show()
 
-    def updateRectCoords(self,xl,yu,xr,yd):
-        self.ui.XRightRect.setValue(xr)
-        self.ui.XLeftRect.setValue(xl)
-        self.ui.YUpRect.setValue(yu)
-        self.ui.YDownRect.setValue(yd)
+
 
 
 
@@ -75,15 +70,10 @@ class UI(QtWidgets.QMainWindow):
         if (temp != None):
             self.ui.canvas.cur_line = [temp]
 
-    def createRectByValue(self):
-        xl = self.ui.XLeftRect.value()
-        xr = self.ui.XRightRect.value()
-        yd = self.ui.YDownRect.value()
-        yu = self.ui.YUpRect.value()
-        if len(self.ui.canvas.cur_polygon) != 0:
-            self.ui.canvas.clear_cur_rect()
-        self.ui.canvas.add_dot_polygon(QPointF(xl, yu))
-        self.ui.canvas.add_dot_polygon(QPointF(xr, yd), skip_state=True)
+    def createPolygonDotByValue(self):
+        x = self.ui.Xdot.value()
+        y = self.ui.Ydot.value()
+        self.ui.canvas.add_dot_polygon(QPointF(x,y))
 
     def DisplayIntersections(self):
         self.ui.canvas.DisplayIntersections()
