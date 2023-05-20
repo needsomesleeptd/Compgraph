@@ -69,10 +69,10 @@ class UI(QtWidgets.QMainWindow):
         self.ui.canvas.add_dot_polygon(QPointF(x, y), self.ui.canvas.polygon, self.ui.canvas.line_color)
 
     def closeCutter(self):
-        self.ui.canvas.close_cutter(self.ui.canvas.cutter)
+        self.ui.canvas.close_cutter()
 
     def closePolygon(self):
-        self.ui.canvas.close_polygon(self.ui.canvas.polygon)
+        self.ui.canvas.close_polygon()
 
     def DisplayIntersections(self):
         self.ui.canvas.DisplayIntersections()
@@ -135,11 +135,11 @@ class UI(QtWidgets.QMainWindow):
             self.ui.table_points.add_to_table([self.ui.canvas.cutter], color = self.ui.canvas.pen.color())
             self.ui.table_points.add_to_table([self.ui.canvas.polygon],color = self.ui.canvas.line_color)
             self.ui.canvas.display_reverted_figures()
-            cutter_closed = popped_state[-2]
-            polygon_closed = popped_state[-1]
-            if cutter_closed:
+            self.ui.canvas.is_cutter_closed = popped_state[-2]
+            self.ui.canvas.is_polygon_closed = popped_state[-1]
+            if self.ui.canvas.is_cutter_closed:
                 self.ui.canvas.close_cutter(skip_state=True)
-            if polygon_closed:
+            if self.ui.canvas.is_polygon_closed:
                 self.ui.canvas.close_polygon(skip_state=True)
 
             self.update()

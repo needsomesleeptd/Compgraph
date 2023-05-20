@@ -119,17 +119,17 @@ class Canvas(QtWidgets.QGraphicsView):
         self.update()
 
     def close_cutter(self, skip_state=False):
-        if not skip_state:
-            self.save_state()
         if (len(self.cutter) > 2):
+            if not skip_state:
+                self.save_state()
             self.drawLine(self.cutter[-1], self.cutter[0], color=self.pen.color())
             self.is_cutter_closed = True
             self.update()
 
     def close_polygon(self, skip_state=False):
-        if not skip_state:
-            self.save_state()
         if (len(self.polygon) > 2):
+            if not skip_state:
+                self.save_state()
             self.drawLine(self.polygon[-1], self.polygon[0], color=self.line_color)
             self.is_polygon_closed = True
             self.update()
@@ -153,13 +153,13 @@ class Canvas(QtWidgets.QGraphicsView):
         if not self.pan_mode:
 
             pos = self.mapToScene(event.pos())
-            self.save_state()
 
-            if event.buttons() == QtCore.Qt.LeftButton:
-                self.add_dot_polygon(pos, self.cutter, self.pen.color())
-
-            if event.buttons() == QtCore.Qt.RightButton:
-                self.add_dot_polygon(pos, self.polygon, self.line_color)
+            if not self.is_cutter_closed:
+                if event.buttons() == QtCore.Qt.LeftButton:
+                    self.add_dot_polygon(pos, self.cutter, self.pen.color())
+            if not self.is_polygon_closed:
+                if event.buttons() == QtCore.Qt.RightButton:
+                    self.add_dot_polygon(pos, self.polygon, self.line_color)
 
                 # if (event.buttons() == QtCore.Qt.MouseButton.MidButton):
                 #   self.close_polygon()
@@ -168,7 +168,7 @@ class Canvas(QtWidgets.QGraphicsView):
 
     def DisplayIntersections(self):
         if (not self.is_polygon_closed):
-            self.show_message("Многоугольник не был замкнут", "Введенный многоугольнки не был замкнут")
+            self.show_message("Многоугольник не был замкнут", "Введенный многоугольник не был замкнут")
             return
 
         cutter_with_points = [QPointF(*dot) for dot in self.cutter]
@@ -219,7 +219,7 @@ class Canvas(QtWidgets.QGraphicsView):
         polygon = []
         for dot in temp_polygon:
             self.add_dot_polygon(QPointF(*dot),polygon,color=color, add_to_table=False, skip_state=True)
-        polygon = temp_polygon
+
 
     def display_reverted_figures(self):
         self.scene.clear()
