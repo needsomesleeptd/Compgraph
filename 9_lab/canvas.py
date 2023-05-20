@@ -30,7 +30,7 @@ def QPoint_to_point(Qpoint: QPointF):
 
 
 class Canvas(QtWidgets.QGraphicsView):
-    dotsPrintSignal = QtCore.pyqtSignal(float, float,QColor)
+    dotsPrintSignal = QtCore.pyqtSignal(float, float, QColor)
     clearSignal = QtCore.pyqtSignal()
 
     def __init__(self, parent):
@@ -97,7 +97,7 @@ class Canvas(QtWidgets.QGraphicsView):
             self.scene.removeItem(self.rect)
         self.rect = None
 
-    def add_dot_polygon(self, pos,polygon,color,add_to_table =True,append_dot =True, skip_state=False):
+    def add_dot_polygon(self, pos, polygon, color, add_to_table=True, append_dot=True, skip_state=False):
         if (skip_state == False):
             self.save_state()
 
@@ -109,7 +109,7 @@ class Canvas(QtWidgets.QGraphicsView):
                 self.dotsPrintSignal.emit(pos.x(), pos.y(), color)
 
         else:
-            if ([pos.x(), pos.y()] !=  polygon[-1]):
+            if ([pos.x(), pos.y()] != polygon[-1]):
                 self.drawLine([pos.x(), pos.y()], polygon[-1], color)
                 self.drawPoint([pos.x(), pos.y()], color)
                 if append_dot:
@@ -145,7 +145,7 @@ class Canvas(QtWidgets.QGraphicsView):
             self.lines.append(self.cur_line)
             self.cur_line = []
 
-        self.dotsPrintSignal.emit(pos.x(), pos.y(),self.line_color)
+        self.dotsPrintSignal.emit(pos.x(), pos.y(), self.line_color)
         self.update()
 
     def mousePressEvent(self, event):
@@ -156,45 +156,37 @@ class Canvas(QtWidgets.QGraphicsView):
             self.save_state()
 
             if event.buttons() == QtCore.Qt.LeftButton:
-                self.add_dot_polygon(pos,self.cutter,self.pen.color())
+                self.add_dot_polygon(pos, self.cutter, self.pen.color())
 
             if event.buttons() == QtCore.Qt.RightButton:
-                self.add_dot_polygon(pos,self.polygon,self.line_color)
+                self.add_dot_polygon(pos, self.polygon, self.line_color)
 
-                #if (event.buttons() == QtCore.Qt.MouseButton.MidButton):
-                 #   self.close_polygon()
-
-
+                # if (event.buttons() == QtCore.Qt.MouseButton.MidButton):
+                #   self.close_polygon()
 
             self.update()
 
     def DisplayIntersections(self):
-        if (len(self.cur_line) != 0):
-            self.show_message("Линия не была проведена", "Вторая точка прямой не была определена")
+        if (not self.is_polygon_closed):
+            self.show_message("Многоугольник не был замкнут", "Введенный многоугольнки не был замкнут")
             return
 
-        lines_with_points = [[QPointF(*line[0]), QPointF(*line[1])] for line in self.lines]
-        polygon_with_points = [QPointF(*dot) for dot in self.cutter]
-        if not is_polygon_valid(polygon_with_points):
-            self.show_message("Введенный отсекатель не валиден", "Введенный отсекатель  не является выпуклым многоугольником")
+        cutter_with_points = [QPointF(*dot) for dot in self.cutter]
+        polygon_with_points = [QPointF(*dot) for dot in self.polygon]
+        if not is_polygon_valid(cutter_with_points):
+            self.show_message("Введенный отсекатель не валиден",
+                              "Введенный отсекатель  не является выпуклым многоугольником")
             return
+
+        #make_rotation_clockwise(polygon_with_points)
 
         self.save_state(is_itersected=True)
 
-
-
-        intersected_lines = find_intersections(polygon_with_points, lines_with_points)
-        for i, results in enumerate(intersected_lines):
-            flag, inter_line = results[0], QLine_to_line(results[1]) #flag symbols visiability
-            if flag == False:  # invisible
-                self.drawLine(*self.lines[i], self.cut_off_color)
-            if flag == True:  # visible
-                self.drawLine(*inter_line, self.line_color)
-                # print(inter_line,self.lines[i])
-                if (inter_line[0] != self.lines[i][0]):
-                    self.drawLine(inter_line[0], self.lines[i][0], self.cut_off_color)
-                if (inter_line[1] != self.lines[i][1]):
-                    self.drawLine(inter_line[1], self.lines[i][1], self.cut_off_color)
+        p, np =  sutherland_hodgman(polygon_with_points,cutter_with_points)
+        for i in range(np):
+            self.drawLine(QPoint_to_point(p[i-1]),QPoint_to_point(p[i]),color=self.cut_off_color)
+            #c.create_line(p[i - 1][0], p[i - 1][1], p[i][0], p[i][1], fill=result_colour)
+        #self.drawLines()
 
 
         self.update()
@@ -217,15 +209,16 @@ class Canvas(QtWidgets.QGraphicsView):
     def reset_values(self):
         self.lines = []
         self.cutter = []
+        self.polygon = []
         self.cur_line = []
         self.is_cutter_closed = False
-
+        self.is_polygon_closed = False
 
     def drawPolygon(self):
         temp_polygon = self.cutter.copy()
         self.cutter = []
         for dot in temp_polygon:
-            self.add_dot_polygon(QPointF(*dot),add_to_table=False,skip_state=True)
+            self.add_dot_polygon(QPointF(*dot), add_to_table=False, skip_state=True)
         self.cutter = temp_polygon
 
     def display_reverted_figures(self):
@@ -248,7 +241,8 @@ class Canvas(QtWidgets.QGraphicsView):
         return [self, self.pen.color(), self.fill_color, self.seed_point, self.polygons]
 
     def save_state(self, is_itersected=False):
-        self.saved_state.append([self.cur_line.copy(), self.lines.copy(), self.cutter.copy(), is_itersected, self.is_cutter_closed])
+        self.saved_state.append(
+            [self.cur_line.copy(), self.lines.copy(), self.cutter.copy(), is_itersected, self.is_cutter_closed])
 
     def show_message(self, title, message):
         msg = QMessageBox()
