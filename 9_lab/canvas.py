@@ -13,6 +13,7 @@ from PyQt5.QtGui import QMouseEvent
 from copy import deepcopy
 from PyQt5.QtWidgets import QMessageBox
 
+from math import  isclose
 
 def QLine_to_line(Qline: [QPointF, QPointF]):
     return [[Qline[0].x(), Qline[0].y()], [Qline[1].x(), Qline[1].y()]]
@@ -28,6 +29,11 @@ def QLines_to_line(Qlines):
 def QPoint_to_point(Qpoint: QPointF):
     return [Qpoint.x(), Qpoint.y()]
 
+def points_eq(point1,point2,eps=1e-2):
+    if isclose(point1.x(), point2[0], abs_tol=eps) and isclose(point1.y(), point2[1], abs_tol=eps):
+        return True
+    else:
+        return False
 
 class Canvas(QtWidgets.QGraphicsView):
     dotsPrintSignal = QtCore.pyqtSignal(float, float, QColor)
@@ -109,7 +115,7 @@ class Canvas(QtWidgets.QGraphicsView):
                 self.dotsPrintSignal.emit(pos.x(), pos.y(), color)
 
         else:
-            if ([pos.x(), pos.y()] != polygon[-1]):
+            if not points_eq(pos,polygon[-1]):# Возможно стоит пробегаться по всем вершинам и искать похожую
                 self.drawLine([pos.x(), pos.y()], polygon[-1], color)
                 self.drawPoint([pos.x(), pos.y()], color)
                 if append_dot:
