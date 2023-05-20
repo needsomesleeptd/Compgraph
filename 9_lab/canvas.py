@@ -118,19 +118,19 @@ class Canvas(QtWidgets.QGraphicsView):
                     self.dotsPrintSignal.emit(pos.x(), pos.y(), color)
         self.update()
 
-    def close_cutter(self, polygon, skip_state=False):
+    def close_cutter(self, skip_state=False):
         if not skip_state:
             self.save_state()
-        if (len(polygon) > 2):
-            self.drawLine(polygon[-1], polygon[0], color=self.pen.color())
+        if (len(self.cutter) > 2):
+            self.drawLine(self.cutter[-1], self.cutter[0], color=self.pen.color())
             self.is_cutter_closed = True
             self.update()
 
-    def close_polygon(self, polygon, skip_state=False):
+    def close_polygon(self, skip_state=False):
         if not skip_state:
             self.save_state()
-        if (len(polygon) > 2):
-            self.drawLine(polygon[-1], polygon[0], color=self.line_color)
+        if (len(self.polygon) > 2):
+            self.drawLine(self.polygon[-1], self.polygon[0], color=self.line_color)
             self.is_polygon_closed = True
             self.update()
 
@@ -214,19 +214,17 @@ class Canvas(QtWidgets.QGraphicsView):
         self.is_cutter_closed = False
         self.is_polygon_closed = False
 
-    def drawPolygon(self):
-        temp_polygon = self.cutter.copy()
-        self.cutter = []
+    def drawPolygon(self,polygon,color):
+        temp_polygon = polygon.copy()
+        polygon = []
         for dot in temp_polygon:
-            self.add_dot_polygon(QPointF(*dot), add_to_table=False, skip_state=True)
-        self.cutter = temp_polygon
+            self.add_dot_polygon(QPointF(*dot),polygon,color=color, add_to_table=False, skip_state=True)
+        polygon = temp_polygon
 
     def display_reverted_figures(self):
         self.scene.clear()
-        self.drawPolygon()
-        if (len(self.cur_line) == 1):
-            self.drawLine(*self.cur_line, *self.cur_line, color=self.line_color)
-        self.drawLines(self.lines, color=self.line_color)
+        self.drawPolygon(self.polygon,color=self.line_color)
+        self.drawPolygon(self.cutter,color=self.pen.color())
 
         self.update()
 
@@ -242,7 +240,7 @@ class Canvas(QtWidgets.QGraphicsView):
 
     def save_state(self, is_itersected=False):
         self.saved_state.append(
-            [self.cur_line.copy(), self.lines.copy(), self.cutter.copy(), is_itersected, self.is_cutter_closed])
+            [self.polygon.copy(), self.cutter.copy(), self.is_polygon_closed,self.is_cutter_closed,is_itersected])
 
     def show_message(self, title, message):
         msg = QMessageBox()

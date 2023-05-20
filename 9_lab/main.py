@@ -129,16 +129,22 @@ class UI(QtWidgets.QMainWindow):
         if (len(self.ui.canvas.saved_state) > 0):
             popped_state = self.ui.canvas.saved_state.pop()
             #[self.cur_line.copy(), self.lines.copy(), self.cur_rect.copy()]
-            self.ui.canvas.cur_line = popped_state[0].copy()
-            self.ui.canvas.lines= popped_state[1].copy()
-            self.ui.canvas.cutter = popped_state[2].copy()
-            self.ui.canvas.is_cutter_closed = popped_state[-1]
+            self.ui.canvas.polygon= popped_state[0].copy()
+            self.ui.canvas.cutter = popped_state[1].copy()
             self.ui.table_points.clearContents()
             self.ui.table_points.add_to_table([self.ui.canvas.cutter], color = self.ui.canvas.pen.color())
-            self.ui.table_points.add_to_table(self.ui.canvas.lines + [self.ui.canvas.cur_line],color = self.ui.canvas.line_color)
+            self.ui.table_points.add_to_table([self.ui.canvas.polygon],color = self.ui.canvas.line_color)
             self.ui.canvas.display_reverted_figures()
-            if popped_state[-1]:#is_closed
+            cutter_closed = popped_state[-2]
+            polygon_closed = popped_state[-1]
+            if cutter_closed:
                 self.ui.canvas.close_cutter(skip_state=True)
+            if polygon_closed:
+                self.ui.canvas.close_polygon(skip_state=True)
+
+            self.update()
+
+
 
 
 

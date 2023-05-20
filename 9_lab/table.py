@@ -11,7 +11,7 @@ class Table(QtWidgets.QTableWidget):
     def __init__(self, parent):
         super().__init__(parent)
         self.adjust_table()
-
+        self.saved_state = []
     def adjust_table(self):
         self.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         self.setColumnCount(2)
@@ -29,6 +29,7 @@ class Table(QtWidgets.QTableWidget):
         self.setItem(rowPos, 1, QtWidgets.QTableWidgetItem(str(round(iy, precision))))
         self.item(rowPos, 0).setBackground(color)
         self.item(rowPos, 1).setBackground(color)
+
 
 
     def update_to_canvas(self, graphs: list, color):

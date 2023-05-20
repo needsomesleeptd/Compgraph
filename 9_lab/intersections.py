@@ -106,7 +106,6 @@ def sutherland_hodgman(polygon, clipper):
     w = clipper.copy()
     w.append(clipper[0])
     np = len(p)
-    nq = 0
     nw = len(w)
 
     s = []
@@ -138,11 +137,13 @@ def sutherland_hodgman(polygon, clipper):
             p = q
             np = nq
             continue
+
         is_crossing = check_lines_crossing(s, f, w[i], w[i + 1])
         if is_crossing == False:
             p = q
             np = nq
             continue
+
         q.append(get_cross_point(s, f, w[i], w[i + 1]))
         nq += 1
         p = q
