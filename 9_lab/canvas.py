@@ -46,7 +46,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.pen.setJoinStyle(Qt.MiterJoin)
         # self.pen.setMiterLimit(0)
         self.backgroundColor = QtGui.QColor(Qt.white)
-        self._zoom = 2  # times which picture is zoomed
+        self._zoom = 3  # times which picture is zoomed
         self.figure_items_count = []
         self.saved_scene = QtWidgets.QGraphicsScene()
         self.curr_state_saved_len = -1
@@ -75,6 +75,7 @@ class Canvas(QtWidgets.QGraphicsView):
         else:
             factor = 0.8
             self._zoom -= 1
+
         self.scale(factor, factor)
 
     def resizeEvent(self, event):
