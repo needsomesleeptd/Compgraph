@@ -6,20 +6,30 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1193</width>
+    <width>1200</width>
     <height>1000</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1000</width>
+    <width>1200</width>
     <height>1000</height>
    </size>
+  </property>
+  <property name="font">
+   <font>
+    <family>Times New Roman</family>
+   </font>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="font">
+    <font>
+     <family>SEGDT</family>
+    </font>
+   </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
      <layout class="QHBoxLayout" name="Main_Horixontal_layout">
@@ -30,6 +40,11 @@
           <width>800</width>
           <height>0</height>
          </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe Script</family>
+         </font>
         </property>
        </widget>
       </item>
@@ -54,6 +69,11 @@
             <width>20</width>
             <height>0</height>
            </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Times New Roman</family>
+           </font>
           </property>
           <property name="lineWidth">
            <number>2</number>
@@ -107,7 +127,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Цвет многокгольника:</string>
+             <string>Цвет многоугольника:</string>
             </property>
            </widget>
           </item>
@@ -120,6 +140,11 @@
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="Label_2">
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+             </font>
+            </property>
             <property name="text">
              <string>Цвет отчесенной фигуры:</string>
             </property>
@@ -233,6 +258,11 @@
           </item>
           <item>
            <widget class="QPushButton" name="add_cutter_dot">
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+             </font>
+            </property>
             <property name="text">
              <string>Поставить точку</string>
             </property>
@@ -454,8 +484,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1193</width>
-     <height>22</height>
+     <width>1200</width>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

@@ -1,4 +1,4 @@
-from main import show_message
+from main import show_warning_message,show_info_message
 
 from intersections import *
 from drawing_algos import *
@@ -126,7 +126,7 @@ class Canvas(QtWidgets.QGraphicsView):
             self.is_cutter_closed = True
             self.update()
         else:
-            show_message('У введенного отсекателя недостаточно сторон',
+            show_warning_message('У введенного отсекателя недостаточно сторон',
                          'У введенного отсекателя недостаточно сторон для его завершения')
 
     def close_polygon(self, skip_state=False):
@@ -137,7 +137,7 @@ class Canvas(QtWidgets.QGraphicsView):
             self.is_polygon_closed = True
             self.update()
         else:
-            show_message('У введенного многоугольника недостаточно сторон',
+            show_warning_message('У введенного многоугольника недостаточно сторон',
                          'У введенного многоугольника недостаточно сторон для его завершения')
 
     def add_dot_line(self, pos):
@@ -160,12 +160,20 @@ class Canvas(QtWidgets.QGraphicsView):
 
             pos = self.mapToScene(event.pos())
 
-            if not self.is_cutter_closed:
-                if event.buttons() == QtCore.Qt.LeftButton:
+
+            if event.buttons() == QtCore.Qt.LeftButton:
+                if not self.is_cutter_closed:
                     self.add_dot_polygon(pos, self.cutter, self.pen.color())
-            if not self.is_polygon_closed:
-                if event.buttons() == QtCore.Qt.RightButton:
+                else:
+                    show_info_message('Фигура замкнута', 'Многоугольник замкнут, невозможно ставить его точки')
+
+
+
+            if event.buttons() == QtCore.Qt.RightButton:
+                if not self.is_polygon_closed:
                     self.add_dot_polygon(pos, self.polygon, self.line_color)
+                else:
+                    show_info_message('Фигура замкнута', 'Отсекатель замкнут, невозможно ставить его точки')
 
                 # if (event.buttons() == QtCore.Qt.MouseButton.MidButton):
                 #   self.close_polygon()

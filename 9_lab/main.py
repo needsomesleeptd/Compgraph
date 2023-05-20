@@ -8,13 +8,22 @@ from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QPoint, QPointF
 
 
-def show_message(title, message):
+def show_warning_message(title, message):
     msg = QMessageBox()
-    msg.setIcon(QMessageBox.Information)
+    msg.setIcon(QMessageBox.Warning)
     msg.setText(title)
     msg.setInformativeText(message)
     msg.setWindowTitle('Warning')
     msg.exec_()
+
+def show_info_message(title, message):
+    msg = QMessageBox()
+    msg.setIcon(QMessageBox.Information)
+    msg.setText(title)
+    msg.setInformativeText(message)
+    msg.setWindowTitle('Info')
+    msg.exec_()
+
 
 def Qcolor_to_stylesheet(color):
     return '* { background-color: ' + color.name() + ' }'
@@ -69,12 +78,18 @@ class UI(QtWidgets.QMainWindow):
     def createCutterDotByValue(self):
         x = self.ui.Xdot.value()
         y = self.ui.Ydot.value()
-        self.ui.canvas.add_dot_polygon(QPointF(x,y),self.ui.canvas.cutter,self.ui.canvas.pen.color())
+        if (not self.ui.canvas.is_cutter_closed):
+            self.ui.canvas.add_dot_polygon(QPointF(x,y),self.ui.canvas.cutter,self.ui.canvas.pen.color())
+        else:
+            show_info_message('Фигура замкнута','Отсекатель замкнут ,невозможно ставить его точки')
 
     def createPolygonDotByValue(self):
         x = self.ui.XPolygonDot.value()
         y = self.ui.YPolygonDot.value()
-        self.ui.canvas.add_dot_polygon(QPointF(x, y), self.ui.canvas.polygon, self.ui.canvas.line_color)
+        if (not self.ui.canvas.is_polygon_closed):
+            self.ui.canvas.add_dot_polygon(QPointF(x, y), self.ui.canvas.polygon, self.ui.canvas.line_color)
+        else:
+            show_info_message('Фигура замкнута', 'Многоугольник замкнут, невозможно ставить его точки')
 
     def closeCutter(self):
         self.ui.canvas.close_cutter()
@@ -131,7 +146,7 @@ class UI(QtWidgets.QMainWindow):
         title = "Об авторе"
         text = "Данная работа была выполнена студентом Разиным Андреем группы ИУ7-44Б\n\n" \
                "Если бы он знал о command pattern его жизнь была бы проще"
-        show_message(title,text)
+        show_info_message(title, text)
 
     def revert_state(self):
         if (len(self.ui.canvas.saved_state) > 0):
@@ -167,7 +182,7 @@ class UI(QtWidgets.QMainWindow):
                "   2. На левую кнопку мыши происходит построение самого многоугольника, замыкание происходит на правую кнопку мыши\n" \
                "   3. на колесико мыши есть возможность зума для детального рассмотра изображения"
 
-        show_message(title,text)
+        show_info_message(title, text)
 
 
 
