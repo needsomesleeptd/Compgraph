@@ -8,6 +8,14 @@ from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QPoint, QPointF
 
 
+def show_message(title, message):
+    msg = QMessageBox()
+    msg.setIcon(QMessageBox.Information)
+    msg.setText(title)
+    msg.setInformativeText(message)
+    msg.setWindowTitle('Warning')
+    msg.exec_()
+
 def Qcolor_to_stylesheet(color):
     return '* { background-color: ' + color.name() + ' }'
 
@@ -123,7 +131,7 @@ class UI(QtWidgets.QMainWindow):
         title = "Об авторе"
         text = "Данная работа была выполнена студентом Разиным Андреем группы ИУ7-44Б\n\n" \
                "Если бы он знал о command pattern его жизнь была бы проще"
-        self.show_message(title, text)
+        show_message(title,text)
 
     def revert_state(self):
         if (len(self.ui.canvas.saved_state) > 0):
@@ -159,15 +167,9 @@ class UI(QtWidgets.QMainWindow):
                "   2. На левую кнопку мыши происходит построение самого многоугольника, замыкание происходит на правую кнопку мыши\n" \
                "   3. на колесико мыши есть возможность зума для детального рассмотра изображения"
 
-        self.show_message(title, text)
+        show_message(title,text)
 
-    def show_message(self, title, message):
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Information)
-        msg.setText(title)
-        msg.setInformativeText(message)
-        msg.setWindowTitle(title)
-        msg.exec_()
+
 
 
 if __name__ == '__main__':

@@ -1,4 +1,4 @@
-from main import Qcolor_to_stylesheet
+from main import show_message
 
 from intersections import *
 from drawing_algos import *
@@ -125,6 +125,9 @@ class Canvas(QtWidgets.QGraphicsView):
             self.drawLine(self.cutter[-1], self.cutter[0], color=self.pen.color())
             self.is_cutter_closed = True
             self.update()
+        else:
+            show_message('У введенного отсекателя недостаточно сторон',
+                         'У введенного отсекателя недостаточно сторон для его завершения')
 
     def close_polygon(self, skip_state=False):
         if (len(self.polygon) > 2):
@@ -133,6 +136,9 @@ class Canvas(QtWidgets.QGraphicsView):
             self.drawLine(self.polygon[-1], self.polygon[0], color=self.line_color)
             self.is_polygon_closed = True
             self.update()
+        else:
+            show_message('У введенного многоугольника недостаточно сторон',
+                         'У введенного многоугольника недостаточно сторон для его завершения')
 
     def add_dot_line(self, pos):
         self.save_state()
@@ -178,16 +184,15 @@ class Canvas(QtWidgets.QGraphicsView):
                               "Введенный отсекатель  не является выпуклым многоугольником")
             return
 
-        #make_rotation_clockwise(polygon_with_points)
+        # make_rotation_clockwise(polygon_with_points)
 
         self.save_state(is_itersected=True)
 
-        p, np =  sutherland_hodgman(polygon_with_points,cutter_with_points)
+        p, np = sutherland_hodgman(polygon_with_points, cutter_with_points)
         for i in range(np):
-            self.drawLine(QPoint_to_point(p[i-1]),QPoint_to_point(p[i]),color=self.cut_off_color)
-            #c.create_line(p[i - 1][0], p[i - 1][1], p[i][0], p[i][1], fill=result_colour)
-        #self.drawLines()
-
+            self.drawLine(QPoint_to_point(p[i - 1]), QPoint_to_point(p[i]), color=self.cut_off_color)
+            # c.create_line(p[i - 1][0], p[i - 1][1], p[i][0], p[i][1], fill=result_colour)
+        # self.drawLines()
 
         self.update()
 
@@ -214,17 +219,16 @@ class Canvas(QtWidgets.QGraphicsView):
         self.is_cutter_closed = False
         self.is_polygon_closed = False
 
-    def drawPolygon(self,polygon,color):
+    def drawPolygon(self, polygon, color):
         temp_polygon = polygon.copy()
         polygon = []
         for dot in temp_polygon:
-            self.add_dot_polygon(QPointF(*dot),polygon,color=color, add_to_table=False, skip_state=True)
-
+            self.add_dot_polygon(QPointF(*dot), polygon, color=color, add_to_table=False, skip_state=True)
 
     def display_reverted_figures(self):
         self.scene.clear()
-        self.drawPolygon(self.polygon,color=self.line_color)
-        self.drawPolygon(self.cutter,color=self.pen.color())
+        self.drawPolygon(self.polygon, color=self.line_color)
+        self.drawPolygon(self.cutter, color=self.pen.color())
 
         self.update()
 
@@ -240,7 +244,7 @@ class Canvas(QtWidgets.QGraphicsView):
 
     def save_state(self, is_itersected=False):
         self.saved_state.append(
-            [self.polygon.copy(), self.cutter.copy(), self.is_polygon_closed,self.is_cutter_closed,is_itersected])
+            [self.polygon.copy(), self.cutter.copy(), self.is_polygon_closed, self.is_cutter_closed, is_itersected])
 
     def show_message(self, title, message):
         msg = QMessageBox()
