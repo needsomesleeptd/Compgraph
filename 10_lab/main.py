@@ -4,6 +4,8 @@ from PyQt5.QtCore import Qt
 import layout
 from PyQt5.QtWidgets import QMessageBox
 
+from intersections import funcs
+
 
 from PyQt5.QtCore import QPoint, QPointF
 
@@ -50,7 +52,7 @@ class UI(QtWidgets.QMainWindow):
 
 
 
-        self.ui.revert.clicked.connect(self.revert_state)
+
 
         self.ui.about_creator.triggered.connect(self.about_author_message)
         self.ui.about_programm.triggered.connect(self.about_program_message)
@@ -77,7 +79,7 @@ class UI(QtWidgets.QMainWindow):
 
 
     def DisplayIntersections(self):
-        self.clear_canvas()
+        self.ui.canvas.scene.clear()
         self.ui.canvas.angles = self.get_angles()
         self.ui.canvas.scale_factor = self.ui.ScaleSlider.value()
         x_left = self.ui.Xstart.value()
@@ -88,8 +90,8 @@ class UI(QtWidgets.QMainWindow):
         delta_y  = self.ui.DeltaY.value()
         data_x = [x_left,x_right,delta_x]
         data_y = [y_left,y_right,delta_y]
-
-        self.ui.canvas.DisplayIntersections(data_x,data_y)
+        f = funcs(self.ui.FuncOptions.currentIndex())
+        self.ui.canvas.DisplayIntersections(data_x,data_y,f)
 
     def changeColorBound(self):
         border_color = QtWidgets.QColorDialog.getColor()

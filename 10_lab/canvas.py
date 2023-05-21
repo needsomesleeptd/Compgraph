@@ -46,7 +46,7 @@ def points_eq(point1, point2, eps=1e-2):
         return False
 
 
-EPS = 1e-5
+EPS = 1e-7
 MAX_NUM = 1e5
 MIN_NUM = -1e5
 
@@ -58,8 +58,9 @@ class Canvas(QtWidgets.QGraphicsView):
     def __init__(self, parent):
         super().__init__(parent)
         self.scene = self.CreateGraphicsScene()
-        self.pen = QtGui.QPen(Qt.red)
-        #self.pen.setJoinStyle(Qt.MiterJoin)
+        self.pen = QtGui.QPen(Qt.red, 0.1)
+
+        # self.pen.setJoinStyle(Qt.MiterJoin)
         # self.pen.setMiterLimit(0)
         self.backgroundColor = QtGui.QColor(Qt.white)
         self._zoom = 3  # times which picture is zoomed
@@ -71,13 +72,16 @@ class Canvas(QtWidgets.QGraphicsView):
         self.background_color = QColor(255, 255, 255)
         self.save_color = QColor(255, 255, 255)
         self.saved_state = []
-        self.pan_mode =False
-        self.size_x = self.width()
-        self.size_y = self.height()
+        self.pan_mode = False
         self.up_arr = []
         self.down_arr = []
-        self.angles = [0,0,0]
+        self.angles = [0, 0, 0]
         self.scale_factor = 1
+
+   # def __post_init__(self):
+        #self.size_x = self.width()
+        #self.size_y = self.height()
+        #self.setSceneRect(0, 0, self.size_x - 4, self.size_y - 4)
 
     def wheelEvent(self, event):
         if event.angleDelta().y() > 0:
@@ -87,82 +91,21 @@ class Canvas(QtWidgets.QGraphicsView):
             factor = 0.8
             self._zoom -= 1
         if self._zoom > 0:
-            #self.scale(factor, factor)
+            # self.scale(factor, factor)
             super().scale(factor, factor)
         else:
             self._zoom = 0
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
-        #self.size_x = event.size().width()
-        #self.size_y = event.size().height()
+        # self.size_x = event.size().width()
+        # self.size_y = event.size().height()
 
-
-    def drawLine(self, fr, to, color):
-        return self.scene.addLine(*fr, *to, color)
+    def drawLine(self, fr, to, color=None):
+        return self.scene.addLine(*fr, *to, self.pen)
 
     def drawPoint(self, pos, color):
         self.scene.addEllipse(*pos, 1, 1, color)
-
-    def drawLines(self, lines, color):
-        lines_drawings = []
-        for line in lines:
-            lines_drawings.append(self.drawLine(*line, color))
-        return lines_drawings
-
-    def drawRect(self, left_point, right_point, color):
-
-        w = right_point[0] - left_point[0]
-        h = right_point[1] - left_point[1]
-        return self.scene.addRect(*left_point, w, h, color)
-
-    def clear_cur_rect(self):
-        if (self.rect != None):
-            self.scene.removeItem(self.rect)
-        self.rect = None
-
-    def add_dot_polygon(self, pos, polygon, color, add_to_table=True, append_dot=True, skip_state=False):
-        if (skip_state == False):
-            self.save_state()
-
-        if len(polygon) == 0:
-            self.drawPoint([pos.x(), pos.y()], color)
-            if append_dot:
-                polygon.append([pos.x(), pos.y()])
-            if add_to_table:
-                self.dotsPrintSignal.emit(pos.x(), pos.y(), color)
-
-        else:
-            if not points_eq(pos, polygon[-1]):  # Возможно стоит пробегаться по всем вершинам и искать похожую
-                self.drawLine([pos.x(), pos.y()], polygon[-1], color)
-                self.drawPoint([pos.x(), pos.y()], color)
-                if append_dot:
-                    polygon.append([pos.x(), pos.y()])
-                if add_to_table:
-                    self.dotsPrintSignal.emit(pos.x(), pos.y(), color)
-        self.update()
-
-    def close_cutter(self, skip_state=False):
-        if (len(self.cutter) > 2):
-            if not skip_state:
-                self.save_state()
-            self.drawLine(self.cutter[-1], self.cutter[0], color=self.pen.color())
-            self.is_cutter_closed = True
-            self.update()
-        else:
-            show_warning_message('У введенного отсекателя недостаточно сторон',
-                                 'У введенного отсекателя недостаточно сторон для его завершения')
-
-    def close_polygon(self, skip_state=False):
-        if (len(self.polygon) > 2):
-            if not skip_state:
-                self.save_state()
-            self.drawLine(self.polygon[-1], self.polygon[0], color=self.line_color)
-            self.is_polygon_closed = True
-            self.update()
-        else:
-            show_warning_message('У введенного многоугольника недостаточно сторон',
-                                 'У введенного многоугольника недостаточно сторон для его завершения')
 
     def add_dot_line(self, pos):
         self.save_state()
@@ -178,18 +121,13 @@ class Canvas(QtWidgets.QGraphicsView):
         self.dotsPrintSignal.emit(pos.x(), pos.y(), self.line_color)
         self.update()
 
-
-
-
-
-    def DisplayIntersections(self,data_x,data_z):
-
+    def DisplayIntersections(self, data_x, data_z,f):
+        self.clearCanvasAndData()
         self.save_state(is_itersected=True)
 
+        self.create_surface(data_x, data_z, f)
 
-        self.create_surface(data_x, data_z, f2)
 
-        self.update()
 
     def CreateGraphicsScene(self):
         scene = QtWidgets.QGraphicsScene()
@@ -220,26 +158,23 @@ class Canvas(QtWidgets.QGraphicsView):
         for dot in temp_polygon:
             self.add_dot_polygon(QPointF(*dot), polygon, color=color, add_to_table=False, skip_state=True)
 
-    def display_reverted_figures(self):
-        self.scene.clear()
-        self.drawPolygon(self.polygon, color=self.line_color)
-        self.drawPolygon(self.cutter, color=self.pen.color())
 
-        self.update()
+
 
     def clearCanvasAndData(self):
         self.scene.clear()
-        self.reset_values()
-        self.clearSignal.emit()
-        self.update()
+        self.up_arr = []
+        self.down_arr = []
+
 
     def get_params(self):
         # canvas_copy = self.image.copy()
         return [self, self.pen.color(), self.fill_color, self.seed_point, self.polygons]
 
     def save_state(self, is_itersected=False):
-        self.saved_state.append(
-            [self.polygon.copy(), self.cutter.copy(), self.is_polygon_closed, self.is_cutter_closed, is_itersected])
+        # self.saved_state.append(
+        #  [self.polygon.copy(), self.cutter.copy(), self.is_polygon_closed, self.is_cutter_closed, is_itersected])
+        a = 1  # TODO::DO smth
 
     def show_message(self, title, message):
         msg = QMessageBox()
@@ -255,17 +190,16 @@ class Canvas(QtWidgets.QGraphicsView):
         self.scene.addLine(x1, y1, x2, y2, self.pen.color())
 
     def transform_points(self, x, y, z):  # think about it
-        super().transform()
+
         x, y, z = self.rotate_point([x, y, z])
+        print(x, y, z)
+        # x = (x - data_x[0]) / (data_x[1] - data_x[0])
+        # x = 20 + x * (self.size_x - 40)
 
-        #x = (x - data_x[0]) / (data_x[1] - data_x[0])
-        #x = 20 + x * (self.size_x - 40)
-
-        #y = (y - data_y[0]) / (data_y[1] - data_y[0])
-        #y = 20 + y * (self.size_y - 40)
-        x *= self.scale_factor
-        y *= self.scale_factor
-
+        # y = (y - data_y[0]) / (data_y[1] - data_y[0])
+        # y = 20 + y * (self.size_y - 40)
+        x *= self.scale_factor / 10
+        y *= self.scale_factor / 10
 
         return int(x), int(y)
 
@@ -308,7 +242,7 @@ class Canvas(QtWidgets.QGraphicsView):
 
         temp = point[0]
         point[0] = cos(al) * point[0] + sin(al) * point[2]
-        point[2] = cos(al) * point[2] - sin(al) * temp
+        point[2] = cos(al) * point[2] + sin(al) * temp
         return point
 
     def rotate_z(self, point):
@@ -324,17 +258,13 @@ class Canvas(QtWidgets.QGraphicsView):
         self.up_arr = []
         self.down_arr = []
 
-
-
     def get_angles(self):
         return (float(self.angle_ox.value()), float(self.angle_oy.value()),
                 float(self.angle_oz.value()))
 
     def create_surface(self, data_x, data_z, f):
-        data_x0, data_y = self.find_min_max_y(data_x, data_z, f)
-
-        self.up_arr = [0] * self.width() * 100
-        self.down_arr = [self.height()] * self.width() * 100
+        self.up_arr = [MIN_NUM] * self.width()
+        self.down_arr = [self.height()] * self.width()
 
         x_left = y_left = -1
         x_right = y_right = -1
@@ -401,7 +331,7 @@ class Canvas(QtWidgets.QGraphicsView):
     def side_edge(self, x, y, x_edge, y_edge):
         if (x_edge != -1):
             self.make_horizons(x_edge, y_edge, x, y)
-            #self.draw_cut(x_edge, y_edge, x, y)
+            self.draw_cut(x_edge, y_edge, x, y)
         return x, y
 
     def make_horizons(self, x1, y1, x2, y2):
@@ -418,8 +348,6 @@ class Canvas(QtWidgets.QGraphicsView):
 
     def is_visible(self, x, y):
         x = int(x)
-        if (x > len(self.down_arr) or x > len(self.up_arr)):
-            return 0
         if (self.down_arr[x] < y and y < self.up_arr[x]):
             flag = 0
         elif (y >= self.up_arr[x]):
@@ -450,34 +378,47 @@ class Canvas(QtWidgets.QGraphicsView):
 
         return xi, yi
 
+
 def f1(x, z):
     return 5 * x + 3 * z - 7
+
 
 def f2(x, z):
     return x ** 2 + z ** 2
 
+
 def f3(x, z):
-    return x ** 2 - 2 * z ** 2
+    return sin(x * z)
+
 
 def f4(x, z):
     return sin(x * z)
 
+
 def f5(x, z):
     return x ** 2 * z
+
 
 def f6(x, z):
     return (x * z) ** 2
 
+
+def f7(x, z):
+    return exp(x * z)
+
+
 def funcs(ind):
-    func_arr = [f1, f2, f3, f4, f5, f6]
+    func_arr = [f1, f2, f3, f4, f5, f6, f7]
     return func_arr[ind]
+
 
 def frange(a, b, step=1):
     arr = []
-    while (a <= b + EPS):
+    while (fabs(a) <= fabs(b) + EPS):
         arr.append(a)
         a += step
     return arr
+
 
 def sign(x):
     if (not x): return 0

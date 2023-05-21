@@ -49,7 +49,36 @@
        </widget>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,0,1,1,1">
+       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,1,0,1,1">
+        <item>
+         <widget class="QComboBox" name="FuncOptions">
+          <property name="font">
+           <font>
+            <family>Times New Roman</family>
+           </font>
+          </property>
+          <item>
+           <property name="text">
+            <string>sin(x)*cos(z)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>sin(x *z)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>x**2 + z**2</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>exp(x*z)</string>
+           </property>
+          </item>
+         </widget>
+        </item>
         <item>
          <layout class="QFormLayout" name="formLayout">
           <item row="0" column="0">
@@ -92,11 +121,20 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="minimum">
+             <number>-180</number>
+            </property>
             <property name="maximum">
-             <number>360</number>
+             <number>180</number>
+            </property>
+            <property name="singleStep">
+             <number>5</number>
             </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="tickPosition">
+             <enum>QSlider::TicksBelow</enum>
             </property>
            </widget>
           </item>
@@ -120,11 +158,20 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="minimum">
+             <number>-180</number>
+            </property>
             <property name="maximum">
-             <number>360</number>
+             <number>180</number>
+            </property>
+            <property name="singleStep">
+             <number>5</number>
             </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="tickPosition">
+             <enum>QSlider::TicksBelow</enum>
             </property>
            </widget>
           </item>
@@ -148,11 +195,20 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="minimum">
+             <number>-180</number>
+            </property>
             <property name="maximum">
-             <number>360</number>
+             <number>180</number>
+            </property>
+            <property name="singleStep">
+             <number>5</number>
             </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="tickPosition">
+             <enum>QSlider::TicksBelow</enum>
             </property>
            </widget>
           </item>
@@ -177,27 +233,23 @@
              </sizepolicy>
             </property>
             <property name="minimum">
-             <number>1</number>
+             <number>40</number>
+            </property>
+            <property name="maximum">
+             <number>100</number>
             </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
+            <property name="tickPosition">
+             <enum>QSlider::TicksBelow</enum>
+            </property>
+            <property name="tickInterval">
+             <number>0</number>
+            </property>
            </widget>
           </item>
          </layout>
-        </item>
-        <item>
-         <widget class="QPushButton" name="revert">
-          <property name="font">
-           <font>
-            <family>Times New Roman</family>
-            <pointsize>9</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>Вернуть на одно состояние назад</string>
-          </property>
-         </widget>
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -444,6 +496,19 @@
           </property>
           <property name="text">
            <string>Выполнить преобразования</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="clear">
+          <property name="font">
+           <font>
+            <family>Times New Roman</family>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Очитстить холст</string>
           </property>
          </widget>
         </item>
