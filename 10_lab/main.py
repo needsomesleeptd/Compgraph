@@ -40,6 +40,7 @@ class UI(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
 
+
         self.ui = layout.Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.panning.clicked.connect(self.changetoPanMode)
@@ -62,8 +63,10 @@ class UI(QtWidgets.QMainWindow):
         self.ui.XSlider.valueChanged.connect(self.DisplayIntersections)
         self.ui.YSlider.valueChanged.connect(self.DisplayIntersections)
         self.ui.ZSlider.valueChanged.connect(self.DisplayIntersections)
-        self.ui.ScaleSlider.valueChanged.connect(self.DisplayIntersections)
+        #self.ui.ScaleSlider.valueChanged.connect(self.DisplayIntersections)
 
+        self.ui.canvas.size_x = self.ui.canvas.size().width()
+        self.ui.canvas.size_y = self.ui.canvas.size().height()
 
         self.show()
 
@@ -79,9 +82,9 @@ class UI(QtWidgets.QMainWindow):
 
 
     def DisplayIntersections(self):
-        self.ui.canvas.scene.clear()
+        self.ui.canvas.clearCanvasAndData()
         self.ui.canvas.angles = self.get_angles()
-        self.ui.canvas.scale_factor = self.ui.ScaleSlider.value()
+        #self.ui.canvas.scale_factor = self.ui.ScaleSlider.value()
         x_left = self.ui.Xstart.value()
         y_left = self.ui.Ystart.value()
         x_right = self.ui.Xend.value()

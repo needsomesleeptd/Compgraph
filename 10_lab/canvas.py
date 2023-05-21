@@ -15,6 +15,8 @@ from PyQt5.QtWidgets import QMessageBox
 
 from math import *
 
+HEIGHT = 1000
+WIDTH = 1000
 
 def frange(a, b, step=1):
     arr = []
@@ -58,7 +60,8 @@ class Canvas(QtWidgets.QGraphicsView):
     def __init__(self, parent):
         super().__init__(parent)
         self.scene = self.CreateGraphicsScene()
-        self.pen = QtGui.QPen(Qt.red, 0.1)
+        self.pen = QtGui.QPen(Qt.red)
+        self.pen.setWidth(0.1)
 
         # self.pen.setJoinStyle(Qt.MiterJoin)
         # self.pen.setMiterLimit(0)
@@ -189,17 +192,25 @@ class Canvas(QtWidgets.QGraphicsView):
     def draw_cut(self, x1, y1, x2, y2):
         self.scene.addLine(x1, y1, x2, y2, self.pen.color())
 
-    def transform_points(self, x, y, z):  # think about it
+    def transform_points(self, x, y, z,data_x,data_y):
 
         x, y, z = self.rotate_point([x, y, z])
-        print(x, y, z)
+        #print(x, y, z)
         # x = (x - data_x[0]) / (data_x[1] - data_x[0])
         # x = 20 + x * (self.size_x - 40)
 
         # y = (y - data_y[0]) / (data_y[1] - data_y[0])
         # y = 20 + y * (self.size_y - 40)
-        x *= self.scale_factor / 10
-        y *= self.scale_factor / 10
+        x, y, z = self.rotate_point([x, y, z])
+
+        x = (x - data_x[0]) / (data_x[1] - data_x[0])
+        x = 20 + x * (self.size_x - 40)
+
+        y = (y - data_y[0]) / (data_y[1] - data_y[0])
+        y = 20 + y * (self.size_y - 40)
+        y = self.size_y - y
+       # x *= self.scale_factor / 10
+       # y *= self.scale_factor / 10
 
         return int(x), int(y)
 
@@ -263,8 +274,11 @@ class Canvas(QtWidgets.QGraphicsView):
                 float(self.angle_oz.value()))
 
     def create_surface(self, data_x, data_z, f):
-        self.up_arr = [MIN_NUM] * self.width() * self.height()
-        self.down_arr = [self.height()] * self.width() * self.height()
+        self.size_x = WIDTH
+        self.size_y = HEIGHT
+        data_x0, data_y = self.find_min_max_y(data_x, data_z, f)
+        self.up_arr = [-HEIGHT] * WIDTH * WIDTH
+        self.down_arr = [HEIGHT] * WIDTH * WIDTH
 
         x_left = y_left = -1
         x_right = y_right = -1
@@ -274,14 +288,14 @@ class Canvas(QtWidgets.QGraphicsView):
 
         for z in frange(z_min, z_max, z_step):
             x_prev, y_prev = data_x[0], f(data_x[0], z)
-            x_prev, y_prev = self.transform_points(x_prev, y_prev, z)
+            x_prev, y_prev = self.transform_points(x_prev, y_prev, z,data_x0,data_y)
 
             x_left, y_left = self.side_edge(x_prev, y_prev, x_left, y_left)
             prev_flag = self.is_visible(x_prev, y_prev)
 
             for x in frange(x_min, x_max, x_step):
                 y = f(x, z)
-                x, y = self.transform_points(x, y, z)
+                x, y = self.transform_points(x, y, z,data_x0,data_y)
 
                 flag = self.is_visible(x, y)
                 if (flag == prev_flag):
@@ -348,6 +362,8 @@ class Canvas(QtWidgets.QGraphicsView):
 
     def is_visible(self, x, y):
         x = int(x)
+        if (len(self.down_arr) < x or len(self.up_arr) < x):
+            return 0
         if (self.down_arr[x] < y and y < self.up_arr[x]):
             flag = 0
         elif (y >= self.up_arr[x]):
@@ -404,7 +420,7 @@ def f6(x, z):
 
 
 def f7(x, z):
-    return sinh(x) * cos(z)
+    return sin(x) * cos(z)
 
 
 def funcs(ind):
@@ -414,7 +430,7 @@ def funcs(ind):
 
 def frange(a, b, step=1):
     arr = []
-    while (fabs(a) <= fabs(b) + EPS):
+    while (a <= b + EPS):
         arr.append(a)
         a += step
     return arr

@@ -89,7 +89,7 @@
           </item>
           <item>
            <property name="text">
-            <string>sinh(x) * cos(z)</string>
+            <string>sin(x) * cos(x)</string>
            </property>
           </item>
          </widget>
@@ -224,43 +224,6 @@
             </property>
             <property name="tickPosition">
              <enum>QSlider::TicksBelow</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="scaleLabel">
-            <property name="font">
-             <font>
-              <family>Times New Roman</family>
-             </font>
-            </property>
-            <property name="text">
-             <string>Масштаб</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QSlider" name="ScaleSlider">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimum">
-             <number>40</number>
-            </property>
-            <property name="maximum">
-             <number>1000</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="tickPosition">
-             <enum>QSlider::NoTicks</enum>
-            </property>
-            <property name="tickInterval">
-             <number>0</number>
             </property>
            </widget>
           </item>
