@@ -386,6 +386,8 @@
           <property name="font">
            <font>
             <family>Times New Roman</family>
+            <pointsize>9</pointsize>
+            <bold>false</bold>
            </font>
           </property>
           <property name="text">
@@ -398,6 +400,8 @@
           <property name="font">
            <font>
             <family>Times New Roman</family>
+            <pointsize>9</pointsize>
+            <bold>false</bold>
            </font>
           </property>
           <property name="text">
