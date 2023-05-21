@@ -60,6 +60,8 @@ class UI(QtWidgets.QMainWindow):
         self.ui.XSlider.valueChanged.connect(self.DisplayIntersections)
         self.ui.YSlider.valueChanged.connect(self.DisplayIntersections)
         self.ui.ZSlider.valueChanged.connect(self.DisplayIntersections)
+        self.ui.ScaleSlider.valueChanged.connect(self.DisplayIntersections)
+
 
         self.show()
 
@@ -75,10 +77,19 @@ class UI(QtWidgets.QMainWindow):
 
 
     def DisplayIntersections(self):
-        self.clear_calnvas()
+        self.clear_canvas()
         self.ui.canvas.angles = self.get_angles()
-        self.ui.canvas.scale = self.ui.ScaleSlider.value()
-        self.ui.canvas.DisplayIntersections()
+        self.ui.canvas.scale_factor = self.ui.ScaleSlider.value()
+        x_left = self.ui.Xstart.value()
+        y_left = self.ui.Ystart.value()
+        x_right = self.ui.Xend.value()
+        y_right =  self.ui.Yend.value()
+        delta_x = self.ui.DeltaX.value()
+        delta_y  = self.ui.DeltaY.value()
+        data_x = [x_left,x_right,delta_x]
+        data_y = [y_left,y_right,delta_y]
+
+        self.ui.canvas.DisplayIntersections(data_x,data_y)
 
     def changeColorBound(self):
         border_color = QtWidgets.QColorDialog.getColor()
@@ -100,7 +111,7 @@ class UI(QtWidgets.QMainWindow):
         self.ui.canvas.setDragMode(QtWidgets.QGraphicsView.NoDrag)
         self.ui.canvas.pan_mode = False
 
-    def clear_calnvas(self):
+    def clear_canvas(self):
         self.ui.canvas.clearCanvasAndData()
 
     def changeRectLineColor(self):

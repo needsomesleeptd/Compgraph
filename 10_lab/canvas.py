@@ -182,12 +182,11 @@ class Canvas(QtWidgets.QGraphicsView):
 
 
 
-    def DisplayIntersections(self):
+    def DisplayIntersections(self,data_x,data_z):
 
         self.save_state(is_itersected=True)
 
-        data_x = [-50,50,2]
-        data_z =[-50,50,2]
+
         self.create_surface(data_x, data_z, f2)
 
         self.update()
@@ -308,8 +307,8 @@ class Canvas(QtWidgets.QGraphicsView):
         al = radians(self.angles[1])
 
         temp = point[0]
-        point[0] = cos(al) * point[0] - sin(al) * point[2]
-        point[2] = cos(al) * point[2] + sin(al) * temp
+        point[0] = cos(al) * point[0] + sin(al) * point[2]
+        point[2] = cos(al) * point[2] - sin(al) * temp
         return point
 
     def rotate_z(self, point):
@@ -325,15 +324,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.up_arr = []
         self.down_arr = []
 
-    def do_task(self):
-        self.clean_screen()
 
-        x_min, x_max, x_step = float(self.XStart.text()), float(self.XEnd.text()), float(self.DX.text())
-        z_min, z_max, z_step = float(self.ZStart.text()), float(self.ZEnd.text()), float(self.DZ.text())
-
-        self.angles = self.get_angles()
-
-        self.create_surface((x_min, x_max, x_step), (z_min, z_max, z_step), funcs(self.Funcs.currentIndex()))
 
     def get_angles(self):
         return (float(self.angle_ox.value()), float(self.angle_oy.value()),
@@ -342,8 +333,8 @@ class Canvas(QtWidgets.QGraphicsView):
     def create_surface(self, data_x, data_z, f):
         data_x0, data_y = self.find_min_max_y(data_x, data_z, f)
 
-        self.up_arr = [0] * self.width() * 2
-        self.down_arr = [self.height()] * self.width() * 2
+        self.up_arr = [0] * self.width() * 100
+        self.down_arr = [self.height()] * self.width() * 100
 
         x_left = y_left = -1
         x_right = y_right = -1

@@ -49,53 +49,7 @@
        </widget>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,1,0,1,1,1">
-        <item>
-         <widget class="Table" name="table_points">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>20</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>200</width>
-            <height>100</height>
-           </size>
-          </property>
-          <property name="sizeIncrement">
-           <size>
-            <width>20</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>Times New Roman</family>
-           </font>
-          </property>
-          <property name="lineWidth">
-           <number>2</number>
-          </property>
-          <property name="midLineWidth">
-           <number>2</number>
-          </property>
-          <attribute name="horizontalHeaderVisible">
-           <bool>true</bool>
-          </attribute>
-          <column>
-           <property name="text">
-            <string>x</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>y</string>
-           </property>
-          </column>
-         </widget>
-        </item>
+       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,0,1,1,1">
         <item>
          <layout class="QFormLayout" name="formLayout">
           <item row="0" column="0">
@@ -210,7 +164,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Scale</string>
+             <string>Масштаб</string>
             </property>
            </widget>
           </item>
@@ -221,6 +175,9 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="minimum">
+             <number>1</number>
             </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -245,7 +202,90 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
+           <widget class="QLabel" name="label">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Шаг:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QFormLayout" name="formLayout_2">
+            <item row="0" column="0">
+             <widget class="QLabel" name="dXLabel">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+               </font>
+              </property>
+              <property name="text">
+               <string>dx:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="dyLabel">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+               </font>
+              </property>
+              <property name="text">
+               <string>dz</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QDoubleSpinBox" name="DeltaY">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+               </font>
+              </property>
+              <property name="stepType">
+               <enum>QAbstractSpinBox::DefaultStepType</enum>
+              </property>
+              <property name="value">
+               <double>2.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QDoubleSpinBox" name="DeltaX">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+               </font>
+              </property>
+              <property name="value">
+               <double>2.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
            <widget class="QLabel" name="label_2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="font">
              <font>
               <family>Times New Roman</family>
@@ -282,13 +322,16 @@
                </font>
               </property>
               <property name="minimum">
-               <double>-1000.000000000000000</double>
+               <double>-100.000000000000000</double>
               </property>
               <property name="maximum">
-               <double>1000.000000000000000</double>
+               <double>50.000000000000000</double>
               </property>
               <property name="singleStep">
                <double>10.000000000000000</double>
+              </property>
+              <property name="value">
+               <double>-10.000000000000000</double>
               </property>
              </widget>
             </item>
@@ -314,13 +357,16 @@
                </font>
               </property>
               <property name="minimum">
-               <double>-1000.000000000000000</double>
+               <double>-100.000000000000000</double>
               </property>
               <property name="maximum">
-               <double>1000.000000000000000</double>
+               <double>50.000000000000000</double>
               </property>
               <property name="singleStep">
                <double>10.000000000000000</double>
+              </property>
+              <property name="value">
+               <double>-10.000000000000000</double>
               </property>
              </widget>
             </item>
@@ -336,6 +382,24 @@
               </property>
              </widget>
             </item>
+            <item row="2" column="1">
+             <widget class="QDoubleSpinBox" name="Xend">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+               </font>
+              </property>
+              <property name="minimum">
+               <double>-100.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>50.000000000000000</double>
+              </property>
+              <property name="value">
+               <double>10.000000000000000</double>
+              </property>
+             </widget>
+            </item>
             <item row="3" column="0">
              <widget class="QLabel" name="y2Label">
               <property name="font">
@@ -344,16 +408,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Y2</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QDoubleSpinBox" name="Xend">
-              <property name="font">
-               <font>
-                <family>Times New Roman</family>
-               </font>
+               <string>Z2</string>
               </property>
              </widget>
             </item>
@@ -364,15 +419,18 @@
                 <family>Times New Roman</family>
                </font>
               </property>
+              <property name="minimum">
+               <double>-100.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>50.000000000000000</double>
+              </property>
+              <property name="value">
+               <double>10.000000000000000</double>
+              </property>
              </widget>
             </item>
            </layout>
-          </item>
-          <item>
-           <layout class="QFormLayout" name="formLayout_2"/>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_3"/>
           </item>
          </layout>
         </item>
@@ -480,11 +538,6 @@
    <class>Canvas</class>
    <extends>QGraphicsView</extends>
    <header location="global">canvas</header>
-  </customwidget>
-  <customwidget>
-   <class>Table</class>
-   <extends>QTableWidget</extends>
-   <header location="global">table</header>
   </customwidget>
  </customwidgets>
  <resources/>
