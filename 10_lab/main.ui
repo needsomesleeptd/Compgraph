@@ -79,7 +79,7 @@
           </item>
           <item>
            <property name="text">
-            <string>x**2 / z</string>
+            <string>x**2 * z</string>
            </property>
           </item>
           <item>
@@ -102,6 +102,7 @@
              <font>
               <family>Times New Roman</family>
               <pointsize>9</pointsize>
+              <bold>true</bold>
              </font>
             </property>
             <property name="text">
@@ -124,32 +125,7 @@
              </font>
             </property>
             <property name="text">
-             <string>X:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QSlider" name="XSlider">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimum">
-             <number>-180</number>
-            </property>
-            <property name="maximum">
-             <number>180</number>
-            </property>
-            <property name="singleStep">
-             <number>5</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="tickPosition">
-             <enum>QSlider::TicksBelow</enum>
+             <string>Rotate OX:</string>
             </property>
            </widget>
           </item>
@@ -161,32 +137,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Y</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QSlider" name="YSlider">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimum">
-             <number>-180</number>
-            </property>
-            <property name="maximum">
-             <number>180</number>
-            </property>
-            <property name="singleStep">
-             <number>5</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="tickPosition">
-             <enum>QSlider::TicksBelow</enum>
+             <string>Rotate OY:</string>
             </property>
            </widget>
           </item>
@@ -198,32 +149,61 @@
              </font>
             </property>
             <property name="text">
-             <string>Z</string>
+             <string>Rotate OZ:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QDoubleSpinBox" name="rotateOX">
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+             </font>
+            </property>
+            <property name="minimum">
+             <double>-180.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>180.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>5.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QDoubleSpinBox" name="rotateOY">
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+             </font>
+            </property>
+            <property name="minimum">
+             <double>-180.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>180.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>5.000000000000000</double>
             </property>
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QSlider" name="ZSlider">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+           <widget class="QDoubleSpinBox" name="rotateOZ">
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+             </font>
             </property>
             <property name="minimum">
-             <number>-180</number>
+             <double>-180.000000000000000</double>
             </property>
             <property name="maximum">
-             <number>180</number>
+             <double>180.000000000000000</double>
             </property>
             <property name="singleStep">
-             <number>5</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="tickPosition">
-             <enum>QSlider::TicksBelow</enum>
+             <double>5.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -263,7 +243,7 @@
                </font>
               </property>
               <property name="text">
-               <string>dx:</string>
+               <string>dX:</string>
               </property>
              </widget>
             </item>
@@ -275,7 +255,7 @@
                </font>
               </property>
               <property name="text">
-               <string>dz</string>
+               <string>dZ:</string>
               </property>
              </widget>
             </item>
@@ -285,6 +265,9 @@
                <font>
                 <family>Times New Roman</family>
                </font>
+              </property>
+              <property name="maximum">
+               <double>100.000000000000000</double>
               </property>
               <property name="stepType">
                <enum>QAbstractSpinBox::DefaultStepType</enum>
@@ -300,6 +283,9 @@
                <font>
                 <family>Times New Roman</family>
                </font>
+              </property>
+              <property name="maximum">
+               <double>100.000000000000000</double>
               </property>
               <property name="value">
                <double>2.000000000000000</double>
@@ -355,7 +341,7 @@
                <double>-100.000000000000000</double>
               </property>
               <property name="maximum">
-               <double>50.000000000000000</double>
+               <double>100.000000000000000</double>
               </property>
               <property name="singleStep">
                <double>10.000000000000000</double>
@@ -390,7 +376,7 @@
                <double>-100.000000000000000</double>
               </property>
               <property name="maximum">
-               <double>50.000000000000000</double>
+               <double>100.000000000000000</double>
               </property>
               <property name="singleStep">
                <double>10.000000000000000</double>
@@ -408,7 +394,7 @@
                </font>
               </property>
               <property name="text">
-               <string>X2</string>
+               <string>X2:</string>
               </property>
              </widget>
             </item>
@@ -423,7 +409,7 @@
                <double>-100.000000000000000</double>
               </property>
               <property name="maximum">
-               <double>50.000000000000000</double>
+               <double>100.000000000000000</double>
               </property>
               <property name="value">
                <double>10.000000000000000</double>
@@ -438,7 +424,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Z2</string>
+               <string>Z2:</string>
               </property>
              </widget>
             </item>
@@ -453,7 +439,7 @@
                <double>-100.000000000000000</double>
               </property>
               <property name="maximum">
-               <double>50.000000000000000</double>
+               <double>100.000000000000000</double>
               </property>
               <property name="value">
                <double>10.000000000000000</double>

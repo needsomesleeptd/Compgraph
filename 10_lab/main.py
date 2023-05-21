@@ -60,9 +60,9 @@ class UI(QtWidgets.QMainWindow):
 
         update_widget_by_Qcolor(self.ui.change_rect_color, self.ui.canvas.pen.color())
 
-        self.ui.XSlider.valueChanged.connect(self.DisplayIntersections)
-        self.ui.YSlider.valueChanged.connect(self.DisplayIntersections)
-        self.ui.ZSlider.valueChanged.connect(self.DisplayIntersections)
+        self.ui.rotateOX.valueChanged.connect(self.DisplayIntersections)
+        self.ui.rotateOY.valueChanged.connect(self.DisplayIntersections)
+        self.ui.rotateOZ.valueChanged.connect(self.DisplayIntersections)
         #self.ui.ScaleSlider.valueChanged.connect(self.DisplayIntersections)
 
         self.ui.canvas.size_x = self.ui.canvas.size().width()
@@ -77,7 +77,7 @@ class UI(QtWidgets.QMainWindow):
 
 
     def get_angles(self):
-        return [self.ui.XSlider.value(),self.ui.YSlider.value(),self.ui.ZSlider.value()]
+        return [self.ui.rotateOX.value(),self.ui.rotateOY.value(),self.ui.rotateOZ.value()]
 
 
 
