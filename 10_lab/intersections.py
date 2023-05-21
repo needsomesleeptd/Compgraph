@@ -33,7 +33,7 @@ def f6(x, z):
 
 
 def f7(x, z):
-    return exp(x * z)
+    return sinh(x) * cos(z)
 
 
 def funcs(ind):

@@ -63,7 +63,7 @@ class Canvas(QtWidgets.QGraphicsView):
         # self.pen.setJoinStyle(Qt.MiterJoin)
         # self.pen.setMiterLimit(0)
         self.backgroundColor = QtGui.QColor(Qt.white)
-        self._zoom = 3  # times which picture is zoomed
+        self._zoom = 10  # times which picture is zoomed
         self.figure_items_count = []
         self.saved_scene = QtWidgets.QGraphicsScene()
         self.save_request = []
@@ -263,8 +263,8 @@ class Canvas(QtWidgets.QGraphicsView):
                 float(self.angle_oz.value()))
 
     def create_surface(self, data_x, data_z, f):
-        self.up_arr = [MIN_NUM] * self.width()
-        self.down_arr = [self.height()] * self.width()
+        self.up_arr = [MIN_NUM] * self.width() * self.height()
+        self.down_arr = [self.height()] * self.width() * self.height()
 
         x_left = y_left = -1
         x_right = y_right = -1
@@ -392,11 +392,11 @@ def f3(x, z):
 
 
 def f4(x, z):
-    return sin(x * z)
+    return exp(x) / exp(z)
 
 
 def f5(x, z):
-    return x ** 2 * z
+    return x ** 2 / z
 
 
 def f6(x, z):
@@ -404,7 +404,7 @@ def f6(x, z):
 
 
 def f7(x, z):
-    return exp(x * z)
+    return sinh(x) * cos(z)
 
 
 def funcs(ind):

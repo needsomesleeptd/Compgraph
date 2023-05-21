@@ -59,12 +59,7 @@
           </property>
           <item>
            <property name="text">
-            <string>sin(x)*cos(z)</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>sin(x *z)</string>
+            <string>5*x+3*z-21</string>
            </property>
           </item>
           <item>
@@ -74,7 +69,27 @@
           </item>
           <item>
            <property name="text">
-            <string>exp(x*z)</string>
+            <string>sin(x * z)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>exp(x) / exp(z)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>x**2 / z</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>(x*z) ** 2</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>sinh(x) * cos(z)</string>
            </property>
           </item>
          </widget>
@@ -236,13 +251,13 @@
              <number>40</number>
             </property>
             <property name="maximum">
-             <number>100</number>
+             <number>1000</number>
             </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
             <property name="tickPosition">
-             <enum>QSlider::TicksBelow</enum>
+             <enum>QSlider::NoTicks</enum>
             </property>
             <property name="tickInterval">
              <number>0</number>
