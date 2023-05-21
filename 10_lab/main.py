@@ -45,19 +45,10 @@ class UI(QtWidgets.QMainWindow):
         self.ui.cut.clicked.connect(self.DisplayIntersections)
 
         self.ui.change_rect_color.clicked.connect(self.changeRectLineColor)
-        self.ui.change_lines_color.clicked.connect(self.changeLineColor)
-        self.ui.change_intersected_lines_color.clicked.connect(self.changeCutOffColor)
 
-        self.ui.close_polygon.clicked.connect(self.closePolygon)
-        self.ui.close_cutter.clicked.connect(self.closeCutter)
 
-        self.ui.canvas.dotsPrintSignal.connect(self.ui.table_points.push_node_back)
-        self.ui.canvas.clearSignal.connect(self.ui.table_points.clearContents)
 
-        self.ui.clear_canvas_button.clicked.connect(self.ui.canvas.clearCanvasAndData)
 
-        self.ui.add_polygon_dot.clicked.connect(self.createPolygonDotByValue)
-        self.ui.add_cutter_dot.clicked.connect(self.createCutterDotByValue)
 
         self.ui.revert.clicked.connect(self.revert_state)
 
@@ -65,8 +56,10 @@ class UI(QtWidgets.QMainWindow):
         self.ui.about_programm.triggered.connect(self.about_program_message)
 
         update_widget_by_Qcolor(self.ui.change_rect_color, self.ui.canvas.pen.color())
-        update_widget_by_Qcolor(self.ui.change_lines_color, self.ui.canvas.line_color)
-        update_widget_by_Qcolor(self.ui.change_intersected_lines_color, self.ui.canvas.cut_off_color)
+
+        self.ui.XSlider.valueChanged.connect(self.DisplayIntersections)
+        self.ui.YSlider.valueChanged.connect(self.DisplayIntersections)
+        self.ui.ZSlider.valueChanged.connect(self.DisplayIntersections)
 
         self.show()
 
@@ -75,29 +68,16 @@ class UI(QtWidgets.QMainWindow):
 
 
 
-    def createCutterDotByValue(self):
-        x = self.ui.Xdot.value()
-        y = self.ui.Ydot.value()
-        if (not self.ui.canvas.is_cutter_closed):
-            self.ui.canvas.add_dot_polygon(QPointF(x,y),self.ui.canvas.cutter,self.ui.canvas.pen.color())
-        else:
-            show_info_message('Фигура замкнута','Отсекатель замкнут ,невозможно ставить его точки')
 
-    def createPolygonDotByValue(self):
-        x = self.ui.XPolygonDot.value()
-        y = self.ui.YPolygonDot.value()
-        if (not self.ui.canvas.is_polygon_closed):
-            self.ui.canvas.add_dot_polygon(QPointF(x, y), self.ui.canvas.polygon, self.ui.canvas.line_color)
-        else:
-            show_info_message('Фигура замкнута', 'Многоугольник замкнут, невозможно ставить его точки')
+    def get_angles(self):
+        return [self.ui.XSlider.value(),self.ui.YSlider.value(),self.ui.ZSlider.value()]
 
-    def closeCutter(self):
-        self.ui.canvas.close_cutter()
 
-    def closePolygon(self):
-        self.ui.canvas.close_polygon()
 
     def DisplayIntersections(self):
+        self.clear_calnvas()
+        self.ui.canvas.angles = self.get_angles()
+        self.ui.canvas.scale = self.ui.ScaleSlider.value()
         self.ui.canvas.DisplayIntersections()
 
     def changeColorBound(self):

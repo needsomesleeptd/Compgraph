@@ -65,38 +65,32 @@ class Canvas(QtWidgets.QGraphicsView):
         self._zoom = 3  # times which picture is zoomed
         self.figure_items_count = []
         self.saved_scene = QtWidgets.QGraphicsScene()
-        self.curr_state_saved_len = -1
         self.save_request = []
-        self.flag_has_started = False
-        self.points = []
-        self.cutter = []
-        self.polygon = []
-        self.is_cutter_closed = False
-        self.is_polygon_closed = False
-        self.lines = []
-        self.cur_line = []
-        self.pan_mode = False
-        self.rect = None
         self.cut_off_color = QColor(0, 0, 0)
         self.line_color = QColor(12, 123, 56)
         self.background_color = QColor(255, 255, 255)
         self.save_color = QColor(255, 255, 255)
         self.saved_state = []
+        self.pan_mode =False
         self.size_x = self.width()
         self.size_y = self.height()
         self.up_arr = []
         self.down_arr = []
+        self.angles = [0,0,0]
+        self.scale_factor = 1
 
     def wheelEvent(self, event):
-
         if event.angleDelta().y() > 0:
             factor = 1.25
             self._zoom += 1
         else:
             factor = 0.8
             self._zoom -= 1
-
-        self.scale(factor, factor)
+        if self._zoom > 0:
+            #self.scale(factor, factor)
+            super().scale(factor, factor)
+        else:
+            self._zoom = 0
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -184,28 +178,7 @@ class Canvas(QtWidgets.QGraphicsView):
         self.dotsPrintSignal.emit(pos.x(), pos.y(), self.line_color)
         self.update()
 
-    def mousePressEvent(self, event):
-        super().mousePressEvent(event)
-        if not self.pan_mode:
 
-            pos = self.mapToScene(event.pos())
-
-            if event.buttons() == QtCore.Qt.LeftButton:
-                if not self.is_cutter_closed:
-                    self.add_dot_polygon(pos, self.cutter, self.pen.color())
-                else:
-                    show_info_message('Фигура замкнута', 'Многоугольник замкнут, невозможно ставить его точки')
-
-            if event.buttons() == QtCore.Qt.RightButton:
-                if not self.is_polygon_closed:
-                    self.add_dot_polygon(pos, self.polygon, self.line_color)
-                else:
-                    show_info_message('Фигура замкнута', 'Отсекатель замкнут, невозможно ставить его точки')
-
-                # if (event.buttons() == QtCore.Qt.MouseButton.MidButton):
-                #   self.close_polygon()
-
-            self.update()
 
 
 
@@ -215,7 +188,7 @@ class Canvas(QtWidgets.QGraphicsView):
 
         data_x = [-50,50,2]
         data_z =[-50,50,2]
-        self.create_surface(data_x,data_z,f1)
+        self.create_surface(data_x, data_z, f2)
 
         self.update()
 
@@ -282,16 +255,18 @@ class Canvas(QtWidgets.QGraphicsView):
     def draw_cut(self, x1, y1, x2, y2):
         self.scene.addLine(x1, y1, x2, y2, self.pen.color())
 
-    def transform(self, x, y, z, data_x, data_y=(-10, 1000)):  # think about it
+    def transform_points(self, x, y, z):  # think about it
         super().transform()
         x, y, z = self.rotate_point([x, y, z])
 
-        x = (x - data_x[0]) / (data_x[1] - data_x[0])
-        x = 20 + x * (self.size_x - 40)
+        #x = (x - data_x[0]) / (data_x[1] - data_x[0])
+        #x = 20 + x * (self.size_x - 40)
 
-        y = (y - data_y[0]) / (data_y[1] - data_y[0])
-        y = 20 + y * (self.size_y - 40)
-        y = self.size_y - y
+        #y = (y - data_y[0]) / (data_y[1] - data_y[0])
+        #y = 20 + y * (self.size_y - 40)
+        x *= self.scale_factor
+        y *= self.scale_factor
+
 
         return int(x), int(y)
 
@@ -322,7 +297,7 @@ class Canvas(QtWidgets.QGraphicsView):
         return point[0], point[1], point[2]
 
     def rotate_x(self, point):
-        al = radians(0)
+        al = radians(self.angles[0])
 
         temp = point[1]
         point[1] = cos(al) * point[1] - sin(al) * point[2]
@@ -330,7 +305,7 @@ class Canvas(QtWidgets.QGraphicsView):
         return point
 
     def rotate_y(self, point):
-        al = radians(0)
+        al = radians(self.angles[1])
 
         temp = point[0]
         point[0] = cos(al) * point[0] - sin(al) * point[2]
@@ -338,7 +313,7 @@ class Canvas(QtWidgets.QGraphicsView):
         return point
 
     def rotate_z(self, point):
-        al = radians(0)
+        al = radians(self.angles[2])
 
         temp = point[0]
         point[0] = cos(al) * point[0] - sin(al) * point[1]
@@ -367,8 +342,8 @@ class Canvas(QtWidgets.QGraphicsView):
     def create_surface(self, data_x, data_z, f):
         data_x0, data_y = self.find_min_max_y(data_x, data_z, f)
 
-        self.up_arr = [0] * self.size_x
-        self.down_arr = [self.size_y] * self.size_x
+        self.up_arr = [0] * self.width() * 2
+        self.down_arr = [self.height()] * self.width() * 2
 
         x_left = y_left = -1
         x_right = y_right = -1
@@ -378,14 +353,14 @@ class Canvas(QtWidgets.QGraphicsView):
 
         for z in frange(z_min, z_max, z_step):
             x_prev, y_prev = data_x[0], f(data_x[0], z)
-            x_prev, y_prev = self.transform(x_prev, y_prev, z, data_x0, data_y)
+            x_prev, y_prev = self.transform_points(x_prev, y_prev, z)
 
             x_left, y_left = self.side_edge(x_prev, y_prev, x_left, y_left)
             prev_flag = self.is_visible(x_prev, y_prev)
 
             for x in frange(x_min, x_max, x_step):
                 y = f(x, z)
-                #x, y = self.transform(x, y, z, data_x0, data_y)
+                x, y = self.transform_points(x, y, z)
 
                 flag = self.is_visible(x, y)
                 if (flag == prev_flag):
@@ -452,6 +427,8 @@ class Canvas(QtWidgets.QGraphicsView):
 
     def is_visible(self, x, y):
         x = int(x)
+        if (x > len(self.down_arr) or x > len(self.up_arr)):
+            return 0
         if (self.down_arr[x] < y and y < self.up_arr[x]):
             flag = 0
         elif (y >= self.up_arr[x]):
